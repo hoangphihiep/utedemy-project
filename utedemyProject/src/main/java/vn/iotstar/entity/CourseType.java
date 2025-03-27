@@ -17,15 +17,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name="course")
-@NamedQuery(name="Course.findAll", query="SELECT c from Course c")
-public class Course implements Serializable {
-	
+@Table(name="course_type")
+@NamedQuery(name="CourseType.findAll", query="SELECT ct from CourseType ct")
+public class CourseType implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-    private int id;
+	private int id;
+	
+	@Column(name = "course_type_name", nullable = false, length = 255)
+    private String courseTypeName;
 
 }
