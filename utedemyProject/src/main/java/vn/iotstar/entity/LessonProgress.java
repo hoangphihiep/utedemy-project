@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,24 +20,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name="target")
-@NamedQuery(name="Target.findAll", query="SELECT t from Target t")
-public class Target implements Serializable {
+@Table(name="lesson_progress")
+@NamedQuery(name="LessonProgress.findAll", query="SELECT lp from LessonProgress lp")
+public class LessonProgress implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
     private int id;
+	
+	@OneToOne
+    @JoinColumn(name = "lesson_id", referencedColumnName = "id", nullable = false)
+    private Lesson lesson;
 
-    @Column(name = "learner_achievements", nullable = false, length = 500)
-    private String learnerAchievements;
-
-    @Column(name = "course_learner", nullable = false, length = 500)
-    private String courseLearner;
-    
-    @ManyToOne
-    @JoinColumn(name = "course_detail_id", nullable = false)
-    private CourseDetail courseDetail;
+	@Column(name = "is_completed")
+    private boolean isCompleted;
+	
+	@ManyToOne
+    @JoinColumn(name = "course_progress_id", nullable = false)
+    private CourseProgress courseProgress;
 }

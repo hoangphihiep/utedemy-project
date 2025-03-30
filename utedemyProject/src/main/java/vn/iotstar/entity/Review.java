@@ -1,6 +1,7 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,9 +20,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name="target")
-@NamedQuery(name="Target.findAll", query="SELECT t from Target t")
-public class Target implements Serializable {
+@Table(name="review")
+@NamedQuery(name="Review.findAll", query="SELECT r from Review r")
+public class Review implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -29,14 +30,22 @@ public class Target implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
     private int id;
+	
+	@Column(name = "rate")
+    private String rate;
+	
+	@Column(name = "content")
+    private String content;
+	
+	@ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+	
+	@ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User createdBy;
+	
+	@Column(name = "created_at")
+    private Date createdAt;
 
-    @Column(name = "learner_achievements", nullable = false, length = 500)
-    private String learnerAchievements;
-
-    @Column(name = "course_learner", nullable = false, length = 500)
-    private String courseLearner;
-    
-    @ManyToOne
-    @JoinColumn(name = "course_detail_id", nullable = false)
-    private CourseDetail courseDetail;
 }
