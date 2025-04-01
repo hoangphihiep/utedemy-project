@@ -9,12 +9,12 @@ import vn.iotstar.entity.Role;
 
 public class Test {
 	public static void main(String[] args) {
-		EntityManager enma = JPAConfig.getEntityManager();
+		//EntityManager enma = JPAConfig.getEntityManager();
 		EntityTransaction trans = enma.getTransaction();
 		Role role = new Role();
 		role.setName("USER");
 		try
-		{
+		{ 
 			trans.begin();
 			enma.persist(role);
 			trans.commit();
