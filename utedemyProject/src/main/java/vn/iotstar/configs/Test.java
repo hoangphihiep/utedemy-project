@@ -14,7 +14,7 @@ public class Test {
 		Role role = new Role();
 		role.setName("USER");
 		try
-		{
+		{ 
 			trans.begin();
 			enma.persist(role);
 			trans.commit();
