@@ -116,13 +116,13 @@
                     newSection.innerHTML = `
                         <div class="section-header">
                             <div class="section-title">
-                                <span>Phần ${sectionNumber}: ${sectionTitle}</span>
+                                <span>Phần 1: Tổng quan về khóa học</span>
                             </div>
                             <div class="section-columns">
-                                <div>Học thử</div>
-                                <div>Trạng thái</div>
-                                <div>Thời lượng</div>
-                            </div>
+	                            <div class="column-label">Học thử</div>
+	                            <div class="column-label">Trạng thái</div>
+	                            <div class="column-label">Thời lượng</div>
+	                        </div>
                             <div class="section-actions">
                                 <div class="action-icon">✎</div>
                                 <div class="action-icon">🗑</div>
@@ -132,11 +132,10 @@
                         <div class="lesson-actions">
                             <button class="lesson-button">Bài học mới</button>
                             <button class="lesson-button">Bài trắc nghiệm</button>
-                            <button class="lesson-button">Thêm nhanh bài học</button>
                         </div>
                         
                         <div class="lesson-info">
-                            ${sectionDescription || 'Mỗi bài học nên có một bài trắc nghiệm để cung cố kiến thức'}
+                        		Mỗi bài học nên có một bài trắc nghiệm để củng cố kiến thức
                         </div>
                     `;
                     
