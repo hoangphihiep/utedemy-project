@@ -19,15 +19,15 @@ public class HomeController extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 		if (url.contains("/user/addTarget")) 
 		{
-			req.getRequestDispatcher("/views/user/addTarget.jsp").forward(req, resp);
+			req.getRequestDispatcher("/views/teacher/addTarget.jsp").forward(req, resp);
 		}
 		else if (url.contains("/user/add")) 
 		{
-			req.getRequestDispatcher("/views/user/add.jsp").forward(req, resp);
+			req.getRequestDispatcher("/views/teacher/add.jsp").forward(req, resp);
 		}
 		else if (url.contains("/user/adBasicInformation")) 
 		{
-			req.getRequestDispatcher("/views/user/adBasicInformation.jsp").forward(req, resp);
+			req.getRequestDispatcher("/views/teacher/adBasicInformation.jsp").forward(req, resp);
 		}
 		
 	}
