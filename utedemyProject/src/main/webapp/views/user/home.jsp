@@ -1214,7 +1214,15 @@ function renderBestsellerCourses() {
 
     container.innerHTML = bestsellerCourses.map(course => `
         <div class="bestseller-card">
-            ${course.badge ? `<span class="bestseller-badge">${course.badge}</span>` : ''}
+    	<c:choose>
+    	<c:when test="${not empty course.badge}">
+        <span class="bestseller-badge">${course.badge}</span>
+    	</c:when>
+    	<c:otherwise>
+        <!-- Không làm gì nếu không có badge -->
+    		</c:otherwise>
+		</c:choose>
+
             <img src="${course.image}" alt="${course.title}">
             <div class="course-card-content">
                 <h4>${course.title}</h4>
