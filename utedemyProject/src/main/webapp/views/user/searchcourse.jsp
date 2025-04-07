@@ -4,19 +4,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Search Results</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-      rel="stylesheet"
-    />
-
-    <script>
-      // JavaScript to toggle dropdown visibility
-      function toggleDropdown() {
-        const dropdown = document.getElementById("dropdown-menu");
-        dropdown.classList.toggle("hidden");
-      }
-    </script>
-  </head>
+   	<head>
+  		<link rel="stylesheet" href="searchCourse.css">
+	</head>
   <body class="bg-gray-100">
     <header class="bg-white shadow">
       <div
