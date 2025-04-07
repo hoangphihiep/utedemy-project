@@ -1,12 +1,23 @@
-<html lang="en">
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Search Results</title>
     <script src="https://cdn.tailwindcss.com"></script>
-   	<head>
-  		<link rel="stylesheet" href="searchCourse.css">
-	</head>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+	<link
+      href="webapp/views/Css/searchCourse.css"
+      rel="stylesheet"
+    />
+    
+    
+  </head>
   <body class="bg-gray-100">
     <header class="bg-white shadow">
       <div
@@ -17,7 +28,7 @@
             alt="Unica logo"
             class="h-10"
             height="40"
-            src="D:\hk2nam3\congnghephanmemHDT\pictureapp\unica.png"
+            src=""
             width="100"
           />
           <span class="ml-2 text-lg font-semibold"> DANH MỤC </span>
@@ -340,5 +351,12 @@
         </section>
       </div>
     </main>
+    <script>
+      // JavaScript to toggle dropdown visibility
+      function toggleDropdown() {
+        const dropdown = document.getElementById("dropdown-menu");
+        dropdown.classList.toggle("hidden");
+      }
+    </script>
   </body>
 </html>
