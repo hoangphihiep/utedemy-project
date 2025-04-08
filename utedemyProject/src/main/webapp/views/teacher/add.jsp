@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
+<head>
+    <link rel="stylesheet" href="/utedemyProject/views/Css/addCourse.css">
+</head>
 <body>
 	<div class="content-box">
 		<div class="content-header">Danh sách bài học</div>
