@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemesh>
-	<mapping path="/user/addTarget" name="user" decorator="user.jsp" />
-	<mapping path="/user/add" name="user" decorator="user.jsp" />
-	<mapping path="/user/adBasicInformation" name="user" decorator="user.jsp" />
+	<mapping path="/teacher/addTarget" name="teacher" decorator="addCourse.jsp" />
+	<mapping path="/teacher/add" name="teacher" decorator="addCourse.jsp" />
+	<mapping path="/teacher/adBasicInformation" name="teacher" decorator="addCourse.jsp" />
 </sitemesh>

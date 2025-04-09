@@ -8,7 +8,7 @@
 </head>
 <body>
 	<script type="text/javascript">
-		window.location.href = "${pageContext.request.contextPath}/user/addTarget";
+		window.location.href = "${pageContext.request.contextPath}/teacher/addTarget";
 	</script>
 </body>
 </html>
