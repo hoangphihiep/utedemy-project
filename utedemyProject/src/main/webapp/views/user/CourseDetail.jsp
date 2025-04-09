@@ -8,33 +8,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/utedemyProject/views/Css/CourseDetail.css">
 </head>
-
 <body>
-    <div class="header">
-        <nav class="nav">
-            <a href="index.html">
-                <img src="Images/UnicaLogo.png" alt="Unicalogo" width="100" height="auto">
-            </a>
-            <a>Danh mục</a>
-            <div class="search-container">
-                <input class="search-input" type="text" placeholder="Tìm khóa học, giảng viên">
-                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z"/>
-                </svg>
-              </div>
-            <a href="business.html">Doanh nghiệp</a>
-            <a href="member.html">Hội viên</a>
-            <button class="access">Vào học</button>
-            <a href="cart.html">
-                <img src="Images/cartIcon.png" width="40px" height="auto">
-            </a>
-            <div class="login">
-            <a href="acountHome.html">
-                <img src="Iamge/Profile.png" width="40" height="auto">
-            </a>
-            <div>
-        </nav>
-    </div>   
+    <!-- Phần Header -->
+    <header class="top-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="https://via.placeholder.com/100x30?text=HAKETU" alt="Haketu Logo" class="logo-img">
+                <div class="nav-category">
+                    <button class="nav-category-btn">
+                        DANH MỤC <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Tìm kiếm khóa học, giảng viên...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <a href="#" class="header-link">Doanh nghiệp</a>
+                <a href="#" class="header-link">Học viên</a>
+                <a href="#" class="header-link">Vào học</a>
+                <button class="icon-btn">
+                    <i class="far fa-heart"></i>
+                </button>
+                <button class="icon-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </button>
+                <img src="https://via.placeholder.com/28x28" alt="Avatar" class="avatar">
+            </div>
+        </div>
+    </header>
     <!-- Course Panel -->
     <div class="guitar-course-panel">
         <a href="#" class="breadcrumb-item">
@@ -53,14 +58,14 @@
             Hãy đến với Học đệm hát cùng haketu guitar nổi tiếng Việt Nam,
             nhanh chóng làm chủ cây đàn guitar trong tay với kỹ thuật chơi guitar đơn giản, hiệu quả
         </p>
-       
+
         <div class="course-rating">
             <span class="stars">★★★★★</span>
             <span class="rating-text">4.3 (215 đánh giá)</span>
         </div>
-       
+
         <div class="students-count">11519 Học viên</div>
-       
+
         <div class="instructor">
             <span class="label">Giảng viên:</span>
             <span class="name">Hà Kế Tú</span>
@@ -89,17 +94,17 @@
         <div class="intro-content">
             <p><strong>Bạn có biết:</strong></p>
             <p>Guitar đã trở thành một nhạc cụ vô cùng quen thuộc ngày nay, chúng góp phần cho cuộc sống của con người thêm vui vẻ và hài hòa. Thực tế cho thấy những người có khả năng chơi một loại nhạc cụ nào đó thì luôn biết cách làm mình nổi bật giữa đám đông và vô cùng tự tin.</p>
-           
+
             <p>Trong một cuộc khảo sát tâm lý mới đây, với câu hỏi: "Người đàn ông lý tưởng của bạn là gì?" Có đến 70% các cô gái được hỏi đã nói: Người đàn ông lý tưởng của họ là người biết chơi Guitar.</p>
-           
+
             <p>Vậy tại sao bạn lại không chơi Guitar?</p>
-           
+
             <p>Guitar đệm hát đang là xu hướng dẫn đầu trong cộng đồng người yêu thích và chơi đàn guitar, cũng là phương thức chơi đàn thông dụng kết hợp song song giữa việc chơi đàn và hát.</p>
-           
+
             <p>Hãy đến với khóa học âm nhạc "Đệm hát Guitar cơ bản của Hà Kế Tú" - một Guitarist - giảng viên Guitar nổi tiếng Việt Nam được nhắc đến với cái tên guitar Haketu để làm chủ cây đàn Guitar trong tay và hát nghêu ngao cùng bạn bè, người yêu... chỉ trong một thời gian ngắn học guitar cơ bản đệm hát và thực hành.</p>
-           
+
             <h3>Khóa học có gì dành cho bạn?</h3>
-           
+
             <ul>
                 <li>✔️ Trong khóa học guitar haketu, bạn sẽ biết các kiến thức cơ bản học guitar đệm hát trong Guitar để bạn có thể làm chủ một cách nhanh chóng cây đàn</li>
                 <li>✔️ Kiến thức nhạc lý cơ bản, đệm lý trong guitar đệm hát và một số hợp âm cơ bản cần nắm được</li>
@@ -108,7 +113,7 @@
                 <li>✔️ Hoàn thiện kỹ năng chơi guitar một cách hoàn chỉnh thành thạo với 10+ bài đêm hát khác</li>
                 <li>✔️ Được định hướng phong cách chơi và định hướng con đường chuyên nghiệp cho người chơi guitar về sau.</li>
             </ul>
-           
+
             <p class="call-to-action">Vậy còn chờ gì nữa mà không học guitar đệm hát cùng Haketu nhanh chóng làm chủ cây đàn Guitar ngay tại nhà với khóa học "Đệm hát Guitar cơ bản của Hà Kế Tú" thôi nào!</p>
         </div>
     </div>
@@ -118,7 +123,7 @@
     <div class="course-content-section">
         <h2>Nội dung khóa học</h2>
         <div class="course-stats">5 phần - 48 bài giảng - 04 giờ 17 phút</div>
-       
+
         <div class="course-sections">
             <div class="section">
                 <div class="section-title">- Phần 1: Khởi động</div>
@@ -128,24 +133,24 @@
                 <div class="section-title">- Phần 2: Thực hành</div>
                 <div class="section-detail">23 bài giảng - 2 giờ 01 phút</div>
             </div>
-           
+
             <div class="section">
                 <div class="section-title">- Phần 3: Định hướng</div>
                 <div class="section-detail">4 bài giảng - 0 giờ 20 phút</div>
             </div>
-           
+
             <div class="section">
                 <div class="section-title">- Phần 4: Bài tập áp dụng</div>
                 <div class="section-detail">10 bài giảng - 0 giờ 46 phút</div>
             </div>
-           
+
             <div class="section">
                 <div class="section-title">- Phần 5: Tổng kết</div>
                 <div class="section-detail">1 bài giảng - 0 giờ 05 phút</div>
             </div>
         </div>
     </div>
-   
+
     <div class="course-tags">
         <span>Tags:</span>
         <span class="tag">Guitar</span>
@@ -156,7 +161,7 @@
     <!-- Related Courses -->
     <div class="related-courses">
         <h2 class="related-courses-title">Khóa học liên quan</h2>
-       
+
         <div class="courses-container">
             <!-- Course 1 -->
             <div class="exact-course-card">
@@ -169,7 +174,7 @@
                         <span class="price">749.000đ</span>
                     </div>
                 </div>
-               
+
                 <div class="second-row">
                     <span class="duration">03 giờ 23 phút</span>
                     <span class="original-price">1.200.000đ</span>
@@ -188,7 +193,7 @@
                         <span class="price">749.000đ</span>
                     </div>
                 </div>
-               
+
                 <div class="second-row">
                     <span class="duration">03 giờ 23 phút</span>
                     <span class="original-price">1.200.000đ</span>
@@ -207,7 +212,7 @@
                         <span class="price">749.000đ</span>
                     </div>
                 </div>
-               
+
                 <div class="second-row">
                     <span class="duration">03 giờ 23 phút</span>
                     <span class="original-price">1.200.000đ</span>
@@ -220,7 +225,7 @@
     <!-- Frequently Bought Together -->
     <div class="frequently-bought">
         <h2 class="section-title">Học viên thường mua cùng</h2>
-       
+
         <!-- Course 1 -->
         <div class="bought-course">
             <div class="course-header">
@@ -230,7 +235,7 @@
                     <div class="instructor">Hoàng Phúc</div>
                 </div>
             </div>
-           
+
             <div class="course-footer">
                 <div class="pricing">
                     <span class="current-price">299.000đ</span>
@@ -239,7 +244,7 @@
                 <div class="rating">4.1 ★★★★★ (107)</div>
             </div>
         </div>
-       
+
         <!-- Course 2 -->
         <div class="bought-course">
             <div class="course-header">
@@ -249,7 +254,7 @@
                     <div class="instructor">Đỗ Đức Hiếu</div>
                 </div>
             </div>
-           
+
             <div class="course-footer">
                 <div class="pricing">
                     <span class="current-price">299.000đ</span>
@@ -258,7 +263,7 @@
                 <div class="rating">3.8 ★★★★★ (10)</div>
             </div>
         </div>
-       
+
         <!-- Course 3 -->
         <div class="bought-course">
             <div class="course-header">
@@ -268,7 +273,7 @@
                     <div class="instructor">Sweet Media</div>
                 </div>
             </div>
-           
+
             <div class="course-footer">
                 <div class="pricing">
                     <span class="current-price">299.000đ</span>
@@ -277,13 +282,13 @@
                 <div class="rating">5.0 ★★★★★ (2)</div>
             </div>
         </div>
-       
+
         <!-- Total and Button -->
         <div class="total-section">
             <div class="total-price">Tổng: 897.000đ</div>
             <div class="original-total">2.100.000đ</div>
         </div>
-       
+
         <button class="add-all-btn">Thêm tất cả vào giỏ hàng</button>
     </div>
 
@@ -291,20 +296,20 @@
     <!-- Instructor Profile -->
     <div class="instructor-profile">
         <h2 class="profile-title">Giảng viên</h2>
-       
+
         <div class="instructor-header">
             <div class="instructor-name">Hà Kế Tú - Haketu</div>
             <div class="instructor-subtitle">Giảng viên Guitar - Youtuber nổi tiếng cộng đồng guitar Việt Nam</div>
         </div>
-       
+
         <div class="instructor-bio">
             <p>Với kinh nghiệm 12 năm chơi đàn và nghiên cứu về âm nhạc, 5 năm kinh nghiệm tổ chức các khóa học Guitar offline tại Úc và Hà Nội, đào tạo hàng trăm học viên trong những khóa: Guitar cổ điển, Fingerstyle và Đệm hát.</p>
-           
+
             <p>Hà Kế Tú hay còn thường gọi là Haketu là một trong những Giảng viên, Youtuber có tên tuổi trong cộng đồng Guitar tại Việt Nam.</p>
-           
+
             <p>Kênh Youtube hiện đang là một trong những cộng đồng guitar lớn nhất Việt Nam với 600,000 người theo dõi.</p>
         </div>
-       
+
         <div class="instructor-highlights">
             <div class="highlight-item">
                 <span class="highlight-icon">✓</span>
@@ -323,7 +328,7 @@
                 <span class="highlight-text">Chuyên gia Fingerstyle (Nhật ký của mẹ)</span>
             </div>
         </div>
-       
+
         <div class="instructor-stats">
             <div class="stat-item">
                 <span class="stat-icon">★</span>
@@ -342,7 +347,7 @@
     <!-- Reviews Section -->
     <div class="reviews-section">
         <h2 class="section-title">Đánh giá học viên</h2>
-       
+
         <div class="review-list">
             <!-- Review 1 -->
             <div class="review-item">
@@ -353,7 +358,7 @@
                 </div>
                 <div class="review-content">Anh Tú dạy rất dễ hiểu, tương tác rồi nha anh :)</div>
             </div>
-           
+
             <!-- Review 2 -->
             <div class="review-item">
                 <div class="review-header">
@@ -363,7 +368,7 @@
                 </div>
                 <div class="review-content">Thầy giáo dạy đơn giản dễ hiểu phù hợp cho người bắt đầu. Hiện tại tôi đã có thể tự đệm được vài bài cơ bản rồi. Very good</div>
             </div>
-           
+
             <!-- Review 3 -->
             <div class="review-item">
                 <div class="review-header">
@@ -373,7 +378,7 @@
                 </div>
                 <div class="review-content">Rất dễ hiểu. Xin cảm ơn anh Hà kế tú</div>
             </div>
-           
+
             <!-- Review 4 -->
             <div class="review-item">
                 <div class="review-header">
@@ -383,7 +388,7 @@
                 </div>
                 <div class="review-content">Muốn học khoá của a vì đơn giản a đàn rất hay</div>
             </div>
-           
+
             <!-- Review 5 -->
             <div class="review-item">
                 <div class="review-header">
@@ -393,7 +398,7 @@
                 </div>
                 <div class="review-content">Tốt, rất dễ học, có thể tạo một tài liệu riêng cho các giai điệu để học viên luyện tập không?</div>
             </div>
-           
+
             <!-- Review 6 -->
             <div class="review-item">
                 <div class="review-header">
@@ -403,7 +408,7 @@
                 </div>
                 <div class="review-content">Thấy cười khá hiền và đẹp trai nên vote 5 sao.</div>
             </div>
-           
+
             <!-- Review 7 -->
             <div class="review-item">
                 <div class="review-header">
@@ -413,7 +418,7 @@
                 </div>
                 <div class="review-content">Quá hay, có thể vừa học vừa thực hành theo</div>
             </div>
-           
+
             <!-- Review 8 -->
             <div class="review-item">
                 <div class="review-header">
@@ -510,7 +515,7 @@
                     <p><i class="fas fa-clock"></i> 08000 - TP430, thứ 2 - thứ 7</p>
                 </div>
             </div>
-           
+
             <div class="footer-section">
                 <h3>Về Unica</h3>
                 <ul class="footer-links">
@@ -522,7 +527,7 @@
                     <li><i class="fas fa-chevron-right"></i> Chính sách bảo nội</li>
                 </ul>
             </div>
-           
+
             <div class="footer-section">
                 <h3>Hộp tác</h3>
                 <ul class="footer-links">
@@ -534,7 +539,7 @@
                     <li><i class="fas fa-chevron-right"></i> Quay dung video</li>
                 </ul>
             </div>
-           
+
             <div class="footer-section app-section">
                 <h3>Mobile</h3>
                 <div class="app-download">
@@ -567,8 +572,6 @@
                 heartIcon.style.color = '';
             }
         });
-
-
         // Xử lý xem thêm đánh giá
         document.querySelector('.show-more-btn').addEventListener('click', function() {
             alert('Chức năng xem thêm đánh giá sẽ tải các đánh giá bổ sung');
@@ -576,5 +579,3 @@
     </script>
 </body>
 </html>
-
-
