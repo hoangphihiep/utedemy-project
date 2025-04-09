@@ -1,0 +1,414 @@
+<!-- <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng kí làm giảng viên</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/utedemyProject/views/Css/teacherRegister.css">
+</head>
+<body>
+<header>
+<div class="logo">
+<img src="unica_logo.png" alt="Unica Logo">
+<span class="danh-muc">DANH MỤC</span>
+</div>
+<div class="search-bar">
+<input type="text" placeholder="Tìm khóa học, giảng viên...">
+<button type="submit">Q</button>
+</div>
+<div class="right-menu">
+<a href="#">Doanh nghiệp</a>
+<a href="#">Hội viên</a>
+<a href="#" class="main-button">Vào học</a>
+<a href="#"><img src="data:image/png;base64,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" alt="Yêu thích"></a>
+<a href="#"><img src="data:image/png;base64,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" alt="Giỏ hàng"></a>
+<img src="user_avatar.png" alt="Avatar" class="avatar">
+</div>
+</header>
+<div class="banner">
+    <div class="banner-content">
+      <h1>Hợp tác giảng dạy cùng Unica</h1>
+      <p>"MỖI CHÚNG TA ĐỀU CÓ MỘT SỨ MỆNH CHIA SẺ LẠI GIÁ TRỊ CHO THẾ HỆ SAU"</p>
+      <p class="author">- Nguyễn Trọng Thơ - CEO INET -</p>
+      <a href="#" class="button">TRỞ THÀNH GIẢNG VIÊN</a>
+    </div>
+  </div>
+
+
+<div class="video-container">
+    <video controls>
+    <source src="video.mp4" type="video/mp4">
+    Trình duyệt của bạn không hỗ trợ video HTML5.
+    </video>
+    <div class="video-info">
+    <div class="video-title">
+    <img src="unica_logo.png" alt="Unica Logo" class="logo">
+    <span>HỌC TỪ CHUYÊN GIA - Introduction</span>
+    </div>
+    <div class="video-actions">
+    <a href="#">Xem sau</a>
+    <a href="#">Chia sẻ</a>
+    </div>
+    </div>
+    <div class="video-overlay">
+    <p class="question-text">BẠN CÓ BIẾT</p>
+    <p class="question-text">HỌC Ở ĐÂU HIỆU QUẢ NHẤT</p>
+    <img src="question_mark.png" alt="Question Mark" class="question-mark">
+    </div>
+    </div>
+    <div class="banner2">
+        <div class="partner-student">
+          <div class="partner-box">
+            <img src="unica_logo.png" alt="Unica Logo">
+            <h2>UNICA PARTNER</h2>
+            <ul>
+              <li>- Chuyên gia</li>
+              <li>- Giảng viên</li>
+              <li>- Doanh nhân</li>
+            </ul>
+          </div>
+          <div class="mission-box">
+            <img src="unica_logo.png" alt="Unica Logo">
+            <h2>SỨ MỆNH</h2>
+            <p>Mang tri thức thực tiễn tới 10 triệu người dân Việt Nam</p>
+          </div>
+          <div class="student-box">
+            <img src="student_icon.png" alt="Student Icon">
+            <h2>UNICA STUDENT</h2>
+            <ul>
+              <li>- Lãnh đạo</li>
+              <li>- Người đi làm</li>
+              <li>- Học sinh, sinh viên</li>
+            </ul>
+          </div>
+        </div>
+        <div class="banner-content">
+            <p class="highlight-text">Unica là e-learning platform, là cổng kết nối các CHUYÊN GIA tới hàng triệu người dân Việt Nam.</p>
+            <p class="media">Các bài giảng được dưới dạng video giúp học viên có thể xem được bất kỳ khi nào, bất kỳ đâu.</p>
+          </div>
+      </div>
+
+
+      <div class="card">
+        <div class="card-title">5 LÝ DO NÊN GIẢNG DẠY TRÊN UNICA</div>
+       
+        <div class="benefits-container">
+            <div class="horizontal-container">
+                <div class="item">
+                  <div class="title">Làm 1 lần</div>
+                  <div class="detail">Bán n lần</div>
+                </div>
+                <div class="item">
+                  <div class="title">Quảng bá tới</div>
+                  <div class="detail">Hàng triệu học viên</div>
+                </div>
+                <div class="item">
+                  <div class="title">Chia sẻ lợi nhuận</div>
+                  <div class="detail">30%-100%</div>
+                </div>
+                <div class="item">
+                  <div class="title">Thanh toán trước ngày</div>
+                  <div class="detail">15 hàng tháng</div>
+                </div>
+              </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-title">AI NÊN ĐĂNG KÝ GIẢNG DẠY TRÊN UNICA.VN</div>
+       
+        <div class="target-item">Chuyên gia</div>
+        <div class="target-item">Giảng viên</div>
+        <div class="target-item">Doanh nhân</div>
+        <div class="target-item">Doanh nghiệp</div>
+       
+        <div class="note">
+            *Có trên 3 năm kinh nghiệm trong lĩnh vực muốn giảng dạy<br>
+            Kỹ năng trình bày lưu loát, dễ hiểu, ngôn ngữ cơ thể tốt.*
+        </div>
+    </div>
+
+
+    <div class="steps-banner">
+        <div class="banner-title">4 BƯỚC ĐỂ TRỞ THÀNH GIẢNG VIÊN UNICA</div>
+       
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">Bước 1</div>
+                <div class="step-content">Đăng ký giảng viên</div>
+            </div>
+           
+            <div class="step">
+                <div class="step-number">Bước 2</div>
+                <div class="step-content">Viết outline</div>
+            </div>
+           
+            <div class="step">
+                <div class="step-number">Bước 3</div>
+                <div class="step-content">Upload video</div>
+            </div>
+           
+            <div class="step">
+                <div class="step-number">Bước 4</div>
+                <div class="step-content">Launching khóa học</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="instructors-banner">
+        <div class="banner-title">HƠN 500 GIẢNG VIÊN ĐÃ CÓ KHÓA HỌC TRÊN UNICA</div>
+       
+        <div class="instructors-container">
+            <div class="instructor-card">
+                <div class="instructor-name">Hồ Ngọc Cương</div>
+                <div class="instructor-title">Giảng viên, Chuyên gia Facebook Marketing</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Hán Quang Dự</div>
+                <div class="instructor-title">Giám đốc đào tạo công ty GCC Việt Nam</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Nguyễn Trọng Thơ</div>
+                <div class="instructor-title">CEO MET, Marketing Online Master</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Richard Loc (Đinh Văn Lộc)</div>
+                <div class="instructor-title">Nhà đào tạo Internet Marketing - Chủ tịch OINET</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Hà Kế Tú</div>
+                <div class="instructor-title">Giảng viên Guitar - Youtuber nổi tiếng cộng đồng guitar Việt Nam</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Phạm Thành Long</div>
+                <div class="instructor-title">Luật sư - Diễn giả</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Phan Quốc Việt</div>
+                <div class="instructor-title">Diễn giả - CEO Tâm Việt Group</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Tuấn Hà</div>
+                <div class="instructor-title">Diễn giả - CEO Vinatrix, Đồng sáng lập và Chủ tịch VMCC</div>
+            </div>
+
+
+            <div class="instructor-card">
+                <div class="instructor-name">Bùi Đức Tiến</div>
+                <div class="instructor-title">Diễn giả - CEO VinTech, Đồng sáng lập và Chủ tịch VLC Group</div>
+            </div>
+
+
+            <div class="instructor-card">
+                <div class="instructor-name">Hồ Ngọc Cương</div>
+                <div class="instructor-title">Giảng viên, Chuyên gia Facebook Marketing</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Hán Quang Dự</div>
+                <div class="instructor-title">Giám đốc đào tạo công ty GCC Việt Nam</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Nguyễn Trọng Thơ</div>
+                <div class="instructor-title">CEO MET, Marketing Online Master</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Richard Loc (Đinh Văn Lộc)</div>
+                <div class="instructor-title">Nhà đào tạo Internet Marketing - Chủ tịch OINET</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Hà Kế Tú</div>
+                <div class="instructor-title">Giảng viên Guitar - Youtuber nổi tiếng cộng đồng guitar Việt Nam</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Phạm Thành Long</div>
+                <div class="instructor-title">Luật sư - Diễn giả</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Phan Quốc Việt</div>
+                <div class="instructor-title">Diễn giả - CEO Tâm Việt Group</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Tuấn Hà</div>
+                <div class="instructor-title">Diễn giả - CEO Vinatrix, Đồng sáng lập và Chủ tịch VMCC</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Bùi Đức Tiến</div>
+                <div class="instructor-title">Diễn giả - CEO VinTech, Đồng sáng lập và Chủ tịch VLC Group</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Lê Thẩm Dương</div>
+                <div class="instructor-title">Tiến sĩ Tài chính - Chuyên gia đào tạo</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Nguyễn Hoàng Khắc Hiếu</div>
+                <div class="instructor-title">Tiến sĩ Tâm lý học - Diễn giả nổi tiếng</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Trần Thị Minh Hà</div>
+                <div class="instructor-title">Chuyên gia Digital Marketing - CEO AdsViet</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Vũ Ngọc Anh</div>
+                <div class="instructor-title">Chuyên gia Content Marketing - Tác giả bestseller</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Đặng Trần Trung</div>
+                <div class="instructor-title">Chuyên gia Khởi nghiệp - Nhà đầu tư Shark Tank</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Nguyễn Đình Công</div>
+                <div class="instructor-title">Chuyên gia Bất động sản - CEO LandGroup</div>
+            </div>
+               
+            <div class="instructor-card">
+                <div class="instructor-name">Vũ Ngọc Anh</div>
+                <div class="instructor-title">Chuyên gia Content Marketing - Tác giả bestseller</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Đặng Trần Trung</div>
+                <div class="instructor-title">Chuyên gia Khởi nghiệp - Nhà đầu tư Shark Tank</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Nguyễn Đình Công</div>
+                <div class="instructor-title">Chuyên gia Bất động sản - CEO LandGroup</div>
+            </div>
+            <div class="instructor-card">
+                <div class="instructor-name">Vũ Ngọc Anh</div>
+                <div class="instructor-title">Chuyên gia Content Marketing - Tác giả bestseller</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Đặng Trần Trung</div>
+                <div class="instructor-title">Chuyên gia Khởi nghiệp - Nhà đầu tư Shark Tank</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Nguyễn Đình Công</div>
+                <div class="instructor-title">Chuyên gia Bất động sản - CEO LandGroup</div>
+            </div>
+            <div class="instructor-card">
+                <div class="instructor-name">Vũ Ngọc Anh</div>
+                <div class="instructor-title">Chuyên gia Content Marketing - Tác giả bestseller</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Đặng Trần Trung</div>
+                <div class="instructor-title">Chuyên gia Khởi nghiệp - Nhà đầu tư Shark Tank</div>
+            </div>
+           
+            <div class="instructor-card">
+                <div class="instructor-name">Nguyễn Đình Công</div>
+                <div class="instructor-title">Chuyên gia Bất động sản - CEO LandGroup</div>
+            </div>
+            <div class="instructor-card">
+                <div class="instructor-name">Vũ Ngọc Anh</div>
+                <div class="instructor-title">Chuyên gia Content Marketing - Tác giả bestseller</div>
+            </div>
+            <div class="instructor-card">
+                <div class="instructor-name">Vũ Ngọc Anh</div>
+                <div class="instructor-title">Chuyên gia Content Marketing - Tác giả bestseller</div>
+            </div>
+       </div>
+    </div>
+
+
+    <div class="registration-banner">
+        <h1 class="title">ĐĂNG KÝ ĐỂ TRỞ THÀNH GIẢNG VIÊN UNICA NGAY HÔM NAY</h1>
+       
+        <div class="registration-step">ĐĂNG KÝ GIẢNG VIÊN</div>
+        <div class="registration-detail">Bạn cần đăng ký tài khoản Unica</div>
+       
+        <div class="registration-hotline">HOTLINE: 0320902819</div>
+    </div>
+</body>
+<footer class="unica-footer">
+    <div class="footer-container">
+        <!-- Cột 1: Logo + Thông tin liên hệ -->
+        <div class="footer-col logo-col">
+            <img src="https://via.placeholder.com/120x40?text=UNICA" alt="Unica Logo" class="footer-logo">
+            <p class="footer-slogan">Học online cùng chuyên gia</p>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> Hotline 1: 9000568</p>
+                <p><i class="fas fa-phone"></i> Hotline 2: 099.488.8085</p>
+                <p><i class="fas fa-envelope"></i> Email: castp@unica.vn</p>
+                <p><i class="fas fa-clock"></i> 08000 - 17030, thứ 2 - thứ 7</p>
+            </div>
+        </div>
+
+
+        <!-- Cột 2: Về Unica -->
+        <div class="footer-col">
+            <h3 class="footer-title">Về Unica</h3>
+            <ul class="footer-links">
+                <li><i class="fas fa-chevron-right"></i> Giới thiệu về Unica</li>
+                <li><i class="fas fa-chevron-right"></i> Hướng dẫn sử dụng</li>
+                <li><i class="fas fa-chevron-right"></i> Kích hoạt khóa học</li>
+                <li><i class="fas fa-chevron-right"></i> Đóc chín sẻ</li>
+                <li><i class="fas fa-chevron-right"></i> Giấu khách đối với</li>
+                <li><i class="fas fa-chevron-right"></i> Chính sách bảo mật</li>
+            </ul>
+        </div>
+
+
+        <!-- Cột 3: Hợp tác -->
+        <div class="footer-col">
+            <h3 class="footer-title">Hợp tác</h3>
+            <ul class="footer-links">
+                <li><i class="fas fa-chevron-right"></i> Đăng ký giảng viên</li>
+                <li><i class="fas fa-chevron-right"></i> Giải pháp e-learning</li>
+                <li><i class="fas fa-chevron-right"></i> Đào tạo doanh nghiệp</li>
+                <li><i class="fas fa-chevron-right"></i> Đào tạo trìnhware</li>
+                <li><i class="fas fa-chevron-right"></i> Affiliate</li>
+                <li><i class="fas fa-chevron-right"></i> Quay gừng video</li>
+            </ul>
+        </div>
+
+
+        <!-- Cột 4: Mobile -->
+        <div class="header-section app-section">
+            <h3>Mobile</h3>
+            <div class="app-download">
+                <a href="#" class="app-link">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on App Store" class="app-logo">
+                </a>
+                <a href="#" class="app1-link">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" class="app-logo">
+                </a>
+            </div>
+        </div>
+    <!-- Footer bottom -->
+    <div class="footer-bottom">
+        <p>© Công ty cổ phần đào tạo trực tuyến Unica – 247 Cầu Giấy, P. Gòn Vọng, Q. Cầu Giấy, Tại Việt,</p>
+        <p>Sự điện; Ông Nguyễn Tuyng Trời | Mã số thuế; (trongbiorth có quá trị lời existent' means put his way)</p>
+    </div>
+</footer>
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</html>
+

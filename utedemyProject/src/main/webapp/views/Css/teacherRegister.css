@@ -1,0 +1,773 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #ffffff; /* Màu nền xám nhạt */
+  }
+
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px;
+    background-color: #f0f0f0; /* Màu nền xám nhạt */
+  }
+ 
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+ 
+  .logo img {
+    height: 30px; /* Điều chỉnh kích thước logo */
+    margin-right: 10px;
+  }
+ 
+  .danh-muc {
+    font-weight: bold;
+    color: #333; /* Màu chữ danh mục */
+  }
+ 
+  .search-bar {
+    display: flex;
+    border: 1px solid #ccc; /* Đường viền khung tìm kiếm */
+    border-radius: 5px;
+    overflow: hidden;
+  }
+ 
+  .search-bar input[type="text"] {
+    padding: 8px 400px;
+    border: none;
+    outline: none;
+    flex: 3;
+  }
+ 
+  search-bar button[type="submit"] {
+    padding: 8px 15px;
+    background-color: #ddd; /* Màu nền nút Q */
+    border: none;
+    cursor: pointer;
+  }
+ 
+  .right-menu {
+    display: flex;
+    align-items: center;
+  }
+ 
+  .right-menu a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #333;
+  }
+ 
+  .main-button {
+    background-color: blue; /* Màu nền nút Vào học */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+  }
+ 
+  .right-menu img {
+    height: 30px; /* Điều chỉnh kích thước icon */
+  }
+ 
+  .avatar {
+    width: 90px; /* Điều chỉnh kích thước avatar */
+    height: 90px;
+    border-radius: 40%;
+    margin-left: 40px;
+    margin-right: 50px;
+  }
+ 
+
+
+  .video-container {
+    position: relative;
+    width: 800px; /* Điều chỉnh chiều rộng container video */
+    margin: 50px auto; /* Căn giữa container */
+  }
+ 
+  video {
+    width: 100%;
+    display: block;
+  }
+ 
+  .video-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 20px);
+    color: white;
+  }
+ 
+  .video-title {
+    display: flex;
+    align-items: center;
+  }
+ 
+  .logo {
+    height: 30px; /* Điều chỉnh kích thước logo */
+    margin-right: 10px;
+  }
+ 
+  .video-actions a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+  }
+ 
+  .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ mờ */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+  }
+ 
+  .question-text {
+    font-size: 24px;
+    margin: 10px 0;
+  }
+ 
+  .question-mark {
+    height: 80px; /* Điều chỉnh kích thước dấu chấm hỏi */
+  }
+ 
+  .related-videos {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Nền đen mờ */
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+ 
+  .related-videos p {
+    margin: 0;
+  }
+ 
+  .thumbnail-list {
+    display: flex;
+    margin-left: 10px;
+  }
+ 
+  .thumbnail-list img {
+    height: 60px; /* Điều chỉnh kích thước thumbnail */
+    margin-right: 5px;
+  }
+ 
+  .close-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .banner {
+    background-image: url('data:image/jpeg;base64,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'); /* Thay thế bằng hình nền của bạn */
+    background-size: cover;
+    background-position: center;
+    height: 300px; /* Điều chỉnh chiều cao banner */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgb(217, 217, 218);
+    background-color: #4511be; /* Thêm màu nền xám */
+    width: 100%; /* Kéo dài banner ra full chiều ngang */
+    border-radius: 0; /* Loại bỏ bo tròn góc khung */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ */
+  }
+ 
+  .banner-content {
+    width: 80%; /* Điều chỉnh chiều rộng nội dung */
+    max-width: 800px;
+  }
+ 
+  .banner h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+ 
+  .banner p {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+ 
+  .author {
+    font-style: italic;
+    font-size: 16px;
+  }
+ 
+  .button {
+    background-color: #e53935; /* Màu nền nút */
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    margin-top: 30px;
+  }
+ 
+  .button:hover {
+    background-color: #d32f2f; /* Màu nền nút khi hover */
+  }
+
+
+  .banner2 {
+    width: 100%;
+    padding: 50px 0;
+    text-align: center;
+    background-color: #c0b9b9; /* Màu nền xám nhạt */
+  }
+ 
+  .banner2-content {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    transform: translate(-200px);
+}
+
+
+.banner2-content p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #333;
+}
+
+
+/* Thêm CSS cho phần highlight */
+.highlight-text {
+    font-weight: bold; /* Làm chữ in đậm */
+    text-align: center; /* Căn giữa text */
+    display: block; /* Để có thể căn giữa */
+    transform: translate(500px);
+}
+.media {
+    transform: translateX(500px); /* Di chuyển sang phải 50px */
+    /* Hoặc */
+    /* Hoặc kết hợp X và Y */
+}
+  .partner-student {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Cho phép các hộp xuống dòng khi không đủ chỗ */
+  }
+ 
+  .partner-box, .mission-box, .student-box {
+    background-color: #3498db; /* Màu nền xanh dương */
+    color: white;
+    padding: 20px;
+    margin: 10px; /* Thêm margin để tạo khoảng cách giữa các hộp */
+    width: 250px;
+    text-align: center;
+    border-radius: 5px;
+    flex-direction: column; /* Sắp xếp nội dung bên trong hộp theo chiều dọc */
+  }
+ 
+  .partner-box img, .mission-box img, .student-box img {
+    height: 50px;
+    margin-bottom: auto; /* Đẩy hình ảnh lên trên cùng */
+  }
+ 
+  .partner-box h2, .mission-box h2, .student-box h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+ 
+  .partner-box ul, .student-box ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px; /* Thêm margin để tạo khoảng cách với hình ảnh */
+  }
+ 
+  .partner-box li, .student-box li {
+    margin-bottom: 5px;
+  }
+ 
+  .mission-box p {
+    font-size: 16px;
+    margin-top: 15px; /* Thêm margin để tạo khoảng cách với hình ảnh */
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+}
+
+
+.card-title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #00070e;
+    margin-bottom: 0px;
+    margin-left: 600px;
+    padding-bottom: 10px;
+}
+
+
+.card-title2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #5a6e81;
+    margin-bottom: 0px;
+    margin-left: 50px;
+    margin-right: 300px;
+    padding-bottom: 10px;
+}
+
+
+
+
+.reasons-banner {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+
+.banner-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2a5885;
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+
+.reasons-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.reason-item {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 15px;
+    padding-left: 25px;
+    position: relative;
+}
+
+
+.reason-item:before {
+    content: "•";
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;
+    left: 5px;
+    top: -2px;
+}
+
+
+.highlight {
+    font-weight: bold;
+    color: #e74c3c;
+}
+.highlight {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+
+.note {
+    font-style: italic;
+    margin-top: 25px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #3498db;
+}
+
+
+.steps-banner {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 800px;
+    margin: 30px auto;
+    max-width: 8000px;
+
+
+}
+
+
+.banner-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2a5885;
+    margin-bottom: 30px;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+
+.steps-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+
+.step {
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+    padding: 20px 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+
+.step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+
+.step-number {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e74c3c;
+    margin-bottom: 10px;
+}
+
+
+.step-content {
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+
+@media (max-width: 768px) {
+    .steps-container {
+        flex-direction: column;
+    }
+   
+    .step {
+        min-width: 100%;
+    }
+}
+
+
+ 
+.instructors-banner {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 150px;
+    max-width: 900px;
+    margin: 50px auto;
+    max-width: 8000px;
+
+
+}
+
+
+.banner-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2a5885;
+    margin-bottom: 30px;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+
+.instructors-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+
+.instructor-card {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border-left: 4px solid #e74c3c;
+}
+
+
+.instructor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+
+.instructor-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2a5885;
+    margin-bottom: 8px;
+}
+
+
+.instructor-title {
+    font-size: 15px;
+    line-height: 1.4;
+    color: #555;
+}
+
+
+@media (max-width: 768px) {
+    .instructors-container {
+        grid-template-columns: 1fr;
+    }
+   
+    .banner-title {
+        font-size: 24px;
+    }
+}
+ 
+  .registration-banner {
+    background-color: #478fe2;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 8000px;
+    margin: 10px auto;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #ece5e4;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+
+.registration-step {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e4e6e7;
+    margin-bottom: 20px;
+    margin-right: 730px;
+    margin-left: 730px;
+    padding: 12px;
+    background-color: #8b1616;
+    border-radius: 6px;
+}
+
+
+.registration-detail {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+
+.registration-hotline {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e74c3c;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff4f4;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+
+@media (max-width: 800px) {
+    .registration-title {
+        font-size: 20px;
+    }
+   
+    .registration-step {
+        font-size: 16px;
+    }
+}
+
+
+.unica-footer {
+    background-color: #0e123f;
+    color: white;
+    padding: 40px 0 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+
+.footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+
+.footer-col {
+    min-width: 180px;
+}
+
+
+.logo-col {
+    flex: 0 0 250px;
+}
+
+
+.footer-logo {
+    width: 120px;
+    margin-bottom: 15px;
+}
+
+
+.footer-slogan {
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+}
+
+
+.contact-info p {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.footer-title {
+    font-size: 16px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.footer-links li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+
+
+.app-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.app-badges img {
+    width: 120px;
+    height: auto;
+}
+
+
+.app-text {
+    margin-top: 15px;
+    font-style: italic;
+}
+.app-download {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+
+.app-logo {
+    height: 40px;
+    object-fit: contain;
+    display: block;
+}
+
+
+
+
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    margin: 0 -10px;
+    font-size: 12px;
+    color: #aaa;
+    line-height: 2;
+    transform: translate(220px)
+}
+
+
+.footer-bottom p {
+    margin: 5px 10;
+}
+
+
+
+
+.fas {
+    font-size: 12px;
+}
+
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 50px;
+    }
+   
+    .footer-col {
+        min-width: 100%;
+    }
+}
+
+
+
