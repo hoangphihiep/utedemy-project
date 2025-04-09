@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = {"/user/addTarget","/user/add","/user/adBasicInformation", "/danhsachks/thichKS"})
+@WebServlet(urlPatterns = {"/user/addTarget","/user/add","/user/adBasicInformation", "/danhsachks/thichKS","/user/homepage"})
 public class HomeController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -28,6 +28,10 @@ public class HomeController extends HttpServlet {
 		else if (url.contains("/user/adBasicInformation")) 
 		{
 			req.getRequestDispatcher("/views/teacher/adBasicInformation.jsp").forward(req, resp);
+		}
+		else if (url.contains("/user/homepage"))
+		{
+			req.getRequestDispatcher("/views/user/homepage.jsp").forward(req, resp);
 		}
 		
 	}

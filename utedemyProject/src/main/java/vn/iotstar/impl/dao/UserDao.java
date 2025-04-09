@@ -9,6 +9,26 @@ import vn.iotstar.dao.IUserDao;
 import vn.iotstar.entity.User;
 
 public class UserDao implements IUserDao {
+	
+	
+	@Override
+	public void insert(User user) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+
+	    try {
+	        trans.begin();
+	        em.persist(user);
+	        trans.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	    } finally {
+	        em.close();
+	    }
+	}
 
 	@Override
 	public boolean checkExistEmail(String email) {
@@ -18,6 +38,21 @@ public class UserDao implements IUserDao {
 	        TypedQuery<Long> query = enma.createQuery(
 	            "SELECT COUNT(u) FROM User u WHERE u.email = :email", Long.class);
 	        query.setParameter("email", email);
+	        Long count = query.getSingleResult();
+	        return count > 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	@Override
+	public boolean checkExistPhoneNumber(String phonenumber) {
+		EntityManager enma = JPAConfig.getEntityManager();
+		//EntityTransaction trans = enma.getTransaction();
+		try {
+	        TypedQuery<Long> query = enma.createQuery(
+	            "SELECT COUNT(u) FROM User u WHERE u.phoneNumber = :phoneNumber", Long.class);
+	        query.setParameter("phoneNumber", phonenumber);
 	        Long count = query.getSingleResult();
 	        return count > 0;
 	    } catch (Exception e) {

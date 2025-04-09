@@ -3,9 +3,14 @@ package vn.iotstar.controller.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.time.LocalDate;
 
 import org.json.JSONObject;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,14 +18,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.iotstar.impl.service.EmailService;
+import vn.iotstar.impl.service.RoleService;
 import vn.iotstar.impl.service.UserService;
+import vn.iotstar.service.IRoleService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.utils.AESUtil;
+import vn.iotstar.configs.JPAConfig;
+import vn.iotstar.entity.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @WebServlet(urlPatterns = {"/user/verifyOTP","/user/deleteOTP","/user/resendOTP"})
 public class verifyOTPController extends HttpServlet{
 
 	IUserService userService = new UserService();
+	IRoleService roleService = new RoleService();
 	public EmailService emailService = new EmailService();
 	private static final long serialVersionUID = 1L;
 
@@ -46,6 +60,8 @@ public class verifyOTPController extends HttpServlet{
 			
 			String email = req.getParameter("email");
 			
+			
+			
 			System.out.println ("Người dùng nhập: " + otpCode);
 	        System.out.println ("gmail của người dùng: " + email);
 	        
@@ -57,7 +73,49 @@ public class verifyOTPController extends HttpServlet{
 	            
 	            if (!isOtpAttemptsExceeded(req.getSession(), 5)) {
 	                if (verifyOTP(req.getSession(), otpCode)) {
+	                	
+	                	// register controller gọi sang verify controller
+	                	String fullname_register = (String) req.getSession().getAttribute("fullname");
+	                	String password_register =  (String) req.getSession().getAttribute("password");
+	                	String email_register =  (String) req.getSession().getAttribute("email");
+	                	String phone_register =  (String) req.getSession().getAttribute("phone");
+	                	String confirmPassword_register = (String) req.getSession().getAttribute("confirmPassword");
+	                	
+	                	//neu cac session khoong null thi cai nay la dang ki
 	                    System.out.println("Nhập mã OTP thành công");
+	                    
+	                    if (fullname_register != null && !fullname_register.isEmpty() &&
+	                    	    password_register != null && !password_register.isEmpty() &&
+	                    	    email_register != null && !email_register.isEmpty() &&
+	                    	    phone_register != null && !phone_register.isEmpty()) {
+	                    	    
+	                    	    boolean success_register = deleteOTP(req.getSession());
+	                    	    
+	                    	    if (success_register) {
+	                    	          // add user vào database
+	                    	    	try {
+										String password_register_encrypted = AESUtil.encrypt(password_register);
+									
+								        Role userRole = roleService.getDefaultUserRole();
+										
+										User user_added = new User();
+										user_added.setFullname(fullname_register);
+										user_added.setEmail(email_register);
+										user_added.setPassword(password_register_encrypted);
+										user_added.setPhoneNumber(phone_register);
+										
+										userService.insert(user_added);
+										session.setAttribute("user_added", user_added);
+										
+										resp.sendRedirect("/utedemyProject/user/homepage");
+										
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+	                    	    }
+	                    	}
+	                    
 	                    boolean success = deleteOTP(req.getSession()); 
 	                    if (success) {
 	                    	out.print("{\"success\": true, \"redirectUrl\": \"" + req.getContextPath() + "/user/forgotPassword\"}");
