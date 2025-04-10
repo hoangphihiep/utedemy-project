@@ -91,7 +91,7 @@ public class RegisterController extends HttpServlet {
 			}
 			
 			//call otp controller 
-	String otpCode = emailService.generateOTP();
+			String otpCode = emailService.generateOTP();
         	
         	session.setAttribute("otp_code", otpCode);
             session.setAttribute("email", email);  // Lưu email vào session

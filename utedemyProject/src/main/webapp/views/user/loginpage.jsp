@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -27,8 +28,23 @@
             <div class="login-header">
                 <h2>ĐĂNG NHẬP</h2>
             </div>
-            
-            <form id="loginForm" action="login.jsp" method="post">
+            <c:if test="${not empty alert}">
+               <div class="alert-error">${alert}</div>
+           </c:if>
+            <c:if test="${param.error == 'empty'}">
+              <div class="alert-error">
+                  Vui lòng điền đầy đủ email và mật khẩu.
+              </div>
+            </c:if>
+
+             <c:if test="${param.error == 'invalid'}">
+                 <div class="alert-error">Định dạng email hoặc số điện thoại không hợp lệ.</div>
+            </c:if>
+
+              <c:if test="${param.error == 'wrong'}">
+                  <div class="alert-error">Email/số điện thoại hoặc mật khẩu không đúng.</div>
+              </c:if>            
+            <form id="loginForm" action="/utedemyProject/login" method="post">
                 <div class="form-group">
                     <label for="email">EMAIL / SỐ ĐIỆN THOẠI</label>
                     <input type="text" id="email" name="email" placeholder="Email / Số điện thoại" required>

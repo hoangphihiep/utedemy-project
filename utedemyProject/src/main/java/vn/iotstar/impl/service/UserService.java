@@ -1,6 +1,9 @@
 package vn.iotstar.impl.service;
 
+import java.util.Set;
+
 import vn.iotstar.dao.IUserDao;
+import vn.iotstar.entity.Role;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.dao.UserDao;
 import vn.iotstar.service.IUserService;
@@ -66,6 +69,36 @@ public class UserService implements IUserService {
 	    // Match pattern like: 091 234 56 78
 	    String regex = "^0\\d{2}\\s\\d{3}\\s\\d{2}\\s\\d{2}$";
 	    return phone.matches(regex);
+	}
+	@Override
+	public boolean authenticateUserByEmailAndPassword(String email, String password) {
+		  User user = userDao.findByEmailAndPassword(email, password);
+		  return user != null;
+	}
+	@Override
+	public boolean authenticateUserByPhoneAndPassword(String phone, String password) {
+		  User user = userDao.findByPhoneAndPassword(phone, password);
+		  return user != null;
+	}
+	@Override
+    public User findByEmailAndPassword(String email,String password) {
+		 User user = userDao.findByEmailAndPassword(email, password);
+    	 return user;
+     }
+	@Override
+	public User findByPhoneAndPassword(String phone, String password) {
+		 User user = userDao.findByPhoneAndPassword(phone, password);
+    	 return user;
+	}
+	@Override
+	public User findById(int id) {
+		 User user = userDao.findById(id);
+    	 return user;
+	}
+	@Override
+	public Set<Role> getRolesByUserId(int userId){
+		Set<Role> roles = userDao.getRolesByUserId(userId);
+		return roles;
 	}
 
 }

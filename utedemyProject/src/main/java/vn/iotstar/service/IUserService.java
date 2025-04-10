@@ -1,5 +1,8 @@
 package vn.iotstar.service;
 
+import java.util.Set;
+
+import vn.iotstar.entity.Role;
 import vn.iotstar.entity.User;
 
 public interface IUserService {
@@ -18,5 +21,17 @@ public interface IUserService {
 	
 	public boolean checkFormatPhone(String phone);
 	
+	public boolean authenticateUserByEmailAndPassword(String email, String password);
+	
+	public boolean authenticateUserByPhoneAndPassword(String phone, String password);
+	
 	public void insert(User user);
+	
+	public User findByEmailAndPassword(String email,String password);
+	
+	public User findByPhoneAndPassword(String phone, String password);
+	
+	public User findById(int id);
+
+	Set<Role> getRolesByUserId(int userId);
 }

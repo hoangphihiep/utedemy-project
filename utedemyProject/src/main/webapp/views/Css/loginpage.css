@@ -269,3 +269,13 @@
             align-items: center;
             padding-top: 60px;
         }
+        .alert-error {
+    color: #fff;
+    background-color: #e74c3c;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+        
