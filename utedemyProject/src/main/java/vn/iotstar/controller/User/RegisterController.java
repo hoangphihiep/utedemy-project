@@ -107,8 +107,7 @@ public class RegisterController extends HttpServlet {
         	}
         	 
         	req.setAttribute("email", email);
-			RequestDispatcher dispatcher = req.getRequestDispatcher("/views/user/verifyOTP.jsp");
-			dispatcher.forward(req, resp);
+        	req.getRequestDispatcher("/views/user/verifyOTP.jsp").forward(req, resp);
 				
 		}
 		
