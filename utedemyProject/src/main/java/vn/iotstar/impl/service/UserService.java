@@ -1,7 +1,5 @@
 package vn.iotstar.impl.service;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.Set;
 import vn.iotstar.dao.IUserDao;
 import vn.iotstar.entity.Role;
@@ -112,36 +110,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean updateUserInformation(int userId, String fullname, String email, String phone, String address, String birthdate, String gender) {
-        try {
-            User user = userDao.findById(userId);
-            if (user == null) {
-                return false;
-            }
-
-            user.setFullname(fullname);
-            user.setEmail(email);
-            user.setPhoneNumber(phone);
-            user.setAddress(address);
-            user.setGender(gender);
-
-            if (birthdate != null && !birthdate.trim().isEmpty()) {
-                try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    dateFormat.setLenient(false);
-                    java.util.Date parsedDate = dateFormat.parse(birthdate);
-                    user.setDateOfBirth(new Date(parsedDate.getTime()));
-                } catch (Exception e) {
-                    return false;
-                }
-            } else {
-                user.setDateOfBirth(null);
-            }
-
-            return userDao.updateUserInformation(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public boolean updateUserInformation(User user) {
+    	return userDao.updateUserInformation(user);
     }
 }

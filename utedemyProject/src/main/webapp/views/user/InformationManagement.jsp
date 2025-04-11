@@ -17,13 +17,19 @@
         </div>
         
         <form action="${pageContext.request.contextPath}/user/InformationManagement" method="post" enctype="multipart/form-data">
+        <input type="file" id="profileImageInput" name="profileImage" style="display: none;" accept="image/*">
         <div class="profile-container">
+        	<c:if test="${user.avatarUrl.substring(0,5) != 'https' }">
+			      <c:url value="/image?fname=${user.avatarUrl}" var="imgUrl"></c:url>
+			  </c:if> 
+			  <c:if test="${user.avatarUrl.substring(0,5) == 'https' }">
+			      <c:url value="${user.avatarUrl }" var="imgUrl"></c:url>
+			  </c:if>
+			  <img id="previewImage" height="150" width="200" src="${imgUrl}" />
     		<div class="profile-image">
-        	Unica
-        	<div class="camera-icon">📷</div>
+        		Unica
+        		<div class="camera-icon">📷</div>
     		</div>
-    		<!-- Add hidden file input -->
-    		<input type="file" id="profileImageInput" name="profileImage" accept="image/*" style="display: none;">
 		</div>
         
         <!-- Hiển thị thông báo nếu có -->
@@ -90,5 +96,6 @@
             </div>
         </form>
     </div>
+ 
 </body>
 </html>
