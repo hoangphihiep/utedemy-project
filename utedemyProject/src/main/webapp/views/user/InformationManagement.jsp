@@ -18,15 +18,34 @@
         
         <form action="${pageContext.request.contextPath}/user/InformationManagement" method="post" enctype="multipart/form-data">
 	        <div class="profile-container">
-	  			<div class="profile-image" id="profileImage">
+			  <div class="profile-image-container">
+			    <div class="profile-image" id="profileImage">
 			      <c:if test="${not empty user.avatarUrl}">
-					  <c:url value="/image?fname=${user.avatarUrl}" var="imgUrl"></c:url>
-						<!-- Để debug -->
-						<img id="previewImage" src="${imgUrl}" style="width:100px; height:auto; display:block;" alt="Debug image">
-						
-					</c:if>
+			        <c:url value="/image?fname=${user.avatarUrl}" var="imgUrl"></c:url>
+			        <img id="previewImage" src="${imgUrl}" alt="Ảnh hồ sơ">
+			      </c:if>
+			      <c:if test="${empty user.avatarUrl}">
+			        <div class="profile-placeholder">
+			          <i class="profile-icon">👤</i>
+			        </div>
+			      </c:if>
+			    </div>
+			    <div class="upload-overlay">
+			      <i class="upload-icon">📷</i>
+			    </div>
 			  </div>
-  			  <input type="file" id="images1" name="profileImage" accept="image/*" onchange="previewFile()"><br>
+			  
+			  <div class="upload-controls">
+			    <label for="images1" class="custom-file-upload">
+			      <i class="upload-button-icon">📂</i> Chọn ảnh
+			    </label>
+			    <input type="file" id="images1" name="profileImage" accept="image/*" onchange="previewFile()">
+			    
+			    <div class="url-input-container">
+			      <input type="text" id="imageUrl" placeholder="Hoặc nhập URL ảnh" class="image-url-input">
+			      <button onclick="updateImageFromLink()" class="url-button">Cập nhật</button>
+			    </div>
+			  </div>
 			</div>
 			
 
