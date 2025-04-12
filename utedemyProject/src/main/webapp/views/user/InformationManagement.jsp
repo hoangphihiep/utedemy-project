@@ -17,20 +17,19 @@
         </div>
         
         <form action="${pageContext.request.contextPath}/user/InformationManagement" method="post" enctype="multipart/form-data">
-        <input type="file" id="profileImageInput" name="profileImage" style="display: none;" accept="image/*">
-        <div class="profile-container">
-        	<c:if test="${user.avatarUrl.substring(0,5) != 'https' }">
-			      <c:url value="/image?fname=${user.avatarUrl}" var="imgUrl"></c:url>
-			  </c:if> 
-			  <c:if test="${user.avatarUrl.substring(0,5) == 'https' }">
-			      <c:url value="${user.avatarUrl }" var="imgUrl"></c:url>
-			  </c:if>
-			  <img id="previewImage" height="150" width="200" src="${imgUrl}" />
-    		<div class="profile-image">
-        		Unica
-        		<div class="camera-icon">📷</div>
-    		</div>
-		</div>
+	        <div class="profile-container">
+	  			<div class="profile-image" id="profileImage">
+			      <c:if test="${not empty user.avatarUrl}">
+					  <c:url value="/image?fname=${user.avatarUrl}" var="imgUrl"></c:url>
+						<!-- Để debug -->
+						<img id="previewImage" src="${imgUrl}" style="width:100px; height:auto; display:block;" alt="Debug image">
+						
+					</c:if>
+			  </div>
+  			  <input type="file" id="images1" name="profileImage" accept="image/*" onchange="previewFile()"><br>
+			</div>
+			
+
         
         <!-- Hiển thị thông báo nếu có -->
         <c:if test="${not empty message}">
@@ -96,6 +95,35 @@
             </div>
         </form>
     </div>
- 
+    <script>
+    function previewFile() {
+      const preview = document.getElementById('previewImage');
+      const file = document.getElementById('images1').files[0];
+      const reader = new FileReader();
+
+      reader.onloadend = function () {
+        preview.src = reader.result; // Gán hình ảnh đã được upload vào src
+      }
+
+      if (file) {
+        reader.readAsDataURL(file); // Chuyển đổi file thành URL để hiển thị
+      } else {
+        // Giữ lại hình ảnh hiện tại nếu không có file được chọn
+        preview.src = "${imgUrl}";
+      }
+    }
+
+    function updateImageFromLink() {
+      const linkInput = document.getElementById('images').value;
+      const preview = document.getElementById('previewImage');
+      
+      // Nếu link không rỗng, hiển thị ảnh từ link
+      if (linkInput) {
+        preview.src = linkInput;
+      } else {
+        preview.src = "${imgUrl}"; // Nếu không có link, giữ hình ảnh cũ
+      }
+    }
+  </script>
 </body>
 </html>

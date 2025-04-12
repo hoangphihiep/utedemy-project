@@ -30,11 +30,6 @@ public class InformationManagementController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private IUserService userService = new UserService();
-    
-    @Override
-    public void init() throws ServletException {
-        Constant.initUploadDirectory(getServletContext());
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -82,13 +77,13 @@ public class InformationManagementController extends HttpServlet {
 			
             Part filePart = req.getPart("profileImage");
             if (filePart.getSize() > 0) {
-				String filename = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-				int index = filename.lastIndexOf(".");
-				System.out.println (filename);
-				String ext = filename.substring(index + 1);
-				fname = System.currentTimeMillis() + "." + ext;
+            	String filename = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+    			int index = filename.lastIndexOf(".");
+    			System.out.println (filename);
+    			String ext = filename.substring(index + 1);
+    			fname = System.currentTimeMillis() + "." + ext;
 
-				filePart.write(uploadPath + fname);
+    			filePart.write(uploadPath + "/" + fname);
 				
 				User user = userService.findById(userId);
 				user.setFullname(fullname);
