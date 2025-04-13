@@ -2,13 +2,14 @@ package vn.iotstar.controller.Teacher;
 
 import java.io.IOException;
 
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = {"/teacher/addTarget","/teacher/add","/teacher/adBasicInformation"})
+@WebServlet(urlPatterns = {"/teacher/addTarget","/teacher/addLessonQuiz","/teacher/adBasicInformation"})
 public class HomeController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

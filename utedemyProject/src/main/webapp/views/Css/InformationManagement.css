@@ -48,16 +48,17 @@
 
         .profile-image {
             width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 10px;
-            position: relative;
-            color: #999;
-            font-size: 24px;
+			  height: 100px;
+			  border-radius: 50%;
+			  background-color: #e0e0e0;
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  margin-bottom: 10px;
+			  position: relative;
+			  color: #999;
+			  font-size: 24px;
+			  overflow: hidden;
         }
 
         .camera-icon {
@@ -73,7 +74,17 @@
             align-items: center;
             cursor: pointer;
             border: 1px solid #ddd;
+            z-index: 10;
         }
+        
+        .profile-image-background {
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  border-radius: 50%;
+		}
 
         .form-group {
             margin-bottom: 15px;
