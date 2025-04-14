@@ -158,7 +158,33 @@ public class UserDao implements IUserDao {
 	        em.close(); // Đóng sau khi dữ liệu đã được load
 	    }
 	}
+	@Override
+    public void update(User user) {
+        EntityManager em = JPAConfig.getEntityManager();
+        EntityTransaction trans = em.getTransaction();
 
+        try {
+            trans.begin();
+            em.merge(user);
+            trans.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (trans.isActive()) {
+                trans.rollback();
+            }
+        } finally {
+            em.close();
+        }
+    }
 
-	
+    @Override
+    public boolean updateUserInformation(User user) {
+        try {
+            update(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

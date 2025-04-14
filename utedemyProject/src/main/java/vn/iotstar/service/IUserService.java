@@ -34,4 +34,8 @@ public interface IUserService {
 	public User findById(int id);
 
 	Set<Role> getRolesByUserId(int userId);
+
+	User getUserById(int userId);
+
+    boolean updateUserInformation(User use);
 }

@@ -21,5 +21,9 @@ public interface IUserDao {
 	public User findById(int id);
 
 	Set<Role> getRolesByUserId(int userId);
+
+	void update(User user);
+
+    boolean updateUserInformation(User user);
 	
 }

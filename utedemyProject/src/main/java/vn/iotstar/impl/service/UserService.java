@@ -100,5 +100,14 @@ public class UserService implements IUserService {
 		Set<Role> roles = userDao.getRolesByUserId(userId);
 		return roles;
 	}
+	 @Override
+    public User getUserById(int userId) {
+        return userDao.findById(userId);
+    }
+
+    @Override
+    public boolean updateUserInformation(User user) {
+    	return userDao.updateUserInformation(user);
+    }
 
 }

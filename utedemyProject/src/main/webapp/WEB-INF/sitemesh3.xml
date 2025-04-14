@@ -3,4 +3,6 @@
 	<mapping path="/teacher/addTarget" name="teacher" decorator="addCourse.jsp" />
 	<mapping path="/teacher/add" name="teacher" decorator="addCourse.jsp" />
 	<mapping path="/teacher/adBasicInformation" name="teacher" decorator="addCourse.jsp" />
+	<mapping path="/teacher/homePage" name="teacher" decorator="teacher.jsp" />
+	<mapping path="/admin/homePage" name="admin" decorator="admin.jsp" />
 </sitemesh>

@@ -45,6 +45,7 @@ public class verifyOTPController extends HttpServlet{
 		resp.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
 		
+		System.out.println ("Có vào đây");
 		if (url.contains("/user/verifyOTP")) 
 		{
 			// Kiểm tra xem có phải là request AJAX không
@@ -79,7 +80,6 @@ public class verifyOTPController extends HttpServlet{
 	                	String password_register =  (String) req.getSession().getAttribute("password");
 	                	String email_register =  (String) req.getSession().getAttribute("email");
 	                	String phone_register =  (String) req.getSession().getAttribute("phone");
-	                	String confirmPassword_register = (String) req.getSession().getAttribute("confirmPassword");
 	                	
 	                	//neu cac session khoong null thi cai nay la dang ki
 	                    System.out.println("Nhập mã OTP thành công");
@@ -89,37 +89,39 @@ public class verifyOTPController extends HttpServlet{
 	                    	    email_register != null && !email_register.isEmpty() &&
 	                    	    phone_register != null && !phone_register.isEmpty()) {
 	                    	    
-	                    	    boolean success_register = deleteOTP(req.getSession());
-	                    	    
-	                    	    if (success_register) {
-	                    	          // add user vào database
-	                    	    	try {
-										String password_register_encrypted = AESUtil.encrypt(password_register);
-									
-								        Role userRole = roleService.getDefaultUserRole();
-										
-										User user_added = new User();
-										user_added.setFullname(fullname_register);
-										user_added.setEmail(email_register);
-										user_added.setPassword(password_register_encrypted);
-										user_added.setPhoneNumber(phone_register);
-										
-										userService.insert(user_added);
-										session.setAttribute("user_added", user_added);
-										
-										resp.sendRedirect("/utedemyProject/user/homepage");
-										
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-	                    	    }
-	                    	}
-	                    
-	                    boolean success = deleteOTP(req.getSession()); 
-	                    if (success) {
-	                    	out.print("{\"success\": true, \"redirectUrl\": \"" + req.getContextPath() + "/user/forgotPassword\"}");
-	                    }      
+	                    	String encryptedPassword = null;
+	                		try {
+	                			encryptedPassword = AESUtil.encrypt(password_register);
+	                		} catch (Exception e) {
+	                			// TODO Auto-generated catch block
+	                			e.printStackTrace();
+	                		}
+								
+						    //Role userRole = roleService.getDefaultUserRole();
+								
+							User user_added = new User();
+							user_added.setAvatarUrl("default-avatar.png");
+							user_added.setFullname(fullname_register);
+							user_added.setEmail(email_register);
+							user_added.setPassword(encryptedPassword);
+							user_added.setPhoneNumber(phone_register);
+							
+							System.out.println("username: " + user_added.getFullname());
+							userService.insert(user_added);
+							session.setAttribute("user_added", user_added);
+							
+							boolean success = deleteOTP(req.getSession()); 
+		                    if (success) {
+		                    	out.print("{\"success\": true, \"redirectUrl\": \"" + req.getContextPath() + "/user/homepage\"}");
+		                    }  	
+	                    }
+	                    else {
+	                        // This is for password reset or other OTP verifications
+	                        boolean success = deleteOTP(req.getSession()); 
+	                        if (success) {
+	                            out.print("{\"success\": true, \"redirectUrl\": \"" + req.getContextPath() + "/user/forgotPassword\"}");
+	                        }
+	                    }     
 	                } else {
 	                    updateOtpAttempts(req.getSession());
 	                    System.out.println("Nhập mã OTP thất bại, nhập lại");
@@ -250,6 +252,7 @@ public class verifyOTPController extends HttpServlet{
 	// Phương thức xác thực OTP
 	public boolean verifyOTP(HttpSession session, String submittedOtp) {
 	    String storedOtp = (String) session.getAttribute("otp_code");
+	    System.out.println("Mã OTP của hệ thống: " + storedOtp);
 	    Long lastSendTime = (Long) session.getAttribute("last_send_time");
 	    
 	    if (storedOtp == null || lastSendTime == null) {
