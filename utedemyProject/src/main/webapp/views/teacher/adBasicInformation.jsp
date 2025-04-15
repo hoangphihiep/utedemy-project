@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="vi">
 <body>
@@ -14,45 +15,25 @@
 				<label class="form-label">Tiêu đề khóa học <span
 					class="required">*</span></label> <input type="text" class="form-input"
 					value="Thành Thạo Excel Từ Cơ Bản Đến Nâng Cao">
-				<div class="char-count">21</div>
 				<div class="form-hint">Tiêu đề của bạn không những phải thu
 					hút sự chú ý, chứa nhiều thông tin mà còn được tối ưu hóa để dễ tìm
 					kiếm</div>
 			</div>
 
 			<div class="form-group">
-				<label class="form-label">Tên khóa học (tiếng Anh, để cấp
-					chứng chỉ)</label> <input type="text" class="form-input">
-				<div class="char-count">60</div>
-			</div>
-
-			<div class="form-group">
 				<label class="form-label">Mô tả ngắn <span class="required">*</span></label>
 				<textarea class="form-input" rows="5"></textarea>
-				<div class="char-count">120</div>
 			</div>
 			
 			<div class="form-row">
-				<div class="form-column">
-					<label class="form-label">Thể loại <span class="required">*</span></label>
-					<select class="dropdown">
-						<option>Tin Học Văn Phòng</option>
-					</select>
-				</div>
-		
-				<div class="form-column">
-					<label class="form-label">Danh mục con <span class="required">*</span></label>
-					<select class="dropdown">
-						<option></option>
-					</select>
-				</div>
-		
-				<div class="form-column">
-					<label class="form-label">Tags <span class="required">*</span></label>
-					<select class="dropdown">
-						<option></option>
-					</select>
-				</div>
+			    <div class="form-column">
+			        <label class="form-label">Thể loại <span class="required">*</span></label>
+			        <select class="dropdown" name="courseTypeId">
+			            <c:forEach items="${listCourseType}" var="type">
+			                <option value="${type.id}" ${courseType.id == type.id ? 'selected' : ''}>${type.name}</option>
+			            </c:forEach>
+			        </select>
+			    </div>
 			</div>
 			<!-- Phần giới thiệu khóa học mới được thêm vào -->
 			<div class="form-group">

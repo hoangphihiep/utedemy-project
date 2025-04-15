@@ -11,15 +11,13 @@
 
 			<div id="objectiveItemsContainer" class="objective-items-container">
 				<div class="objective-item">
-					<div class="objective-text">Ví dụ: Xác định mục tiêu và quản
-						lý công việc</div>
+					<div class="objective-text">Ví dụ: Xác định mục tiêu và quản lý công việc</div>
 					<div class="counter">120</div>
 					<div class="delete-button" onclick="deleteItem(this)">🗑️</div>
 				</div>
 
 				<div class="objective-item">
-					<div class="objective-text">Ví dụ: Dự tính ngân sách và tiền
-						đồ</div>
+					<div class="objective-text">Ví dụ: Dự tính ngân sách và tiền đồ</div>
 					<div class="counter">120</div>
 					<div class="delete-button" onclick="deleteItem(this)">🗑️</div>
 				</div>
@@ -31,8 +29,7 @@
 				</div>
 
 				<div class="objective-item">
-					<div class="objective-text">Ví dụ: Nâng cao hiệu quả công
-						việc với phương pháp quản lý đội nhóm</div>
+					<div class="objective-text">Ví dụ: Nâng cao hiệu quả công việc với phương pháp quản lý đội nhóm</div>
 					<div class="counter">120</div>
 					<div class="delete-button" onclick="deleteItem(this)">🗑️</div>
 				</div>
@@ -56,8 +53,7 @@
 					</button>
 					<button class="toolbar-button">≡</button>
 				</div>
-				<div class="editor-content">Ví dụ: Những người đang kinh doanh
-					online,...</div>
+				<div class="editor-content">Ví dụ: Những người đang kinh doanh online,...</div>
 			</div>
 
 			<div class="section-title">Chào mừng học viên tham gia khóa học</div>
@@ -73,8 +69,7 @@
 					</button>
 					<button class="toolbar-button">≡</button>
 				</div>
-				<div class="editor-content">Ví dụ: Chào mừng các bạn đến với
-					khóa học...</div>
+				<div class="editor-content">Ví dụ: Chào mừng các bạn đến với khóa học...</div>
 			</div>
 		</div>
 	</div>

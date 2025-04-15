@@ -23,14 +23,15 @@
 	<div class="container">
 		<div class="sidebar">
 			<div class="sidebar-menu">
-				<a href="/utedemyProject/teacher/addTarget" class="sidebar-item"
-					style="display: inline-block; text-decoration: none;"> <span>Mục
-						tiêu khóa học</span>
-				</a> <a href="/utedemyProject/teacher/adBasicInformation"
+				<a href="/utedemyProject/teacher/adBasicInformation"
 					class="sidebar-item"
 					style="display: inline-block; text-decoration: none;"> <span>Thông
 						tin cơ bản</span>
-				</a> <a href="/utedemyProject/teacher/add" class="sidebar-item"
+				</a>
+				<a href="/utedemyProject/teacher/addTarget" class="sidebar-item"
+					style="display: inline-block; text-decoration: none;"> <span>Mục
+						tiêu khóa học</span>
+				</a>  <a href="/utedemyProject/teacher/add" class="sidebar-item"
 					style="display: inline-block; text-decoration: none;"> <span>Danh
 						sách bài học</span>
 				</a>

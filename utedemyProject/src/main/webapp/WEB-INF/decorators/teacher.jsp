@@ -228,9 +228,98 @@
             margin-left: 20px;
             font-size: 14px;
         }
+        
+         /* Modal Styles */
+	    .modal {
+	        display: none;
+	        position: fixed;
+	        top: 0;
+	        left: 0;
+	        width: 100%;
+	        height: 100%;
+	        background-color: rgba(0,0,0,0.5);
+	        z-index: 1000;
+	        justify-content: center;
+	        align-items: center;
+	    }
+	    .modal-content {
+	        background-color: #f5f5f5;
+	        width: 800px;
+	        max-width: 90%;
+	        border-radius: 5px;
+	        padding: 20px;
+	    }
+	    .modal-title {
+	        font-size: 24px;
+	        margin-bottom: 20px;
+	        margin-top: 20px;
+	    }
+	    .form-group {
+	        margin-bottom: 20px;
+	    }
+	    .form-label {
+	        display: block;
+	        font-weight: bold;
+	        margin-bottom: 5px;
+	    }
+	    .form-hint {
+	        font-size: 12px;
+	        color: #666;
+	        margin-bottom: 8px;
+	    }
+	    .form-input {
+	        width: 100%;
+	        padding: 10px;
+	        border: 1px solid #ddd;
+	        border-radius: 4px;
+	        font-size: 16px;
+	    }
+	    .form-select {
+	        width: 100%;
+	        padding: 10px;
+	        border: 1px solid #ddd;
+	        border-radius: 4px;
+	        font-size: 16px;
+	        appearance: none;
+	        background-image: url('data:image/svg+xml;utf8,<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+	        background-repeat: no-repeat;
+	        background-position: right 10px center;
+	    }
+	    .btn-create-course {
+	        background-color: #0088cc;
+	        color: white;
+	        padding: 10px 20px;
+	        border: none;
+	        border-radius: 4px;
+	        float: right;
+	        cursor: pointer;
+	    }
     </style>
 </head>
 <body>
+	<header class="header">
+        <div class="instructor-info">
+            <div class="instructor-name">Giảng viên : Thảo Chu</div>
+            <div class="instructor-id">ID: 580184</div>
+        </div>
+        <div class="support-info">
+            <p>Hỗ trợ giảng viên</p>
+            <p>HOTLINE: 0329802918</p>
+            <p>EMAIL: teacher@unica.vn</p>
+        </div>
+    </header>
+
+    <nav class="nav-menu">
+        <ul>
+            <li class="active">Bài giảng</li>
+            <li>Học viên</li>
+            <li>Học tập</li>
+            <li>Coupon</li>
+            <li>Đơn hàng</li>
+            <li>Thu nhập</li>
+            <li>Hồ sơ</li>
+        </ul>
+    </nav>
 	<div class="container">
 		<div class="main-content">
 			<sitemesh:write property="body" />
