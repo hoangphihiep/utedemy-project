@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -760,18 +761,25 @@ header nav ul li:hover::after {
     gap: 5px;
 }
 
+
 .stars {
-    display: inline-block;
-    font-size: 18px;
-    font-family: Arial, sans-serif;
-    color: #FFD700; /* Màu vàng */
-    position: relative;
+  --rating: 0;
+  --star-size: 20px;
+  display: inline-block;
+  font-size: var(--star-size);
+  font-family: Times; 
+  line-height: 1;
+  position: relative;
 }
 
 .stars::before {
-    content: "★★★★★"; /* Hiển thị 5 ngôi sao */
-    letter-spacing: 3px;
+  content: '★★★★★';
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, gold calc(var(--rating) / 5 * 100%), #ccc calc(var(--rating) / 5 * 100%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+
 
 .stars::after {
     content: "★★★★★";
@@ -785,7 +793,7 @@ header nav ul li:hover::after {
     color: #FFD700; /* Màu vàng */
 }
 .header-container {
-    background-color: var(--white);
+    background-color: var(white);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
@@ -809,11 +817,15 @@ header nav ul li:hover::after {
 }
 
 .unica-logo {
-    color: var(--primary-blue);
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 15px;
+    display: flex;
+    align-items: left;
 }
+
+.logo-circle {
+    height: 36px; 
+    width: auto;
+    margin-right: 30px;
+    }
 
 /* Category Button */
 .category-btn {
@@ -925,18 +937,6 @@ header nav ul li:hover::after {
     color: #e74c3c; /* Bright red */
     background-color: rgba(255, 255, 255, 0.2); /* Subtle background on hover */
 }
-
-.logo-section {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-.unica-logo {
-    font-weight: bold;
-    font-size: 24px;
-    color: #2e86de;
-    margin-right: 15px;
-}
 .category-btn {
     background-color: #f5f5f5;
     border: none;
@@ -1023,14 +1023,61 @@ header nav ul li:hover::after {
 
 .menu-item:hover .submenu {
     display: block;
+    
+    
 }
+
+.course-badge {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 4px;
+  margin-left: auto;
+}
+
+.course-pricing {
+	display: flex;
+	align-items: center;
+	gap: 8px; /* khoảng cách giữa các phần tử giá */
+	flex-wrap: wrap;
+	margin: 8px 0;
+}
+
+.real-price {
+	font-size: 20px;
+	font-weight: 700;
+	color: #e53935; /* đỏ nổi bật */
+}
+
+.product-price {
+	font-size: 16px;
+	color: #888;
+	text-decoration: line-through;
+}
+
+.product-discount {
+	font-size: 14px;
+	color: #027a3e;
+	background-color: #e1f7e7;
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-weight: 500;
+}
+
+
+
     </style>
 </head>
 <body>
     <header class="header-container">
         <div class="top-bar">
             <div class="logo-section">
-                <span class="unica-logo">unica</span>
+                <a href="#" class="unica-logo">
+					<img src="https://unica.vn/media/img/logo-unica.svg" alt="Unica Logo" class="logo-circle" id="logoImg">
+				</a>
                 <button class="category-btn">
                     <i class="fas fa-th-large"></i> DANH MỤC
                 </button>
@@ -1174,17 +1221,17 @@ header nav ul li:hover::after {
             </div>
         </nav>
 
-        <section class="top-courses" aria-labelledby="top-courses-title">
-            <h3 id="top-courses-title">TOP BÁN CHẠY</h3>
-            <div class="course-grid" aria-live="polite"></div>
-        </section>
+          <section class="top-courses" aria-labelledby="bestseller-title"> 
+			  <h3 id="bestseller-title">TOP BÁN CHẠY</h3>
+			  <div id="bestseller-courses" class="course-grid" aria-live="polite"></div>
+			</section>
 
-          <section class="bestseller-courses" aria-labelledby="bestseller-title">
-        <h3 id="bestseller-title">SIÊU ƯU ĐÃI HÔM NAY</h3>
-        <div id="bestseller-courses" class="bestseller-grid" aria-live="polite">
-            <!-- Courses will be dynamically inserted here -->
-        </div>
-    </section>
+			
+			<section class="top-courses" aria-labelledby="today-sale-title">
+			  <h3 id="today-sale-title">SIÊU ƯU ĐÃI HÔM NAY</h3>
+			  <div id="today-sale-courses" class="course-grid" aria-live="polite"></div>
+			</section>
+
 
        <section class="topics-of-interest" aria-labelledby="topics-title">
     <h3 id="topics-title">CHỦ ĐỀ CÓ THỂ BẠN QUAN TÂM</h3>
@@ -1271,87 +1318,38 @@ header nav ul li:hover::after {
             }
         ];
         const bestsellerCourses = [
+            <c:forEach var="course" items="${bestSellerCourses}" varStatus="status">
             {
-                title: 'Khóa học Digital Marketing toàn diện',
-                instructor: 'Trần Đăng Khoa',
-                rating: 4.9,
-                reviews: 256,
-                price: 499000,
-                originalPrice: 1200000,
-                image: '/api/placeholder/300/200',
-                badge: 'Bestseller'
-            },
-            {
-                title: 'Photoshop từ cơ bản đến chuyên nghiệp',
-                instructor: 'Phạm Văn Minh',
-                rating: 4.7,
-                reviews: 189,
-                price: 349000,
-                originalPrice: 900000,
-                image: '/api/placeholder/300/200',
-                badge: 'Hot'
-            },
-            {
-                title: 'Viết content marketing hiệu quả',
-                instructor: 'Nguyễn Thị Hương',
-                rating: 4.6,
-                reviews: 145,
-                price: 299000,
-                originalPrice: 750000,
-                image: '/api/placeholder/300/200',
-                badge: 'Mới'
-            },
-            {
-                title: 'Quản trị chi phí doanh nghiệp',
-                instructor: 'Lê Văn Tuấn',
-                rating: 4.8,
-                reviews: 98,
-                price: 399000,
-                originalPrice: 1000000,
-                image: '/api/placeholder/300/200',
-                badge: 'Giảm giá'
-            }
+                id: ${status.index},
+                title: "${course[0]}",
+                instructor: "${course[1]}",
+                rating: ${course[2] != null ? course[2] : 0},
+                reviews: 0,
+                price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số
+                originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
+                image: "${course[4] != null ? course[4] : '/api/placeholder/300/200'}",
+        	    badge: "Bán chạy"
+            }<c:if test="${!status.last}">,</c:if>
+            </c:forEach>
         ];
 
 
-        const topCourses = [
-            {
-                title: 'Nhập môn cờ vua cho người mới bắt đầu',
-                instructor: 'Từ Hoàng Thông',
-                rating: 4.7,
-                reviews: 38,
-                price: 299000,
-                originalPrice: 600000,
-                image: '/api/placeholder/300/200'
-            },
-            {
-                title: 'Học Autocad cơ bản và nâng cao',
-                instructor: 'Cẩm Hải Phương',
-                rating: 4.5,
-                reviews: 98,
-                price: 299000,
-                originalPrice: 800000,
-                image: '/api/placeholder/300/200'
-            },
-            {
-                title: 'Trọn bộ kỹ thuật xoa bóp cho người mới bắt đầu',
-                instructor: 'Bác sĩ Lê Hải',
-                rating: 4.8,
-                reviews: 39,
-                price: 249000,
-                originalPrice: 800000,
-                image: '/api/placeholder/300/200'
-            },
-            {
-                title: 'Y học dinh dưỡng thực tiễn',
-                instructor: 'Trần Thanh Toàn',
-                rating: 4.2,
-                reviews: 35,
-                price: 299000,
-                originalPrice: 1000000,
-                image: '/api/placeholder/300/200'
-            }
-        ];
+        const todaySaleCourses = [
+        	  <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
+        	  {
+        	    id: ${status.index},
+        	    title: "${course[0]}",
+        	    instructor: "${course[1]}",
+        	    rating: ${course[2] != null ? course[2] : 0},
+        	    reviews: 0,
+                price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số
+                originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
+        	    image: "${course[4] != null ? course[4] : '/api/placeholder/300/200'}",
+        	    badge: "Giảm ${course[5]}%"
+        	  }<c:if test="${!status.last}">,</c:if>
+        	  </c:forEach>
+        	];
+
 
         const bannerSlides = [
             {
@@ -1415,61 +1413,66 @@ header nav ul li:hover::after {
             });
         }
         
-        function renderTopCourses() {
-            const grid = document.querySelector('.course-grid');
-            if (!grid) return;
-            
-            grid.innerHTML = '';
-            
-            topCourses.forEach(course => {
-                let card = document.createElement('div');
-                card.classList.add('course-card');
+        function renderTodaySaleCourses() {
+        	  const container = document.getElementById('today-sale-courses');
+        	  if (!container) return;
+
+        	  container.innerHTML = '';
+
+        	  todaySaleCourses.forEach(course => {
+        	    let card = document.createElement('div');
+        	    card.classList.add('course-card');
+
+        	    let img = document.createElement('img');
+        	    img.src = course.image;
+        	    img.alt = course.title;
+
+        	    let content = document.createElement('div');
+        	    content.classList.add('course-card-content');
+
+        	    let title = document.createElement('h4');
+        	    title.textContent = course.title;
+
+        	    let instructor = document.createElement('p');
+        	    instructor.textContent = course.instructor;
+
+        	    let ratingContainer = document.createElement('div');
+        	    ratingContainer.classList.add('course-rating');
+
+        	    let stars = document.createElement('div');
+        	    stars.classList.add('stars');
+        	    stars.style.setProperty('--rating', course.rating);
+
+        	    let reviews = document.createElement('span');
+        	    let ratingValue = Number(course.rating);
+        	    reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
+
+        	    let pricing = document.createElement('div');
+        	    pricing.classList.add('course-pricing');
                 
-                let img = document.createElement('img');
-                img.src = course.image;
-                img.alt = course.title;
+        	    let currentPrice = document.createElement('span');
+        	    currentPrice.classList.add('real-price');
+        	    currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
+
+        	    let originalPrice = document.createElement('span');
+        	    originalPrice.classList.add('product-price');
+        	    originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
+
+                let badge = document.createElement('div');
+                badge.classList.add('course-badge');
+                badge.textContent = course.badge;
                 
-                let content = document.createElement('div');
-                content.classList.add('course-card-content');
-                
-                let title = document.createElement('h4');
-                title.textContent = course.title;
-                
-                let instructor = document.createElement('p');
-                instructor.textContent = course.instructor;
-                
-                let ratingContainer = document.createElement('div');
-                ratingContainer.classList.add('course-rating');
-                
-                let stars = document.createElement('div');
-                stars.classList.add('stars');
-                stars.style.setProperty('--rating', course.rating);
-                
-                let reviews = document.createElement('span');
-                reviews.textContent = `(${course.reviews} đánh giá)`;
-                
-                let pricing = document.createElement('div');
-                pricing.classList.add('course-pricing');
-                
-                let currentPrice = document.createElement('span');
-                currentPrice.classList.add('current-price');
-                currentPrice.textContent = `${course.price.toLocaleString()}đ`;
-                
-                let originalPrice = document.createElement('span');
-                originalPrice.classList.add('original-price');
-                originalPrice.textContent = `${course.originalPrice.toLocaleString()}đ`;
-                
-                let detailsBtn = document.createElement('button');
-                detailsBtn.classList.add('details-btn');
-                detailsBtn.textContent = 'Xem chi tiết';
-                
-                ratingContainer.append(stars, reviews);
-                pricing.append(currentPrice, originalPrice);
-                content.append(title, instructor, ratingContainer, pricing, detailsBtn);
-                card.append(img, content);
-                grid.appendChild(card);
-            });
-        }
+        	    let detailsBtn = document.createElement('button');
+        	    detailsBtn.classList.add('details-btn');
+        	    detailsBtn.textContent = 'Xem chi tiết';
+
+        	    ratingContainer.append(stars, reviews);
+        	    pricing.append(currentPrice, originalPrice, badge);
+        	    content.append(title, instructor, ratingContainer, pricing, detailsBtn);
+        	    card.append(img, content);
+        	    container.appendChild(card);
+        	  });
+        	}
         
         function renderBestsellerCourses() {
             const container = document.getElementById('bestseller-courses');
@@ -1500,40 +1503,64 @@ header nav ul li:hover::after {
                 let stars = document.createElement('div');
                 stars.classList.add('stars');
                 stars.style.setProperty('--rating', course.rating);
-                
+
                 let reviews = document.createElement('span');
-                reviews.textContent = `(${course.reviews} đánh giá)`;
+                let ratingValue = Number(course.rating);
+                reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
                 
                 let pricing = document.createElement('div');
-                pricing.classList.add('course-pricing');
+        	    pricing.classList.add('course-pricing');
                 
-                let currentPrice = document.createElement('span');
-                currentPrice.classList.add('current-price');
-                currentPrice.textContent = `${course.price.toLocaleString()}đ`;
-                
-                let originalPrice = document.createElement('span');
-                originalPrice.classList.add('original-price');
-                originalPrice.textContent = `${course.originalPrice.toLocaleString()}đ`;
+        	    let currentPrice = document.createElement('span');
+        	    currentPrice.classList.add('real-price');
+        	    currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
+
+        	    let originalPrice = document.createElement('span');
+        	    originalPrice.classList.add('product-price');
+        	    originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
+
+                let badge = document.createElement('div');
+                badge.classList.add('course-badge');
+                badge.textContent = course.badge;
                 
                 let detailsBtn = document.createElement('button');
                 detailsBtn.classList.add('details-btn');
                 detailsBtn.textContent = 'Xem chi tiết';
                 
                 ratingContainer.append(stars, reviews);
-                pricing.append(currentPrice, originalPrice);
+        	    pricing.append(currentPrice, originalPrice, badge);
                 content.append(title, instructor, ratingContainer, pricing, detailsBtn);
                 card.append(img, content);
                 container.appendChild(card);
+            });
+        }
+
+        function formatPrices(className) {
+            var elements = document.querySelectorAll('.' + className);
+            elements.forEach(function(element) {
+                var value = element.innerText;
+                value = value.replace('₫', '').trim();
+                if (!isNaN(value)) {
+                    value = Number(value).toLocaleString('vi-VN') + '₫';
+                    element.innerText = value;
+                }
             });
         }
         
         // Gọi các hàm render khi DOM được load
         window.addEventListener('DOMContentLoaded', () => {
             renderBannerSlides();
-            renderTopCourses();
+            renderTodaySaleCourses();
             renderBestsellerCourses();
+            renderTodaySaleCourses();
+            formatPrices('real-price');
+            formatPrices('product-price');
         });    
-
+        
+        window.onload = function() {
+            renderBestsellerCourses();
+            renderTodaySaleCourses();
+        };
 
         function initializeSlider() {
             const sliderContent = document.querySelector('.slider-content');
@@ -1576,7 +1603,7 @@ header nav ul li:hover::after {
             }
 
             function prevSlide() {
-                goToSlide(currentSlide - 1);
+                goToSlide(currentSlide - 1);1
             }
 
             // Auto slide
@@ -1606,7 +1633,7 @@ header nav ul li:hover::after {
 
         // Render components
         renderBannerSlides();
-        renderTopCourses();
+        renderTodaySaleCourses();
         renderFeaturedInstructors();
         renderBestsellerCourses();
         initializeSlider();

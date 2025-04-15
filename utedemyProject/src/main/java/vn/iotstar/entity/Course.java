@@ -71,7 +71,7 @@ public class Course implements Serializable {
     private Set<FavoriteCourse> favoriteCourse = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "courses")
-    private Set<Voucher> vouchers = new HashSet<>();
+    private Set<Voucher> voucher = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "courses", cascade = CascadeType.ALL)
     private Set<Cart> cart = new HashSet<>();
