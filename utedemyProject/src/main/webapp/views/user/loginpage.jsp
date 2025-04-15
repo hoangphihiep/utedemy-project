@@ -7,9 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unica - Đăng Nhập</title>
-   </head>
     <link rel="stylesheet" href="/utedemyProject/views/Css/loginpage.css">
-</head>
 </head>
 <body>
     <!-- Network background effect -->
@@ -28,22 +26,18 @@
             <div class="login-header">
                 <h2>ĐĂNG NHẬP</h2>
             </div>
+
             <c:if test="${not empty alert}">
-               <div class="alert-error">${alert}</div>
-           </c:if>
-            <c:if test="${param.error == 'empty'}">
-              <div class="alert-error">
-                  Vui lòng điền đầy đủ email và mật khẩu.
-              </div>
+                <div class="alert-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                    </svg>
+                    ${alert}
+                </div>
+                <c:remove var="alert" scope="session" />
             </c:if>
 
-             <c:if test="${param.error == 'invalid'}">
-                 <div class="alert-error">Định dạng email hoặc số điện thoại không hợp lệ.</div>
-            </c:if>
-
-              <c:if test="${param.error == 'wrong'}">
-                  <div class="alert-error">Email/số điện thoại hoặc mật khẩu không đúng.</div>
-              </c:if>            
             <form id="loginForm" action="/utedemyProject/login" method="post">
                 <div class="form-group">
                     <label for="email">EMAIL / SỐ ĐIỆN THOẠI</label>
@@ -77,7 +71,6 @@
                     </div>
                 </div>
             </form>
-           
         </div>
     </div>
 
@@ -86,7 +79,7 @@
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const passwordToggle = document.querySelector('.password-toggle');
-            
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 passwordToggle.innerHTML = `
@@ -106,28 +99,38 @@
                 `;
             }
         }
-        
+
         // Form validation
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            
+
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-            
+
             if (email === '' || password === '') {
                 alert('Vui lòng điền đầy đủ thông tin đăng nhập');
                 return;
             }
-            
-            // In a real application, this would be an AJAX request or form submission
-            // For now, we'll just simulate submission
-            console.log('Form submitted:', { email, password });
-            
-            // Submit the form to the server
+
+            // Gửi form
             this.submit();
         });
-        
-        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertError = document.querySelector('.alert-error');
+            if (alertError) {
+                alertError.classList.add('shake');
+
+                setTimeout(function() {
+                    alertError.style.opacity = '0';
+                    alertError.style.transition = 'opacity 0.5s ease';
+
+                    setTimeout(function() {
+                        alertError.remove();
+                    }, 500);
+                }, 5000);
+            }
+        });
     </script>
 </body>
 </html>

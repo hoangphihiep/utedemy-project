@@ -66,6 +66,8 @@ public class LoginController extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+        System.out.println("test"+password);
         
         boolean isRememberMe = false;
         String remember = req.getParameter("remember");
@@ -75,8 +77,9 @@ public class LoginController extends HttpServlet {
         }
         
         if (input.isEmpty() || password.isEmpty()) {
-        	 resp.sendRedirect("/utedemyProject/views/user/loginpage.jsp?error=empty");
-        	 return;
+        	session.setAttribute("alert", "Email/số điện thoại hoặc mật khẩu chưa nhập");
+        	resp.sendRedirect("/utedemyProject/views/user/loginpage.jsp");
+        	return;
         }
         
      // Xác định loại tài khoản người dùng nhập vào
@@ -84,7 +87,8 @@ public class LoginController extends HttpServlet {
         boolean isPhone = input.matches("^0\\d{9,10}$"); // Ví dụ số VN 10-11 số bắt đầu bằng 0
 
         if (!isEmail && !isPhone) {
-            resp.sendRedirect("/utedemyProject/views/user/loginpage.jsp?error=invalid");
+        	session.setAttribute("alert", "Email/số điện thoại sai định dạng");
+            resp.sendRedirect("/utedemyProject/views/user/loginpage.jsp");
             return;
         }
         
@@ -111,11 +115,13 @@ public class LoginController extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/waiting");
             } else {
                 // Tài khoản bị khóa
-                resp.sendRedirect(req.getContextPath() + "/views/user/loginpage.jsp?alert=locked");
+            	session.setAttribute("alert", "Tài khoản của bạn bị khóa");
+                resp.sendRedirect(req.getContextPath() + "/views/user/loginpage.jsp");
             }
         } else {
             // Sai tài khoản hoặc mật khẩu
-            resp.sendRedirect(req.getContextPath() + "/views/user/loginpage.jsp?alert=wrong");
+        	session.setAttribute("alert", "Nhập sai tài khoản hoặc mật khẩu");
+            resp.sendRedirect(req.getContextPath() + "/views/user/loginpage.jsp");
         }
 
 	}
