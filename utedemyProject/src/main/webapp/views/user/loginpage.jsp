@@ -65,9 +65,9 @@
                 <button type="submit" class="login-btn">ĐĂNG NHẬP</button>
                 
                 <div class="login-footer">
-                    <a href="forgot-password.jsp">Quên mật khẩu?</a>
+                    <a href="/utedemyProject/views/user/forgotPassword.jsp">Quên mật khẩu?</a>
                     <div>
-                        Bạn chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a>
+                        Bạn chưa có tài khoản? <a href="/utedemyProject/user/register">Đăng ký ngay</a>
                     </div>
                 </div>
             </form>

@@ -23,6 +23,7 @@ import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IRoleService;
 import vn.iotstar.service.IUserService;
 import vn.iotstar.utils.AESUtil;
+import vn.iotstar.utils.RoleUtil;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.entity.*;
 
@@ -97,7 +98,7 @@ public class verifyOTPController extends HttpServlet{
 	                			e.printStackTrace();
 	                		}
 								
-						    //Role userRole = roleService.getDefaultUserRole();
+						    Role userRole = roleService.getDefaultUserRole();
 								
 							User user_added = new User();
 							user_added.setAvatarUrl("default-avatar.png");
@@ -105,6 +106,8 @@ public class verifyOTPController extends HttpServlet{
 							user_added.setEmail(email_register);
 							user_added.setPassword(encryptedPassword);
 							user_added.setPhoneNumber(phone_register);
+							user_added.addRole(userRole);
+							user_added.setActive(true);
 							
 							System.out.println("username: " + user_added.getFullname());
 							userService.insert(user_added);

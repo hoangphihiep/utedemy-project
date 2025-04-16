@@ -35,12 +35,16 @@ public class WaitingController extends HttpServlet {
 			Set<Role> roles = user_service.getRolesByUserId(u.getId());
 			System.out.println("User roles: " + roles);
 			 int roleId = 0;
+			 // nếu user là teacher thì lấy role teacher
 
-			for (Role role : roles) {
-			    roleId = role.getId();
-			    String roleName = role.getName();
-			    System.out.println("session Role ID: " + roleId + ", Name: " + roleName);
-			}
+			 for (Role role : roles) {
+			     if (role.getId() == 2) {
+			    	 roleId = 2;
+			         break;
+			     } else if (role.getId() == 1 && roleId == 0) {
+			    	 roleId = 1;
+			     }
+			 }
 			
 		 	if (roleId == RoleUtil.ADMIN) {
 		 		System.out.println("session User là admin");

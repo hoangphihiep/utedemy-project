@@ -80,8 +80,8 @@
                 <button type="submit" class="register-btn">ĐĂNG KÝ</button>
                 
                 <div class="form-footer">
-                    <a href="forgot-password.jsp">Quên mật khẩu?</a>
-                    <a href="login.jsp">Đăng nhập</a>
+                    <a href="/utedemyProject/views/user/forgotPassword.jsp">Quên mật khẩu?</a>
+                    <a href="/utedemyProject/login">Đăng nhập</a>
                 </div>
             </form>
         </div>
