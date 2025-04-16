@@ -1317,38 +1317,36 @@ header nav ul li:hover::after {
                 image: '/api/placeholder/200/200'
             }
         ];
+        
         const bestsellerCourses = [
             <c:forEach var="course" items="${bestSellerCourses}" varStatus="status">
-            {
+            <c:out value="{" escapeXml="false"/>
+                id: <c:out value="${status.index}" />,
+                title: "<c:out value='${course[0]}'/>",
+                instructor: "<c:out value='${course[1]}'/>",
+                rating: ${course[2] != null ? course[2] : 0},
+                price: ${course[3] != null ? course[3] : 0},
+                originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
+                image: "<c:out value='${course[4] != null ? course[4] : "/api/placeholder/300/200"}'/>",
+                badge: "Bán chạy"
+            <c:out value="}" escapeXml="false"/><c:if test="${!status.last}">,</c:if>
+            </c:forEach>
+        ];
+
+        const todaySaleCourses = [
+            <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
+            <c:out value="{" escapeXml="false"/>
                 id: ${status.index},
                 title: "${course[0]}",
                 instructor: "${course[1]}",
                 rating: ${course[2] != null ? course[2] : 0},
-                reviews: 0,
                 price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số
                 originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
                 image: "${course[4] != null ? course[4] : '/api/placeholder/300/200'}",
-        	    badge: "Bán chạy"
-            }<c:if test="${!status.last}">,</c:if>
+                badge: "Giảm ${course[5]}%"
+            <c:out value="}" escapeXml="false"/><c:if test="${!status.last}">,</c:if>
             </c:forEach>
         ];
-
-
-        const todaySaleCourses = [
-        	  <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
-        	  {
-        	    id: ${status.index},
-        	    title: "${course[0]}",
-        	    instructor: "${course[1]}",
-        	    rating: ${course[2] != null ? course[2] : 0},
-        	    reviews: 0,
-                price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số
-                originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
-        	    image: "${course[4] != null ? course[4] : '/api/placeholder/300/200'}",
-        	    badge: "Giảm ${course[5]}%"
-        	  }<c:if test="${!status.last}">,</c:if>
-        	  </c:forEach>
-        	];
 
 
         const bannerSlides = [
