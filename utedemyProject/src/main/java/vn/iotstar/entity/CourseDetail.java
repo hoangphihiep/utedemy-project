@@ -36,14 +36,17 @@ public class CourseDetail implements Serializable {
 	@OneToMany(mappedBy = "courseDetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Target> courseTarget = new HashSet<>();
 	
-	@Column(name = "description", nullable = false, length = 1000)
+	@Column(name = "description", length = 1000)
 	private String description;
 
-	@Column(name = "courseIntroduction", nullable = false, length = 1000)
+	@Column(name = "course_introduction",length = 1000)
 	private String courseIntroduction;
 
-	@Column(name = "courseImage", nullable = false, length = 255)
+	@Column(name = "course_image", length = 255)
 	private String courseImage;
+	
+	@Column(name = "course_video", length = 255)
+	private String courseVideo;
 	
 	@OneToOne(mappedBy = "courseDetail")
     private Course course;

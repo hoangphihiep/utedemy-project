@@ -2,25 +2,36 @@ package vn.iotstar.controller.Teacher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.service.ICourseService;
 
+@MultipartConfig(
+	    fileSizeThreshold = 1024 * 1024, // 1 MB
+	    maxFileSize = 1024 * 1024 * 10,  // 10 MB
+	    maxRequestSize = 1024 * 1024 * 15 // 15 MB
+	)
 @WebServlet(urlPatterns = {"/teacher/homePage","/teacher/addTarget","/teacher/addCourse","/teacher/add","/teacher/adBasicInformation","/teacher/addLessonQuiz"})
 public class HomeController extends HttpServlet {
 
@@ -104,7 +115,37 @@ public class HomeController extends HttpServlet {
 		}
 		else if (url.contains("/teacher/adBasicInformation")) 
 		{
-			
+			// Set response type
+	        resp.setContentType("application/json");
+	        PrintWriter out = resp.getWriter();
+	        
+	        try {
+
+	            // Extract values from JSON
+	        	String courseTitle = req.getParameter("courseTitle");
+	            String shortDescription = req.getParameter("shortDescription");
+	            String courseTypeId = req.getParameter("courseTypeId");
+	            String coursePrice = req.getParameter("coursePrice");
+	            String courseIntroduction = req.getParameter("courseIntroduction");
+	            String videoLink = req.getParameter("videoLink");
+	            Part filePart = req.getPart("courseImage");
+	            String filename = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+	            // Get course ID from session
+	            //int id = (Integer)session.getAttribute("courseId");
+	            
+	            // Create or update course in database
+	            System.out.println("Tên khóa học: " + courseTitle);
+	            System.out.println("Mô tả ngắn: " + shortDescription);
+	            System.out.println("Loại khóa học: " + courseTypeId);
+	            System.out.println ("Giá khóa học: " + coursePrice);
+	            System.out.println ("Giới thiệu khóa học: " + courseIntroduction);
+	            System.out.println ("Anh khóa học: " + filename);
+	            System.out.println ("Video khóa học: " + videoLink);
+	            
+	        } catch (Exception e) {
+	            // Log the error
+	            e.printStackTrace();
+	        }
 		}
 		else if (url.contains("/teacher/addTarget")) 
 		{

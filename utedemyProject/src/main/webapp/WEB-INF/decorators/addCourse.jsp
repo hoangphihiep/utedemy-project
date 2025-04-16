@@ -93,35 +93,65 @@
 		        // Gửi dữ liệu đến server qua AJAX
 		        sendDataToServer('/utedemyProject/teacher/addTarget', targetData);
 		    }
-		    // Có thể thêm các điều kiện cho các trang khác ở đây
+		 	// Nếu đang ở trang thông tin cơ bản khóa học
+			if (currentPath.includes('/teacher/adBasicInformation')) {
+				// Create FormData object to handle file uploads and form data together
+				  const formData = new FormData();
+				  
+				  // Add text fields to FormData
+				  formData.append("courseTitle", document.querySelector('input[name="courseTitle"]').value);
+				  formData.append("shortDescription", document.querySelector('textarea.form-input').value);
+				  formData.append("courseTypeId", document.querySelector('select[name="courseTypeId"]').value);
+				  formData.append("coursePrice", document.querySelector('input[name="courseName"]').value);
+				  formData.append("courseIntroduction", document.querySelector('.editor-content').textContent || "");
+				  formData.append("videoLink", document.querySelector('.video-upload-container .form-input').value || "");
+				  
+				  // Get the file input and append file if one was selected
+				  const fileInput = document.getElementById('imageUpload');
+				  formData.append("courseImage", fileInput.files[0]);
+				  
+				  // Log data for debugging (note: can't easily log FormData contents)
+				  console.log("Form data created with all fields including possible file upload");
+				  
+				  // Send FormData to server (need to modify the sendDataToServer function)
+				  sendDataToServer('/utedemyProject/teacher/adBasicInformation', formData);
+			}
 		}
+		
 	
-		// Hàm gửi dữ liệu đến server
 		function sendDataToServer(url, data) {
-		    // Tạo request
-		    const xhr = new XMLHttpRequest();
-		    xhr.open('POST', url, true);
-		    xhr.setRequestHeader('Content-Type', 'application/json');
-		    
-		    // Xử lý phản hồi
-		    xhr.onload = function() {
-		        if (xhr.status >= 200 && xhr.status < 300) {
-		            // Thành công
-		            alert('Đã lưu thành công!');
-		        } else {
-		            // Lỗi
-		            alert('Lỗi khi lưu: ' + xhr.statusText);
-		        }
-		    };
-		    
-		    // Xử lý lỗi mạng
-		    xhr.onerror = function() {
-		        alert('Lỗi kết nối đến máy chủ!');
-		    };
-		    
-		    // Gửi dữ liệu
-		    xhr.send(JSON.stringify(data));
-		}
+			  // Tạo request
+			  const xhr = new XMLHttpRequest();
+			  xhr.open('POST', url, true);
+			  
+			  // Không đặt header nếu data là FormData
+			  if (!(data instanceof FormData)) {
+			    xhr.setRequestHeader('Content-Type', 'application/json');
+			  }
+			  
+			  // Xử lý phản hồi
+			  xhr.onload = function() {
+			    if (xhr.status >= 200 && xhr.status < 300) {
+			      // Thành công
+			      alert('Đã lưu thành công!');
+			    } else {
+			      // Lỗi
+			      alert('Lỗi khi lưu: ' + xhr.statusText);
+			    }
+			  };
+			  
+			  // Xử lý lỗi mạng
+			  xhr.onerror = function() {
+			    alert('Lỗi kết nối đến máy chủ!');
+			  };
+			  
+			  // Gửi dữ liệu (nếu là FormData thì gửi trực tiếp, nếu không thì chuyển sang JSON)
+			  if (data instanceof FormData) {
+			    xhr.send(data);
+			  } else {
+			    xhr.send(JSON.stringify(data));
+			  }
+			}
 	</script>
 </body>
 </html>
