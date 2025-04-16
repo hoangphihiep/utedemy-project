@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -761,16 +763,21 @@ header nav ul li:hover::after {
 }
 
 .stars {
-    display: inline-block;
-    font-size: 18px;
-    font-family: Arial, sans-serif;
-    color: #FFD700; /* Màu vàng */
-    position: relative;
+    --rating: 0;
+  --star-size: 20px;
+  display: inline-block;
+  font-size: var(--star-size);
+  font-family: Times; 
+  line-height: 1;
+  position: relative;
 }
 
 .stars::before {
-    content: "★★★★★"; /* Hiển thị 5 ngôi sao */
-    letter-spacing: 3px;
+    content: '★★★★★';
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, gold calc(var(--rating) / 5 * 100%), #ccc calc(var(--rating) / 5 * 100%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .stars::after {
@@ -785,7 +792,7 @@ header nav ul li:hover::after {
     color: #FFD700; /* Màu vàng */
 }
 .header-container {
-    background-color: var(--white);
+    background-color: var(white);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
@@ -809,11 +816,14 @@ header nav ul li:hover::after {
 }
 
 .unica-logo {
-    color: var(--primary-blue);
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 15px;
+    display: flex;
+    align-items: left;
 }
+.logo-circle {
+    height: 36px; 
+    width: auto;
+    margin-right: 30px;
+    }
 
 /* Category Button */
 .category-btn {
@@ -926,17 +936,6 @@ header nav ul li:hover::after {
     background-color: rgba(255, 255, 255, 0.2); /* Subtle background on hover */
 }
 
-.logo-section {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-.unica-logo {
-    font-weight: bold;
-    font-size: 24px;
-    color: #2e86de;
-    margin-right: 15px;
-}
 .category-btn {
     background-color: #f5f5f5;
     border: none;
@@ -1024,13 +1023,50 @@ header nav ul li:hover::after {
 .menu-item:hover .submenu {
     display: block;
 }
+.course-badge {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 4px;
+  margin-left: auto;
+}
+.course-pricing {
+	display: flex;
+	align-items: center;
+	gap: 8px; /* khoảng cách giữa các phần tử giá */
+	flex-wrap: wrap;
+	margin: 8px 0;
+}
+.real-price {
+	font-size: 20px;
+	font-weight: 700;
+	color: #e53935; /* đỏ nổi bật */
+}
+.product-price {
+	font-size: 16px;
+	color: #888;
+	text-decoration: line-through;
+}
+.product-discount {
+	font-size: 14px;
+	color: #027a3e;
+	background-color: #e1f7e7;
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-weight: 500;
+}
     </style>
 </head>
 <body>
     <header class="header-container">
         <div class="top-bar">
             <div class="logo-section">
-                <span class="unica-logo">unica</span>
+                <a href="#" class="unica-logo">
+					<img src="https://unica.vn/media/img/logo-unica.svg" alt="Unica Logo" class="logo-circle" id="logoImg">
+				</a>
                 <button class="category-btn">
                     <i class="fas fa-th-large"></i> DANH MỤC
                 </button>
@@ -1174,17 +1210,15 @@ header nav ul li:hover::after {
             </div>
         </nav>
 
-        <section class="top-courses" aria-labelledby="top-courses-title">
-            <h3 id="top-courses-title">TOP BÁN CHẠY</h3>
-            <div class="course-grid" aria-live="polite"></div>
-        </section>
+        <section class="top-courses" aria-labelledby="bestseller-title"> 
+            <h3 id="bestseller-title">TOP BÁN CHẠY</h3>
+            <div id="bestseller-courses" class="course-grid" aria-live="polite"></div>
+          </section>
 
-          <section class="bestseller-courses" aria-labelledby="bestseller-title">
-        <h3 id="bestseller-title">SIÊU ƯU ĐÃI HÔM NAY</h3>
-        <div id="bestseller-courses" class="bestseller-grid" aria-live="polite">
-            <!-- Courses will be dynamically inserted here -->
-        </div>
-    </section>
+          <section class="top-courses" aria-labelledby="today-sale-title">
+            <h3 id="today-sale-title">SIÊU ƯU ĐÃI HÔM NAY</h3>
+            <div id="today-sale-courses" class="course-grid" aria-live="polite"></div>
+          </section>
 
        <section class="topics-of-interest" aria-labelledby="topics-title">
     <h3 id="topics-title">CHỦ ĐỀ CÓ THỂ BẠN QUAN TÂM</h3>
@@ -1248,369 +1282,334 @@ header nav ul li:hover::after {
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const featuredInstructors = [
-            {
-                name: 'Trần Đăng Khoa',
-                specialty: 'Chuyên gia Digital Marketing',
-                image: '/api/placeholder/200/200'
-            },
-            {
-                name: 'Phạm Văn Minh',
-                specialty: 'Chuyên gia Thiết kế',
-                image: '/api/placeholder/200/200'
-            },
-            {
-                name: 'Nguyễn Thị Hương',
-                specialty: 'Chuyên gia Ngoại ngữ',
-                image: '/api/placeholder/200/200'
-            },
-            {
-                name: 'Lê Văn Tuấn',
-                specialty: 'Chuyên gia Tài chính',
-                image: '/api/placeholder/200/200'
-            }
-        ];
-        const bestsellerCourses = [
-            {
-                title: 'Khóa học Digital Marketing toàn diện',
-                instructor: 'Trần Đăng Khoa',
-                rating: 4.9,
-                reviews: 256,
-                price: 499000,
-                originalPrice: 1200000,
-                image: '/api/placeholder/300/200',
-                badge: 'Bestseller'
-            },
-            {
-                title: 'Photoshop từ cơ bản đến chuyên nghiệp',
-                instructor: 'Phạm Văn Minh',
-                rating: 4.7,
-                reviews: 189,
-                price: 349000,
-                originalPrice: 900000,
-                image: '/api/placeholder/300/200',
-                badge: 'Hot'
-            },
-            {
-                title: 'Viết content marketing hiệu quả',
-                instructor: 'Nguyễn Thị Hương',
-                rating: 4.6,
-                reviews: 145,
-                price: 299000,
-                originalPrice: 750000,
-                image: '/api/placeholder/300/200',
-                badge: 'Mới'
-            },
-            {
-                title: 'Quản trị chi phí doanh nghiệp',
-                instructor: 'Lê Văn Tuấn',
-                rating: 4.8,
-                reviews: 98,
-                price: 399000,
-                originalPrice: 1000000,
-                image: '/api/placeholder/300/200',
-                badge: 'Giảm giá'
-            }
-        ];
+    const featuredInstructors = [
+        {
+            name: 'Trần Đăng Khoa',
+            specialty: 'Chuyên gia Digital Marketing',
+            image: '/api/placeholder/200/200'
+        },
+        {
+            name: 'Phạm Văn Minh',
+            specialty: 'Chuyên gia Thiết kế',
+            image: '/api/placeholder/200/200'
+        },
+        {
+            name: 'Nguyễn Thị Hương',
+            specialty: 'Chuyên gia Ngoại ngữ',
+            image: '/api/placeholder/200/200'
+        },
+        {
+            name: 'Lê Văn Tuấn',
+            specialty: 'Chuyên gia Tài chính',
+            image: '/api/placeholder/200/200'
+        }
+    ];
 
+    const bestsellerCourses = [
+        <c:forEach var="course" items="${bestSellerCourses}" varStatus="status">
+        <c:out value="{" escapeXml="false"/>
+            id: <c:out value="${status.index}" />,
+            title: "<c:out value='${course[0]}'/>",
+            instructor: "<c:out value='${course[1]}'/>",
+            rating: ${course[2] != null ? course[2] : 0},
+            reviews: 0,
+            price: ${course[3] != null ? course[3] : 0},
+            originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
+            image: "<c:out value='${course[4] != null ? course[4] : "/api/placeholder/300/200"}'/>",
+            badge: "Bán chạy"
+        <c:out value="}" escapeXml="false"/><c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
 
-        const topCourses = [
-            {
-                title: 'Nhập môn cờ vua cho người mới bắt đầu',
-                instructor: 'Từ Hoàng Thông',
-                rating: 4.7,
-                reviews: 38,
-                price: 299000,
-                originalPrice: 600000,
-                image: '/api/placeholder/300/200'
-            },
-            {
-                title: 'Học Autocad cơ bản và nâng cao',
-                instructor: 'Cẩm Hải Phương',
-                rating: 4.5,
-                reviews: 98,
-                price: 299000,
-                originalPrice: 800000,
-                image: '/api/placeholder/300/200'
-            },
-            {
-                title: 'Trọn bộ kỹ thuật xoa bóp cho người mới bắt đầu',
-                instructor: 'Bác sĩ Lê Hải',
-                rating: 4.8,
-                reviews: 39,
-                price: 249000,
-                originalPrice: 800000,
-                image: '/api/placeholder/300/200'
-            },
-            {
-                title: 'Y học dinh dưỡng thực tiễn',
-                instructor: 'Trần Thanh Toàn',
-                rating: 4.2,
-                reviews: 35,
-                price: 299000,
-                originalPrice: 1000000,
-                image: '/api/placeholder/300/200'
-            }
-        ];
+    const todaySaleCourses = [
+        <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
+        <c:out value="{" escapeXml="false"/>
+            id: ${status.index},
+            title: "${course[0]}",
+            instructor: "${course[1]}",
+            rating: ${course[2] != null ? course[2] : 0},
+            reviews: 0,
+            price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số
+            originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
+            image: "${course[4] != null ? course[4] : '/api/placeholder/300/200'}",
+            badge: "Giảm ${course[5]}%"
+        <c:out value="}" escapeXml="false"/><c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
 
-        const bannerSlides = [
-            {
-                title: 'Khóa Học Mới',
-                subtitle: 'Ưu đãi giảm 50% tất cả các khóa học',
-                image: '/api/placeholder/1200/400'
-            },
-            {
-                title: 'Học Trực Tuyến',
-                subtitle: 'Học mọi lúc, mọi nơi với Unica',
-                image: '/api/placeholder/1200/400'
-            }
-        ];
+    const bannerSlides = [
+        {
+            title: 'Khóa Học Mới',
+            subtitle: 'Ưu đãi giảm 50% tất cả các khóa học',
+            image: '/api/placeholder/1200/400'
+        },
+        {
+            title: 'Học Trực Tuyến',
+            subtitle: 'Học mọi lúc, mọi nơi với Unica',
+            image: '/api/placeholder/1200/400'
+        }
+    ];
 
-        function renderBannerSlides() {
-            const sliderContent = document.querySelector('.slider-content');
-            if (!sliderContent) return;
+    function renderBannerSlides() {
+        const sliderContent = document.querySelector('.slider-content');
+        if (!sliderContent) return;
 
-            sliderContent.innerHTML = bannerSlides.map((slide, index) => `
-                <div class="slider-item" data-index="${index}">
-                    <img src="${slide.image}" alt="${slide.title}">
-                    <div class="slider-text">
-                        <h2>${slide.title}</h2>
-                        <p>${slide.subtitle}</p>
-                        <button class="view-course-btn">Xem khóa học</button>
-                    </div>
+        sliderContent.innerHTML = bannerSlides.map((slide, index) => `
+            <div class="slider-item" data-index="${index}">
+                <img src="${slide.image}" alt="${slide.title}">
+                <div class="slider-text">
+                    <h2>${slide.title}</h2>
+                    <p>${slide.subtitle}</p>
+                    <button class="view-course-btn">Xem khóa học</button>
                 </div>
-            `).join('');
-        }
-        function renderBannerSlides() {
-            const sliderContent = document.querySelector('.slider-content');
-            if (!sliderContent) return;
-            
-            sliderContent.innerHTML = '';
-            
-            bannerSlides.forEach((slide, index) => {
-                let slideItem = document.createElement('div');
-                slideItem.classList.add('slider-item');
-                slideItem.setAttribute('data-index', index);
-                
-                let img = document.createElement('img');
-                img.src = slide.image;
-                img.alt = slide.title;
-                
-                let textContainer = document.createElement('div');
-                textContainer.classList.add('slider-text');
-                
-                let title = document.createElement('h2');
-                title.textContent = slide.title;
-                
-                let subtitle = document.createElement('p');
-                subtitle.textContent = slide.subtitle;
-                
-                let button = document.createElement('button');
-                button.classList.add('view-course-btn');
-                button.textContent = 'Xem khóa học';
-                
-                textContainer.append(title, subtitle, button);
-                slideItem.append(img, textContainer);
-                sliderContent.appendChild(slideItem);
-            });
-        }
+            </div>
+        `).join('');
+    }
+
+    function renderBannerSlides() {
+        const sliderContent = document.querySelector('.slider-content');
+        if (!sliderContent) return;
         
-        function renderTopCourses() {
-            const grid = document.querySelector('.course-grid');
-            if (!grid) return;
-            
-            grid.innerHTML = '';
-            
-            topCourses.forEach(course => {
-                let card = document.createElement('div');
-                card.classList.add('course-card');
-                
-                let img = document.createElement('img');
-                img.src = course.image;
-                img.alt = course.title;
-                
-                let content = document.createElement('div');
-                content.classList.add('course-card-content');
-                
-                let title = document.createElement('h4');
-                title.textContent = course.title;
-                
-                let instructor = document.createElement('p');
-                instructor.textContent = course.instructor;
-                
-                let ratingContainer = document.createElement('div');
-                ratingContainer.classList.add('course-rating');
-                
-                let stars = document.createElement('div');
-                stars.classList.add('stars');
-                stars.style.setProperty('--rating', course.rating);
-                
-                let reviews = document.createElement('span');
-                reviews.textContent = `(${course.reviews} đánh giá)`;
-                
-                let pricing = document.createElement('div');
-                pricing.classList.add('course-pricing');
-                
-                let currentPrice = document.createElement('span');
-                currentPrice.classList.add('current-price');
-                currentPrice.textContent = `${course.price.toLocaleString()}đ`;
-                
-                let originalPrice = document.createElement('span');
-                originalPrice.classList.add('original-price');
-                originalPrice.textContent = `${course.originalPrice.toLocaleString()}đ`;
-                
-                let detailsBtn = document.createElement('button');
-                detailsBtn.classList.add('details-btn');
-                detailsBtn.textContent = 'Xem chi tiết';
-                
-                ratingContainer.append(stars, reviews);
-                pricing.append(currentPrice, originalPrice);
-                content.append(title, instructor, ratingContainer, pricing, detailsBtn);
-                card.append(img, content);
-                grid.appendChild(card);
-            });
-        }
+        sliderContent.innerHTML = '';
         
-        function renderBestsellerCourses() {
-            const container = document.getElementById('bestseller-courses');
-            if (!container) return;
+        bannerSlides.forEach((slide, index) => {
+            let slideItem = document.createElement('div');
+            slideItem.classList.add('slider-item');
+            slideItem.setAttribute('data-index', index);
             
-            container.innerHTML = '';
+            let img = document.createElement('img');
+            img.src = slide.image;
+            img.alt = slide.title;
             
-            bestsellerCourses.forEach(course => {
-                let card = document.createElement('div');
-                card.classList.add('course-card');
-                
-                let img = document.createElement('img');
-                img.src = course.image;
-                img.alt = course.title;
-                
-                let content = document.createElement('div');
-                content.classList.add('course-card-content');
-                
-                let title = document.createElement('h4');
-                title.textContent = course.title;
-                
-                let instructor = document.createElement('p');
-                instructor.textContent = course.instructor;
-                
-                let ratingContainer = document.createElement('div');
-                ratingContainer.classList.add('course-rating');
-                
-                let stars = document.createElement('div');
-                stars.classList.add('stars');
-                stars.style.setProperty('--rating', course.rating);
-                
-                let reviews = document.createElement('span');
-                reviews.textContent = `(${course.reviews} đánh giá)`;
-                
-                let pricing = document.createElement('div');
-                pricing.classList.add('course-pricing');
-                
-                let currentPrice = document.createElement('span');
-                currentPrice.classList.add('current-price');
-                currentPrice.textContent = `${course.price.toLocaleString()}đ`;
-                
-                let originalPrice = document.createElement('span');
-                originalPrice.classList.add('original-price');
-                originalPrice.textContent = `${course.originalPrice.toLocaleString()}đ`;
-                
-                let detailsBtn = document.createElement('button');
-                detailsBtn.classList.add('details-btn');
-                detailsBtn.textContent = 'Xem chi tiết';
-                
-                ratingContainer.append(stars, reviews);
-                pricing.append(currentPrice, originalPrice);
-                content.append(title, instructor, ratingContainer, pricing, detailsBtn);
-                card.append(img, content);
-                container.appendChild(card);
-            });
-        }
+            let textContainer = document.createElement('div');
+            textContainer.classList.add('slider-text');
+            
+            let title = document.createElement('h2');
+            title.textContent = slide.title;
+            
+            let subtitle = document.createElement('p');
+            subtitle.textContent = slide.subtitle;
+            
+            let button = document.createElement('button');
+            button.classList.add('view-course-btn');
+            button.textContent = 'Xem khóa học';
+            
+            textContainer.append(title, subtitle, button);
+            slideItem.append(img, textContainer);
+            sliderContent.appendChild(slideItem);
+        });
+    }
+    
+    function renderTopCourses() {
+        const container = document.getElementById('today-sale-courses');
+        if (!container) return;
+        container.innerHTML = '';
+        todaySaleCourses.forEach(course => {
+            let card = document.createElement('div');
+            card.classList.add('course-card');
+            let img = document.createElement('img');
+            img.src = course.image;
+            img.alt = course.title;
+            let content = document.createElement('div');
+            content.classList.add('course-card-content');
+            let title = document.createElement('h4');
+            title.textContent = course.title;
+            let instructor = document.createElement('p');
+            instructor.textContent = course.instructor;
+            let ratingContainer = document.createElement('div');
+            ratingContainer.classList.add('course-rating');
+            let stars = document.createElement('div');
+            stars.classList.add('stars');
+            stars.style.setProperty('--rating', course.rating);
+            let reviews = document.createElement('span');
+            let ratingValue = Number(course.rating);
+            reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
+            let pricing = document.createElement('div');
+            pricing.classList.add('course-pricing');
+            
+            let currentPrice = document.createElement('span');
+            currentPrice.classList.add('real-price');
+            currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
+            let originalPrice = document.createElement('span');
+            originalPrice.classList.add('product-price');
+            originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
+            let badge = document.createElement('div');
+            badge.classList.add('course-badge');
+            badge.textContent = course.badge;
+            
+            let detailsBtn = document.createElement('button');
+            detailsBtn.classList.add('details-btn');
+            detailsBtn.textContent = 'Xem chi tiết';
+            ratingContainer.append(stars, reviews);
+            pricing.append(currentPrice, originalPrice, badge);
+            content.append(title, instructor, ratingContainer, pricing, detailsBtn);
+            card.append(img, content);
+            container.appendChild(card);
+        });
+    }
+
+    function renderBestsellerCourses() {
+        const container = document.getElementById('bestseller-courses');
+        if (!container) return;
         
-        // Gọi các hàm render khi DOM được load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderBannerSlides();
-            renderTopCourses();
-            renderBestsellerCourses();
-        });    
+        container.innerHTML = '';
+        
+        bestsellerCourses.forEach(course => {
+            let card = document.createElement('div');
+            card.classList.add('course-card');
+            
+            let img = document.createElement('img');
+            img.src = course.image;
+            img.alt = course.title;
+            
+            let content = document.createElement('div');
+            content.classList.add('course-card-content');
+            
+            let title = document.createElement('h4');
+            title.textContent = course.title;
+            
+            let instructor = document.createElement('p');
+            instructor.textContent = course.instructor;
+            
+            let ratingContainer = document.createElement('div');
+            ratingContainer.classList.add('course-rating');
+            
+            let stars = document.createElement('div');
+            stars.classList.add('stars');
+            stars.style.setProperty('--rating', course.rating);
+            
+            let reviews = document.createElement('span');
+            let ratingValue = Number(course.rating);
+            reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
+            
+            let pricing = document.createElement('div');
+            pricing.classList.add('course-pricing');
+            
+            let currentPrice = document.createElement('span');
+            currentPrice.classList.add('real-price');
+            currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
+            let originalPrice = document.createElement('span');
+            originalPrice.classList.add('product-price');
+            originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
+            let badge = document.createElement('div');
+            badge.classList.add('course-badge');
+            badge.textContent = course.badge;
+            
+            let detailsBtn = document.createElement('button');
+            detailsBtn.classList.add('details-btn');
+            detailsBtn.textContent = 'Xem chi tiết';
+            
+            ratingContainer.append(stars, reviews);
+            pricing.append(currentPrice, originalPrice, badge);
+            content.append(title, instructor, ratingContainer, pricing, detailsBtn);
+            card.append(img, content);
+            container.appendChild(card);
+        });
+    }
 
-
-        function initializeSlider() {
-            const sliderContent = document.querySelector('.slider-content');
-            const sliderItems = document.querySelectorAll('.slider-item');
-            const sliderDots = document.querySelector('.slider-dots');
-            const prevBtn = document.querySelector('.slider-prev');
-            const nextBtn = document.querySelector('.slider-next');
-
-            let currentSlide = 0;
-            const totalSlides = sliderItems.length;
-
-            // Create dots
-            if (sliderDots) {
-                sliderItems.forEach((_, index) => {
-                    const dot = document.createElement('button');
-                    dot.classList.add('slider-dot');
-                    dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
-                    if (index === 0) dot.classList.add('active');
-                    dot.addEventListener('click', () => goToSlide(index));
-                    sliderDots.appendChild(dot);
-                });
+    function formatPrices(className) {
+        var elements = document.querySelectorAll('.' + className);
+        elements.forEach(function(element) {
+            var value = element.innerText;
+            value = value.replace('₫', '').trim();
+            if (!isNaN(value)) {
+                value = Number(value).toLocaleString('vi-VN') + '₫';
+                element.innerText = value;
             }
-
-            const dots = document.querySelectorAll('.slider-dot');
-
-            function goToSlide(slideIndex) {
-                currentSlide = (slideIndex + totalSlides) % totalSlides;
-                
-                if (sliderContent) {
-                    sliderContent.style.transform = `translateX(-${currentSlide * 100}%)`;
-                }
-                
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentSlide);
-                });
-            }
-
-            function nextSlide() {
-                goToSlide(currentSlide + 1);
-            }
-
-            function prevSlide() {
-                goToSlide(currentSlide - 1);
-            }
-
-            // Auto slide
-            let autoSlideInterval = setInterval(nextSlide, 5000);
-
-            // Event listeners for manual navigation
-            if (nextBtn) {
-                nextBtn.addEventListener('click', () => {
-                    nextSlide();
-                    resetAutoSlide();
-                });
-            }
-
-            if (prevBtn) {
-                prevBtn.addEventListener('click', () => {
-                    prevSlide();
-                    resetAutoSlide();
-                });
-            }
-
-            // Reset auto slide timer when user interacts
-            function resetAutoSlide() {
-                clearInterval(autoSlideInterval);
-                autoSlideInterval = setInterval(nextSlide, 5000);
-            }
-        }
-
-        // Render components
+        });
+    }
+    
+    // Gọi các hàm render khi DOM được load
+    window.addEventListener('DOMContentLoaded', () => {
         renderBannerSlides();
-        renderTopCourses();
-        renderFeaturedInstructors();
+        renderTodaySaleCourses();
         renderBestsellerCourses();
-        initializeSlider();
+        renderTodaySaleCourses();
+        formatPrices('real-price');
+        formatPrices('product-price');
     });
+
+    window.onload = function() {
+        renderBestsellerCourses();
+        renderTodaySaleCourses();
+    };
+
+    function initializeSlider() {
+        const sliderContent = document.querySelector('.slider-content');
+        const sliderItems = document.querySelectorAll('.slider-item');
+        const sliderDots = document.querySelector('.slider-dots');
+        const prevBtn = document.querySelector('.slider-prev');
+        const nextBtn = document.querySelector('.slider-next');
+
+        let currentSlide = 0;
+        const totalSlides = sliderItems.length;
+
+        // Create dots
+        if (sliderDots) {
+            sliderItems.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.classList.add('slider-dot');
+                dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                sliderDots.appendChild(dot);
+            });
+        }
+
+        const dots = document.querySelectorAll('.slider-dot');
+
+        function goToSlide(slideIndex) {
+            currentSlide = (slideIndex + totalSlides) % totalSlides;
+            
+            if (sliderContent) {
+                sliderContent.style.transform = `translateX(-${currentSlide * 100}%)`;
+            }
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // Auto slide
+        let autoSlideInterval = setInterval(nextSlide, 5000);
+
+        // Event listeners for manual navigation
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                resetAutoSlide();
+            });
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                resetAutoSlide();
+            });
+        }
+
+        // Reset auto slide timer when user interacts
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(nextSlide, 5000);
+        }
+    }
+
+    // Render components
+    renderBannerSlides();
+    renderTodaySaleCourses();
+    renderFeaturedInstructors();
+    renderBestsellerCourses();
+    initializeSlider();
+});
     </script>
 </body>
 </html>

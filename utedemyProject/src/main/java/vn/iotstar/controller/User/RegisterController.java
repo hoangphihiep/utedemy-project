@@ -61,31 +61,37 @@ public class RegisterController extends HttpServlet {
 			
 			
 			if(service.checkPasswordAndConfirmPassword(password,confirmPassword)==false) {
-				 resp.sendRedirect("/utedemyProject/user/register?error=password_mismatch");
+				session.setAttribute("alert", "Mật khẩu và xác nhận mật khẩu không khớp");
+				 resp.sendRedirect("/utedemyProject/user/register");
 				    return;
 			}
 			else {
 			  if(service.checkPasswordFormat(confirmPassword)==false) {
-				 resp.sendRedirect("/utedemyProject/user/register?error=invalid_password_format");
+				 session.setAttribute("alert", "Mật khẩu không đúng định dạng");
+				 resp.sendRedirect("/utedemyProject/user/register");
 		         return;
 		     	}
 			}
 			
 			if (service.checkFormatMail(email)==false) {
-			    resp.sendRedirect("/utedemyProject/user/register?error=invalid_email_format");
+				session.setAttribute("alert", "Email không đúng định dạng");
+			    resp.sendRedirect("/utedemyProject/user/register");
 			    return;
 			}
 			if (!service.checkFormatPhone(phone)==false) {
-			    resp.sendRedirect("/utedemyProject/user/register?error=invalid_phone_format");
+				session.setAttribute("alert", "Số điện thoại không đúng định dạng");
+			    resp.sendRedirect("/utedemyProject/user/register");
 			    return;
 			}
 		
 			if (service.checkExistEmail(email)) {
-			    resp.sendRedirect("/utedemyProject/user/register?error=email_exist");
+				session.setAttribute("alert", "Email đã được đăng kí");
+			    resp.sendRedirect("/utedemyProject/user/register");
 			    return;
 			}
 			
 			if (service.checkExistPhoneNumber(phone)) {
+				session.setAttribute("alert", "Số điện thoại đã được đăng kí");
 				 resp.sendRedirect("/utedemyProject/user/register?error=phone_exist");
 				 return;
 			}

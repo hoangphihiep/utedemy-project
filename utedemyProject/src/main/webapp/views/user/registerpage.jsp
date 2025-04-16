@@ -30,32 +30,17 @@
             <div class="registration-header">
                 <h2>ĐĂNG KÝ</h2>
             </div>
-           <c:if test="${param.error == 'password_mismatch'}">
-       <div style="color: red; margin-bottom: 10px;">
-        Mật khẩu và nhập lại mật khẩu không khớp.
-         </div>
-          </c:if>
-          <c:if test="${param.error == 'invalid_password_format'}">
-               <div style="color: red; margin-bottom: 10px;">
-                  Mật khẩu không đúng định dạng. Vui lòng nhập ít nhất 8 ký tự gồm chữ hoa, chữ thường, số và ký tự đặc biệt.
-              </div>
-          </c:if>
-          <c:if test="${param.error == 'invalid_email_format'}">
-              <div style="color: red; margin-bottom: 10px;">
-                      Định dạng email không hợp lệ.
-              </div>
-          </c:if>
-          <c:if test="${param.error == 'email_exist'}">
-            <div style="color: red; margin-bottom: 10px;">
-              Email đã tồn tại. Vui lòng sử dụng một email khác.
-           </div>
-        </c:if>
-        <c:if test="${param.error == 'phone_exist'}">
-          <div style="color: red; margin-bottom: 10px;">
-             Số điện thoại đã được sử dụng. Vui lòng nhập số khác.
-         </div>
-        </c:if>
-        
+           <c:if test="${not empty alert}">
+                <div class="alert-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                    </svg>
+                    ${alert}
+                </div>
+                <c:remove var="alert" scope="session" />
+            </c:if>
+         
             <form id="registrationForm" action="/utedemyProject/user/register" method="post">
                 <div class="form-group">
                     <label for="fullname">HỌ TÊN</label>
@@ -103,65 +88,6 @@
     </div>
 
     <script>
-    function validateEmail(email) {
-        // Đây là một regex kiểm tra định dạng email đơn giản
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-        // Form validation
-       document.getElementById('registrationForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const fullname = document.getElementById('fullname').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const passwordError = document.getElementById('passwordError');
-    const phonePattern = /^0\d{9}$/;
-
-    // Reset previous error
-    passwordError.style.display = "none";
-    passwordError.textContent = "";
-
-    if (fullname === '' || email === '' || phone === '' || password === '' || confirmPassword === '') {
-        alert('Vui lòng điền đầy đủ thông tin đăng ký');
-        return;
-    }
-
-    if (!validateEmail(email)) {
-        alert('Email không hợp lệ');
-        return;
-    }
-
-    if (!phonePattern.test(phone)) {
-        alert('Số điện thoại không đúng định dạng. Vui lòng nhập theo định dạng: 091 234 56 78');
-        return;
-    }
-
-
-    // Password format check
-    if (
-        password.length < 8 || 
-        !/[A-Z]/.test(password) || 
-        !/[a-z]/.test(password) || 
-        !/[0-9]/.test(password) || 
-        !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
-    ) {
-        passwordError.textContent = "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt.";
-        passwordError.style.display = "block";
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        alert('Mật khẩu và nhập lại mật khẩu không khớp');
-        return;
-    }
-
-    console.log('Form submitted:', { fullname, email, phone, password });
-
-    this.submit();
-});
 
     </script>
 </body>
