@@ -1,17 +1,13 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -33,17 +29,23 @@ public class CourseDetail implements Serializable {
 	@Column(name = "id")
 	private int id;
 	
-	@OneToMany(mappedBy = "courseDetail", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Target> courseTarget = new HashSet<>();
-	
-	@Column(name = "description", nullable = false, length = 1000)
+	@Column(name = "description", length = 1000)
 	private String description;
 
-	@Column(name = "courseIntroduction", nullable = false, length = 1000)
+	@Column(name = "course_introduction",length = 1000)
 	private String courseIntroduction;
 
-	@Column(name = "courseImage", nullable = false, length = 255)
+	@Column(name = "course_image", length = 255)
 	private String courseImage;
+	
+	@Column(name = "course_video", length = 255)
+	private String courseVideo;
+	
+	@Column(name = "learner_achievements", nullable = false, length = 500)
+    private String learnerAchievements;
+
+    @Column(name = "course_learner", nullable = false, length = 500)
+    private String courseLearner;
 	
 	@OneToOne(mappedBy = "courseDetail")
     private Course course;

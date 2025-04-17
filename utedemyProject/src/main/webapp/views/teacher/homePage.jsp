@@ -8,30 +8,6 @@
     
 </head>
 <body>
-    <header class="header">
-        <div class="instructor-info">
-            <div class="instructor-name">Giảng viên : Thảo Chu</div>
-            <div class="instructor-id">ID: 580184</div>
-        </div>
-        <div class="support-info">
-            <p>Hỗ trợ giảng viên</p>
-            <p>HOTLINE: 0329802918</p>
-            <p>EMAIL: teacher@unica.vn</p>
-        </div>
-    </header>
-
-    <nav class="nav-menu">
-        <ul>
-            <li class="active">Bài giảng</li>
-            <li>Học viên</li>
-            <li>Học tập</li>
-            <li>Coupon</li>
-            <li>Đơn hàng</li>
-            <li>Thu nhập</li>
-            <li>Hồ sơ</li>
-        </ul>
-    </nav>
-
     <main class="content">
         <div class="content-header">
             <h1 class="content-title">Bài giảng của tôi</h1>
@@ -43,10 +19,11 @@
                     </button>
                 </div>
                 <div class="action-buttons">
-                    <button class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Tạo khóa học
-                    </button>
-                </div>
+				    <a href="/utedemyProject/teacher/addCourse" class="btn btn-primary"
+				    style="display: inline-block; text-decoration: none;">
+				        <i class="fa fa-plus"></i> Tạo khóa học
+				    </a>
+				</div>
             </div>
         </div>
 

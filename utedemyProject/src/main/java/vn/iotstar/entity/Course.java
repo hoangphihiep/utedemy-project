@@ -40,8 +40,8 @@ public class Course implements Serializable {
 	@Column(name = "course_name")
     private String courseName;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "course_type_id", referencedColumnName = "id")
+	@ManyToOne
+    @JoinColumn(name = "course_type_id", nullable = false)
     private CourseType courseType;
 	
 	@OneToOne(cascade = CascadeType.ALL)
