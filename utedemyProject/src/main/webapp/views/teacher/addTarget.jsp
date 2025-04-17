@@ -56,21 +56,7 @@
 				<div class="editor-content">Ví dụ: Những người đang kinh doanh online,...</div>
 			</div>
 
-			<div class="section-title">Chào mừng học viên tham gia khóa học</div>
-
-
-			<div class="text-editor">
-				<div class="editor-toolbar">
-					<button class="toolbar-button">
-						<strong>B</strong>
-					</button>
-					<button class="toolbar-button">
-						<em>I</em>
-					</button>
-					<button class="toolbar-button">≡</button>
-				</div>
-				<div class="editor-content">Ví dụ: Chào mừng các bạn đến với khóa học...</div>
-			</div>
+		
 		</div>
 	</div>
 	<script>

@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <body>
+<script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 	<div class="content-box">
 		<div class="content-header">Thông tin cơ bản</div>
 		<div class="content-body">
@@ -42,19 +43,9 @@
 			<div class="form-group">
 				<label class="form-label">Giới thiệu khóa học <span
 					class="required">*</span></label>
-				<div class="editor-toolbar">
-					<button class="toolbar-button" title="In đậm">B</button>
-					<button class="toolbar-button" title="In nghiêng">
-						<i>I</i>
-					</button>
-					<button class="toolbar-button" title="Danh sách">≡</button>
-				</div>
-				<div class="editor-content" contenteditable="true">
-					Giới thiệu chi tiết về khóa học, trên 300 từ<br> -WHAT: học gì?,
-					giải quyết vấn đề gì?<br> -WHY: Tại sao bạn nên mua khóa học này
-					của tôi?<br> -Kêu gọi hành động: Hãy đăng ký khóa học ngay hôm
-					nay!
-				</div>
+				<form action="saveCourse.jsp" method="post">
+				    <textarea name="courseIntroduction" id="courseIntroduction"></textarea>
+				</form>
 			</div>
 			<!-- Add this inside the main-content div, after the existing form-group for course introduction -->
 			<div class="form-group">
@@ -108,6 +99,8 @@
 		
 	</div>
 	<script>
+    CKEDITOR.replace('courseIntroduction');
+    
 // Function to preview images
 function previewImage(event, previewId, placeholderId) {
   const placeholderText = document.getElementById(placeholderId);
@@ -146,19 +139,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	      const vimeoMatch = url.match(vimeoRegex);
 	      
 	      if (youtubeMatch && youtubeMatch[1]) {
-	        // Sử dụng URL YouTube-nocookie với thêm tham số
-	        const youtubeId = youtubeMatch[1];
-	        
-	        const iframeUrl = "https://www.youtube.com/embed/" + youtubeId + "?origin=" + window.location.origin + "&enablejsapi=1";
-	        
-	        videoPlaceholder.innerHTML = `
-	          <iframe width="100%" height="100%" 
-	        	src="${iframeUrl}"
-	          frameborder="0" 
-	          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-	          allowfullscreen></iframe>
-	        `;
-	      } else if (vimeoMatch && vimeoMatch[1]) {
+	    	  const youtubeId = youtubeMatch[1];
+	    	  videoPlaceholder.innerHTML = '<iframe width="100%" height="100%" ' +
+	    	    'src="https://www.youtube-nocookie.com/embed/' + youtubeId + '?origin=' + window.location.origin + '&enablejsapi=1" ' +
+	    	    'frameborder="0" ' +
+	    	    'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+	    	    'allowfullscreen></iframe>';
+	    	} else if (vimeoMatch && vimeoMatch[1]) {
 	        // Vimeo với tham số do-not-track và origin
 	        const vimeoId = vimeoMatch[1];
 	        videoPlaceholder.innerHTML = `

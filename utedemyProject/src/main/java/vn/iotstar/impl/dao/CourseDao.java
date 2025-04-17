@@ -8,6 +8,7 @@ import jakarta.persistence.Query;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.ICourseDao;
 import vn.iotstar.entity.Course;
+import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseType;
 
 public class CourseDao implements ICourseDao {
@@ -112,6 +113,90 @@ public class CourseDao implements ICourseDao {
 	        }
 	        e.printStackTrace();
 	        return 0;
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+	public boolean saveCourseDetail(CourseDetail courseDetail) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    
+	    try {
+	        trans.begin();
+	        em.merge(courseDetail);
+	        trans.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+	public boolean updateCourse(Course course) {
+		EntityManager enma = JPAConfig.getEntityManager();
+		EntityTransaction trans = enma.getTransaction();
+		try {
+			trans.begin();
+			// gọi phuong thức để insert, update, delete
+			enma.merge(course);
+			trans.commit();
+			return true;
+		} catch (Exception e) {
+			if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+			return false;
+		} finally {
+			enma.close();
+		}
+	}
+
+	@Override
+	public int maxCourseDetailId() {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        String jpql = "SELECT MAX(c.id) FROM CourseDetail c";
+	        Query query = em.createQuery(jpql);
+	        Integer maxId = (Integer) query.getSingleResult();
+	        trans.commit();
+	        return maxId != null ? maxId : 0;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return 0;
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+	public CourseDetail findByIdCourseDetail(int id) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        CourseDetail courseDetail = em.find(CourseDetail.class, id);
+	        trans.commit();
+	        return courseDetail;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return null;
 	    } finally {
 	        em.close();
 	    }

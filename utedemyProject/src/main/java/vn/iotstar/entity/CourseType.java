@@ -1,14 +1,17 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +34,7 @@ public class CourseType implements Serializable {
 	
 	@Column(name = "course_type_name", nullable = false, length = 255)
     private String courseTypeName;
-
-	@OneToOne(mappedBy = "courseType")
-    private Course course;
+	
+	@OneToMany(mappedBy = "courseType", cascade = CascadeType.ALL)
+    private Set<Course> course = new HashSet<>();
 }

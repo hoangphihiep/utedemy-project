@@ -67,27 +67,20 @@
 	            const editorContents = document.querySelectorAll('.editor-content');
 	            
 	            let targetAudience = "";
-	            let welcomeMessage = "";
 	            
 	            // Kiểm tra và lấy nội dung từ các editor-content
 	            if (editorContents.length >= 1) {
 	                targetAudience = editorContents[0].textContent || "";
 	            }
-	            
-	            if (editorContents.length >= 2) {
-	                welcomeMessage = editorContents[1].textContent || "";
-	            }
-	            
+
 	            // Kiểm tra và ghi log để debug
 	            console.log("Objectives:", objectives);
 	            console.log("Target Audience:", targetAudience);
-	            console.log("Welcome Message:", welcomeMessage);
 		        
 		        // Tạo object chứa dữ liệu
 		        const targetData = {
 		            objectives: objectives,
 		            targetAudience: targetAudience,
-		            welcomeMessage: welcomeMessage
 		        };
 		        
 		        // Gửi dữ liệu đến server qua AJAX
@@ -103,7 +96,7 @@
 				  formData.append("shortDescription", document.querySelector('textarea.form-input').value);
 				  formData.append("courseTypeId", document.querySelector('select[name="courseTypeId"]').value);
 				  formData.append("coursePrice", document.querySelector('input[name="courseName"]').value);
-				  formData.append("courseIntroduction", document.querySelector('.editor-content').textContent || "");
+				  formData.append("courseIntroduction", CKEDITOR.instances.courseIntroduction.getData());
 				  formData.append("videoLink", document.querySelector('.video-upload-container .form-input').value || "");
 				  
 				  // Get the file input and append file if one was selected

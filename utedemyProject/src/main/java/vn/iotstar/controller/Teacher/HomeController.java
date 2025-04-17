@@ -1,6 +1,8 @@
 package vn.iotstar.controller.Teacher;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
@@ -23,9 +25,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import vn.iotstar.entity.Course;
+import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.service.ICourseService;
+import vn.iotstar.utils.Constant;
 
 @MultipartConfig(
 	    fileSizeThreshold = 1024 * 1024, // 1 MB
@@ -117,7 +121,6 @@ public class HomeController extends HttpServlet {
 		{
 			// Set response type
 	        resp.setContentType("application/json");
-	        PrintWriter out = resp.getWriter();
 	        
 	        try {
 
@@ -128,19 +131,73 @@ public class HomeController extends HttpServlet {
 	            String coursePrice = req.getParameter("coursePrice");
 	            String courseIntroduction = req.getParameter("courseIntroduction");
 	            String videoLink = req.getParameter("videoLink");
-	            Part filePart = req.getPart("courseImage");
-	            String filename = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 	            // Get course ID from session
-	            //int id = (Integer)session.getAttribute("courseId");
+	            int id = (Integer)session.getAttribute("courseId");
 	            
-	            // Create or update course in database
-	            System.out.println("Tên khóa học: " + courseTitle);
-	            System.out.println("Mô tả ngắn: " + shortDescription);
-	            System.out.println("Loại khóa học: " + courseTypeId);
-	            System.out.println ("Giá khóa học: " + coursePrice);
-	            System.out.println ("Giới thiệu khóa học: " + courseIntroduction);
-	            System.out.println ("Anh khóa học: " + filename);
-	            System.out.println ("Video khóa học: " + videoLink);
+	            Course course = courseService.findByIdCourse(id);
+	            course.setCourseName(courseTitle);
+	            int coursePriceInt = 0;
+
+				if (coursePrice != null && !coursePrice.isEmpty()) {
+				    try {
+				    	coursePriceInt = Integer.parseInt(coursePrice);
+				    } catch (NumberFormatException e) {
+				        e.printStackTrace();
+				    }
+				}
+				course.setCoursePrice(coursePriceInt);
+				
+				int courseTypeIdInt = 0;
+
+				if (courseTypeId != null && !courseTypeId.isEmpty()) {
+				    try {
+				        courseTypeIdInt = Integer.parseInt(courseTypeId);
+				    } catch (NumberFormatException e) {
+				        e.printStackTrace();
+				    }
+				}
+				CourseType courseType = courseService.findByIDCourseType(courseTypeIdInt);
+				course.setCourseType(courseType);
+				
+	            CourseDetail courseDetail = new CourseDetail();
+	            courseDetail.setDescription(shortDescription);
+	            courseDetail.setCourseIntroduction(courseIntroduction);
+	            courseDetail.setCourseVideo(videoLink);
+	            
+	            String fname = "";
+				String uploadPath = Constant.DIR;
+				File uploadDir = new File(uploadPath);
+				if (!uploadDir.exists())
+					uploadDir.mkdir();
+				
+				try {
+					Part part = req.getPart("courseImage");
+					if (part.getSize() > 0) {
+						String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+						int index = filename.lastIndexOf(".");
+						System.out.println (filename);
+						String ext = filename.substring(index + 1);
+						fname = System.currentTimeMillis() + "." + ext;
+
+						part.write(uploadPath + "/" + fname);
+
+						courseDetail.setCourseImage(fname);
+					} else {
+						courseDetail.setCourseImage("avatar.png");
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				boolean check = courseService.saveCourseDetail(courseDetail);
+				if (check) {
+					int idCourseDetail = courseService.maxCourseDetailId();
+					CourseDetail courseDetail1 = courseService.findByIdCourseDetail(idCourseDetail);
+					course.setCourseDetail(courseDetail1);
+					boolean checkUpdate = courseService.updateCourse(course);
+					if (checkUpdate) {
+						System.out.println ("Lưu thông tin thành công");
+					}
+				}
 	            
 	        } catch (Exception e) {
 	            // Log the error
@@ -174,10 +231,10 @@ public class HomeController extends HttpServlet {
 	            }
 	            
 	            // Lấy đối tượng và lời chào
-	            String targetAudience = jsonObject.get("targetAudience").getAsString();
+	            String courseLearner = jsonObject.get("targetAudience").getAsString();
 	            String welcomeMessage = jsonObject.get("welcomeMessage").getAsString();
 	            
-	            System.out.println ("Đối tượng: " + targetAudience);
+	            System.out.println ("Đối tượng: " + courseLearner);
 	            System.out.println ("Lời chào: " + welcomeMessage);        
 	        } catch (Exception e) {
 	            e.printStackTrace();
