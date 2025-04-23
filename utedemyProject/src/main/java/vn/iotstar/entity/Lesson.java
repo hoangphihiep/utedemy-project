@@ -1,6 +1,7 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,12 +16,15 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(exclude = "section")
 @Table(name="lesson")
 @NamedQuery(name="Lesson.findAll", query="SELECT l from Lesson l")
@@ -33,17 +37,20 @@ public class Lesson implements Serializable {
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "title", nullable = false, length = 255)
+	@Column(name = "title", length = 255)
 	private String title;
 	
-	@Column(name = "description", nullable = false, length = 1000)
+	@Column(name = "description", length = 1000)
     private String description;
     
-	@Column(name = "videoUrl", nullable = false, length = 1000)
+	@Column(name = "videoUrl", length = 1000)
     private String videoUrl;
 	
+	@Column(name = "number_item")
+    private int numberItem;
+	
 	@ManyToOne
-    @JoinColumn(name = "section_id", nullable = false)
+    @JoinColumn(name = "section_id")
     private Section section;
 	
 	@OneToOne(mappedBy = "lesson")

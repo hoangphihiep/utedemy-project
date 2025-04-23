@@ -1,6 +1,7 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,12 +14,15 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name="answer")
 @NamedQuery(name="Answer.findAll", query="SELECT a from Answer a")
 public class Answer implements Serializable {
@@ -30,13 +34,13 @@ public class Answer implements Serializable {
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "content", nullable = false, length = 500)
+	@Column(name = "content",length = 500)
     private String content;
 
-    @Column(name = "is_correct", nullable = false)
+    @Column(name = "is_correct")
     private boolean isCorrect;
 
     @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
+    @JoinColumn(name = "question_id")
     private Question question;
 }

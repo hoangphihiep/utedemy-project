@@ -14,19 +14,19 @@ public class CourseService implements ICourseService {
 
 
 	  public CourseService() {
-    	courseDAO = new CourseDao();
+    	//courseDAO = new CourseDao();
     }
 
 
     @Override
     public List<Object[]> getBestSellingCourses(int limit) {
-        return courseDAO.findBestSellingCourseDetails(limit);
+        return courseDao.findBestSellingCourseDetails(limit);
     }
 
 
     @Override
     public List<Object[]> getTodaySaleCourses(int limit) {
-        return courseDAO.findTodaySaleCourses(limit);
+        return courseDao.findTodaySaleCourses(limit);
     }
 	
 	@Override

@@ -48,14 +48,14 @@ public class WaitingController extends HttpServlet {
 			
 		 	if (roleId == RoleUtil.ADMIN) {
 		 		System.out.println("session User là admin");
-				resp.sendRedirect(req.getContextPath() + "/views/hiep.jsp");
+				resp.sendRedirect(req.getContextPath() + "/admin/homePage");
 				return;
 			} else if (roleId == RoleUtil.USER) {
 				System.out.println("session User là user");
-				resp.sendRedirect(req.getContextPath() + "/views/user/homepage.jsp");
+				resp.sendRedirect(req.getContextPath() + "/user/homepage");
 				return;
 			} else {
-				resp.sendRedirect(req.getContextPath() + "/views/teacher/homepage.jsp");
+				resp.sendRedirect(req.getContextPath() + "/teacher/homePage");
 				System.out.println("session User là teacher");
 				return;
 			}
@@ -70,6 +70,7 @@ public class WaitingController extends HttpServlet {
 					String id_user = (String) session.getAttribute("id");
 
 					User u = user_service.findById(Integer.parseInt(id_user));
+					session.setAttribute("account", u);
 					System.out.println("hungdebug"+u.getId());
 					Set<Role> roles = user_service.getRolesByUserId(u.getId());
 					System.out.println("User roles: " + roles);

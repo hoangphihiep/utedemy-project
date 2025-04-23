@@ -24,4 +24,8 @@ public interface ICourseDao {
 	public int maxCourseDetailId();
 	
 	public CourseDetail findByIdCourseDetail (int id);
+
+	List<Object[]> findBestSellingCourseDetails(int limit);
+
+	List<Object[]> findTodaySaleCourses(int limit);
 }

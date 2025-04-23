@@ -6,4 +6,8 @@
 	<mapping path="/teacher/homePage" name="teacher" decorator="teacher.jsp" />
 	<mapping path="/teacher/addCourse" name="teacher" decorator="teacher.jsp" />
 	<mapping path="/admin/homePage" name="admin" decorator="admin.jsp" />
+	
+	
+	    <mapping path="/user/homepage" name="user" decorator="user.jsp" />
+	
 </sitemesh>

@@ -4,6 +4,7 @@ import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.ICourseDao;
 import vn.iotstar.entity.Course;
@@ -67,7 +68,7 @@ public class CourseDao implements ICourseDao {
 	    			"JOIN c.teacher t " +
 	    			"LEFT JOIN c.review r " +
 	    			"JOIN c.courseDetail cd " +
-	    			"JOIN c.voucher v " +
+	    			"JOIN c.vouchers v " +
 	    			"WHERE CURRENT_DATE BETWEEN v.dateSet AND v.dateEnd " +
 	    			"GROUP BY c.id, c.courseName, t.fullname, c.coursePrice, cd.courseImage, v.percentage " +
 	    			"ORDER BY v.percentage DESC";

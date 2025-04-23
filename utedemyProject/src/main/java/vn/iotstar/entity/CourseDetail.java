@@ -12,12 +12,17 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name="course_detail")
 @NamedQuery(name="CourseDetail.findAll", query="SELECT cd from CourseDetail cd")
 public class CourseDetail implements Serializable {
@@ -41,10 +46,10 @@ public class CourseDetail implements Serializable {
 	@Column(name = "course_video", length = 255)
 	private String courseVideo;
 	
-	@Column(name = "learner_achievements", nullable = false, length = 500)
+	@Column(name = "learner_achievements", length = 500)
     private String learnerAchievements;
 
-    @Column(name = "course_learner", nullable = false, length = 500)
+    @Column(name = "course_learner", length = 500)
     private String courseLearner;
 	
 	@OneToOne(mappedBy = "courseDetail")

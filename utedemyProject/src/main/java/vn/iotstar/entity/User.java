@@ -25,13 +25,17 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @ToString(exclude = "roles")
 @Table(name="users")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -105,4 +109,7 @@ public class User implements Serializable {
 	
 	@ManyToMany(mappedBy = "usedByUsers")
     private Set<Discount> usedDiscounts = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Orders> order  = new HashSet<>();
 }

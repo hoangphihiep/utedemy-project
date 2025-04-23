@@ -14,12 +14,15 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(exclude = "users")
+@ToString(exclude = {"users"})
 @Table(name="role")
 @NamedQuery(name="Role.findAll", query="SELECT r from Role r")
 public class Role implements Serializable {

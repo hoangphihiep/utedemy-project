@@ -17,12 +17,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name="question")
 @NamedQuery(name="Question.findAll", query="SELECT q from Question q")
 public class Question implements Serializable {
@@ -34,10 +37,10 @@ public class Question implements Serializable {
 	@Column(name = "id")
 	private int id;
 	
-	@Column(nullable = false, length = 1000)
+	@Column(name = "description", length = 1000)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "score")
     private int score;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)

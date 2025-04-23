@@ -18,12 +18,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name="course_progress")
 @NamedQuery(name="CourseProgress.findAll", query="SELECT cp from CourseProgress cp")
 public class CourseProgress implements Serializable {
