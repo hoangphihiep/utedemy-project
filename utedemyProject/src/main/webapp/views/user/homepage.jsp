@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<link rel="stylesheet" href="/utedemyProject/views/Css/homepage.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="vi">
 <body>
@@ -111,7 +113,7 @@
       const bestsellerCourses = [
           <c:forEach var="course" items="${bestSellerCourses}" varStatus="status">
           <c:out value="{" escapeXml="false"/>
-              id: <c:out value="${status.index}" />,
+              id: ${course[5] != null ? course[5] : 0},
               title: "<c:out value='${course[0]}'/>",
               instructor: "<c:out value='${course[1]}'/>",
               rating: ${course[2] != null ? course[2] : 0},
@@ -126,8 +128,8 @@
       const todaySaleCourses = [
           <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
           <c:out value="{" escapeXml="false"/>
-              id: ${status.index},
-              title: "${course[0]}",
+              id: ${course[6] != null ? course[6] : 0},
+              title: "${course[0]}%",
               instructor: "${course[1]}",
               rating: ${course[2] != null ? course[2] : 0},
               price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số
@@ -246,17 +248,40 @@
       	    originalPrice.classList.add('product-price');
       	    originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
 
-              let badge = document.createElement('div');
-              badge.classList.add('course-badge');
-              badge.textContent = course.badge;
+            let badge = document.createElement('div');
+            badge.classList.add('course-badge');
+            badge.textContent = course.badge;
+              
+            let actions = document.createElement('div');
+            actions.classList.add('course-actions');
+
+            let cartBtn = document.createElement('button');
+            cartBtn.classList.add('icon-btn', 'add-to-cart');
+            cartBtn.innerHTML = '<i class="fas fa-cart-shopping cart-icon"></i>';
+            cartBtn.title = 'Thêm vào giỏ';
+            cartBtn.addEventListener('click', () => {
+                console.log('🛒 Thêm vào giỏ:', course.id);
+                // TODO: Thêm logic xử lý giỏ hàng ở đây
+            });
+
+            let favBtn = document.createElement('button');
+            favBtn.classList.add('icon-btn', 'add-to-favorite');
+            favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
+            favBtn.title = 'Yêu thích';
+            favBtn.addEventListener('click', () => {
+                console.log('❤️ Yêu thích:', course.id);
+                // TODO: Thêm logic xử lý yêu thích ở đây
+            });
               
       	    let detailsBtn = document.createElement('button');
       	    detailsBtn.classList.add('details-btn');
       	    detailsBtn.textContent = 'Xem chi tiết';
 
+      	  	actions.append(cartBtn, favBtn, detailsBtn);
+      	    
       	    ratingContainer.append(stars, reviews);
       	    pricing.append(currentPrice, originalPrice, badge);
-      	    content.append(title, instructor, ratingContainer, pricing, detailsBtn);
+      	    content.append(title, instructor, ratingContainer, pricing, actions);
       	    card.append(img, content);
       	    container.appendChild(card);
       	  });
@@ -311,13 +336,36 @@
               badge.classList.add('course-badge');
               badge.textContent = course.badge;
               
+              let actions = document.createElement('div');
+              actions.classList.add('course-actions');
+
+              let cartBtn = document.createElement('button');
+              cartBtn.classList.add('icon-btn', 'add-to-cart');
+              cartBtn.innerHTML = '<i class="fas fa-cart-shopping cart-icon"></i>';
+              cartBtn.title = 'Thêm vào giỏ';
+              cartBtn.addEventListener('click', () => {
+                  console.log('🛒 Thêm vào giỏ:', course.id);
+                  // TODO: Thêm logic xử lý giỏ hàng ở đây
+              });
+
+              let favBtn = document.createElement('button');
+              favBtn.classList.add('icon-btn', 'add-to-favorite');
+              favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
+              favBtn.title = 'Yêu thích';
+              favBtn.addEventListener('click', () => {
+                  console.log('❤️ Yêu thích:', course.id);
+                  // TODO: Thêm logic xử lý yêu thích ở đây
+              });
+              
               let detailsBtn = document.createElement('button');
               detailsBtn.classList.add('details-btn');
               detailsBtn.textContent = 'Xem chi tiết';
               
+              actions.append(cartBtn, favBtn, detailsBtn);
+              
               ratingContainer.append(stars, reviews);
       	    pricing.append(currentPrice, originalPrice, badge);
-              content.append(title, instructor, ratingContainer, pricing, detailsBtn);
+              content.append(title, instructor, ratingContainer, pricing, actions);
               card.append(img, content);
               container.appendChild(card);
           });

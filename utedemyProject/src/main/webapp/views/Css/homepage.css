@@ -779,7 +779,7 @@ header nav ul li:hover::after {
     color: #FFD700; /* Màu vàng */
 }
 .header-container {
-    background-color: var(white);
+    background-color: var(--white);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
@@ -803,14 +803,11 @@ header nav ul li:hover::after {
 }
 
 .unica-logo {
-    display: flex;
-    align-items: left;
+    color: var(--primary-blue);
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 15px;
 }
-.logo-circle {
-    height: 36px; 
-    width: auto;
-    margin-right: 30px;
-    }
 
 /* Category Button */
 .category-btn {
@@ -826,8 +823,8 @@ header nav ul li:hover::after {
 /* Search Box */
 .search-box {
     flex-grow: 1;
-    max-width: 500px;
-    margin: 0 20px;
+    max-width: 80000px;
+    margin: 0 40px;
 }
 
 .search-box-inner {
@@ -840,7 +837,7 @@ header nav ul li:hover::after {
 .search-box input {
     flex-grow: 1;
     border: none;
-    padding: 10px;
+    padding: 30px;
     font-size: 16px;
 }
 
@@ -862,7 +859,12 @@ header nav ul li:hover::after {
 .user-actions span,
 .cart-icon {
     color: var(--dark-blue);
+  	transition: color 0.3s;
     cursor: pointer;
+}
+
+.cart-icon:hover {
+	color: blue;
 }
 
 /* Buttons */
@@ -923,6 +925,17 @@ header nav ul li:hover::after {
     background-color: rgba(255, 255, 255, 0.2); /* Subtle background on hover */
 }
 
+.logo-section {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.unica-logo {
+    font-weight: bold;
+    font-size: 24px;
+    color: #2e86de;
+    margin-right: 15px;
+}
 .category-btn {
     background-color: #f5f5f5;
     border: none;
@@ -1010,6 +1023,43 @@ header nav ul li:hover::after {
 .menu-item:hover .submenu {
     display: block;
 }
+.live-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.result-item {
+    padding: 12px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: background 0.2s;
+}
+
+.result-item:hover {
+    background: #f8f9fa;
+}
+
+.result-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+}
 .course-badge {
   background-color: red;
   color: white;
@@ -1044,4 +1094,48 @@ header nav ul li:hover::after {
 	padding: 2px 6px;
 	border-radius: 4px;
 	font-weight: 500;
+}
+.heart-icon {
+    color: var(--dark-blue);
+  transition: color 0.3s;
+  cursor: pointed;
+}
+
+.heart-icon:hover {
+  color: red;
+}
+
+.course-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #444;
+    transition: color 0.2s;
+}
+
+.icon-btn:hover {
+    color: var(--primary-blue);
+}
+
+.details-btn {
+    margin-left: auto;
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+}
+
+.details-btn:hover {
+    background-color: #0056b3;
 }

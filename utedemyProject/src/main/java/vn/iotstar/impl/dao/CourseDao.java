@@ -19,7 +19,7 @@ public class CourseDao implements ICourseDao {
 	public List<Object[]> findBestSellingCourseDetails(int limit) {
 	    EntityManager em = JPAConfig.getEntityManager();
 	    try {
-	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage " +
+	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, c.id " +
 	                "FROM OrderItem o " +
 	                "JOIN o.course c " +
 	                "JOIN c.teacher t " +
@@ -63,7 +63,7 @@ public class CourseDao implements ICourseDao {
 	public List<Object[]> findTodaySaleCourses(int limit) {
 	    EntityManager em = JPAConfig.getEntityManager();
 	    try {
-	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, v.percentage " +
+	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, v.percentage, c.id " +
 	    			"FROM Course c " +
 	    			"JOIN c.teacher t " +
 	    			"LEFT JOIN c.review r " +
@@ -80,6 +80,8 @@ public class CourseDao implements ICourseDao {
 	        em.close();
 	    }
 	}
+	
+	
 
     @Override
 	public boolean saveCoure(Course course) {

@@ -30,10 +30,10 @@ public class CourseController extends HttpServlet {
 
     	List<Object[]> bestSellerCourses = courseService.getBestSellingCourses(5);
     	req.setAttribute("bestSellerCourses", bestSellerCourses);
-
+    	
     	List<Object[]> todaySaleCourses = courseService.getTodaySaleCourses(10);
     	req.setAttribute("todaySaleCourses", todaySaleCourses);
-
+    	
     	req.getRequestDispatcher("/views/user/homepage.jsp").forward(req, resp);
 
     }
