@@ -1,6 +1,9 @@
 package vn.iotstar.controller.User;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.iotstar.entity.Cart;
+import vn.iotstar.entity.Course;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.CartService;
 import vn.iotstar.service.ICartService;
@@ -23,22 +27,94 @@ public class CartController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
+		String url = req.getRequestURI();
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		
 		HttpSession session = req.getSession();
 		User u = (User) session.getAttribute("account");
 		int userId = u.getId();
 		
+		if (url.contains("cart"))
+		{
 		Cart cart = cart_service.findByUserId(userId);
+		
+		Set<Course> courses = cart.getCourses();
+		
+		double totalAmount = 0;
+		for (Course course : courses) {
+		    totalAmount += course.getCoursePrice();
+		    System.out.println("hehe" + course.getCourseName());
+		}
+		
+		
 		System.out.println("Testcart"+cart);
+		session.setAttribute("totalAmount",totalAmount);
 		session.setAttribute("cart", cart);
 		
 		resp.sendRedirect("/utedemyProject/views/user/cartpage.jsp");
+		}
 		
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doPost(req, resp);
+		String url = req.getRequestURI();
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		HttpSession session = req.getSession();
+		User u = (User) session.getAttribute("account");
+		
+		if (url.contains("deletecart"))
+		{
+			  String action = req.getParameter("action");
+
+		        if (action != null) {
+		            if (action.equals("deleteAll")) {
+		                boolean bool = cart_service.removeAllCoursesByUserId(u.getId());
+		                System.out.println("Test"+bool);
+		                resp.sendRedirect("/utedemyProject/user/cart");
+		            	return;
+		            }
+		            if ("deleteSelected".equals(action)) {
+		                // Lấy các id khóa học được chọn
+		                String[] selectedCourses = req.getParameterValues("selectedCourses");
+
+		                if (selectedCourses != null && selectedCourses.length > 0) {
+		                    // Lấy cart từ session
+		                    Cart cart = (Cart) session.getAttribute("cart");
+
+		                    if (cart != null) {
+		                        // Chuyển mảng sang List để tiện xử lý
+		                        List<String> selectedList = Arrays.asList(selectedCourses);
+		                        
+		                        List<Integer> selectedIds = selectedList.stream()
+                                        .map(Integer::parseInt)
+                                        .toList();
+
+
+		                        // Xóa từng khóa học khỏi cart
+		                        boolean result = cart_service.deleteSelectedCourses(cart, selectedIds);
+		                        
+		                        if (result) {
+		                            System.out.println("Xóa thành công các khóa học đã chọn.");
+		                        } else {
+		                            System.out.println("Xóa thất bại.");
+		                        }
+
+		                        // Cập nhật lại cart vào session
+		                        session.setAttribute("cart", cart);
+		                    }
+		                }
+
+		                // Redirect về trang cart sau khi xóa
+		                resp.sendRedirect(req.getContextPath() + "/user/cart");
+		                return;
+		            }
+		        }
+		}
+		
+		
 	}
 	
 

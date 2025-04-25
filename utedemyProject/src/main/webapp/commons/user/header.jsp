@@ -3,13 +3,14 @@
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="/utedemyProject/views/Css/homepage.css">
 
  <header class="header-container">
         <div class="top-bar">
             <div class="logo-section">
-                <a href="#" class="unica-logo">
-					<img src="https://unica.vn/media/img/logo-unica.svg" alt="Unica Logo" class="logo-circle" id="logoImg">
-				</a>
+                <span class="unica-logo">unica</span>
                 <button class="category-btn">
                     <i class="fas fa-th-large"></i> DANH MỤC
                 </button>
@@ -98,20 +99,19 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="search-box">
+            <form action="${pageContext.request.contextPath}/user/search" method="post">
                 <div class="search-box-inner">
-                    <input type="text" placeholder="Tìm khóa học, giảng viên">
+                    <input type="text" name="keyword" placeholder="Tìm khóa học, giảng viên">
                     <button class="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-            </div>
-            
+             </form>
             <div class="user-actions">
                 <span>Doanh nghiệp</span>
                 <span>Hội viên</span>
                 <i class="fas fa-shopping-cart cart-icon"></i>
+                <i class="fas fa-heart heart-icon"></i>
                 <button class="login-btn">Đăng nhập</button>
                 <button class="signup-btn">Đăng ký</button>
             </div>

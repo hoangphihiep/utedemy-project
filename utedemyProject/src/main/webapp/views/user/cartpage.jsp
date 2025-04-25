@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -16,7 +15,7 @@
     <script src="/utedemyProject/views/Script/cartpage.js"></script>  
 </head>
 <body>
-    <header class="header-container">
+ <header class="header-container">
         <div class="top-bar">
             <div class="logo-section">
                 <a href="#" class="unica-logo">
@@ -124,33 +123,34 @@
                 <span>Doanh nghiệp</span>
                 <span>Hội viên</span>
                 <i class="fas fa-shopping-cart cart-icon"></i>
-                <button class="login-btn">Đăng nhập</button>
-                <button class="signup-btn">Đăng ký</button>
+                <c:choose>
+                    <c:when test="${empty sessionScope.account}">
+                        <button class="login-btn">Đăng nhập</button>
+                        <button class="signup-btn">Đăng ký</button>
+                    </c:when>
+                    <c:otherwise>
+                        <span>Xin chào, ${sessionScope.account.fullname}</span>
+                        <a href="/utedemyProject/user/logout">Đăng xuất</a>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
-    </header>
-
+    </header> 
     <main>
         <h1 class="cart-title">Giỏ hàng</h1>
         
         <div class="cart-container">
             <c:choose>
-                <c:when test="${empty cart.courses}">
-                    <div class="empty-cart">
-                        <i class="fas fa-shopping-cart fa-4x"></i>
-                        <p>Giỏ hàng của bạn đang trống</p>
-                        <a href="home" class="continue-shopping-btn">Tiếp tục mua sắm</a>
-                    </div>
-                </c:when>
-                <c:otherwise>
+                <c:when test="${not empty cart.courses}">
+                    <!-- TRƯỜNG HỢP 1: GIỎ HÀNG KHÔNG RỖNG -->
                     <div class="cart-items">
                         <div class="select-all">
                             <div class="select-all-left">
                                 <input type="checkbox" id="selectAll" class="select-all-checkbox" checked>
-                                <label for="selectAll">CHỌN TẤT CẢ (<c:out value="${fn:length(cart.courses)}" /> SẢN PHẨM)</label>
+                                <label for="selectAll">CHỌN TẤT CẢ (<span id="item-count">${cart.courses.size()}</span> SẢN PHẨM)</label>
                             </div>
                             
-                            <form action="/utedemyProject/user/cart" method="post">
+                            <form action="/utedemyProject/user/deletecart" method="post">
                                 <input type="hidden" name="action" value="deleteAll">
                                 <button type="submit" class="delete-btn">
                                     <i class="fas fa-trash delete-icon"></i> XÓA
@@ -158,91 +158,57 @@
                             </form>
                         </div>
                         
-                        <form action="/utedemyProject/user/cart" method="post" id="deleteForm">
+                        <form action="/utedemyProject/user/deletecart" method="post" id="deleteForm">
                             <input type="hidden" name="action" value="deleteSelected">
-                            <c:forEach var="course" items="${cart.courses}">
-                                <div class="cart-item" data-course-id="${course.id}">
-                                    <input type="checkbox" class="item-checkbox" checked name="selectedCourses" value="${course.id}" data-price="${course.coursePrice}" data-discount-price="${course.discountPrice}">
-                                    <c:choose>
-                                        <c:when test="${not empty course.courseDetail.imagePath}">
-                                            <c:if test="${course.courseDetail.imagePath.substring(0,5) != 'https'}">
-                                                <c:url value="/image?fname=${course.courseDetail.imagePath}" var="imgUrl"></c:url>
-                                            </c:if>
-                                            <c:if test="${course.courseDetail.imagePath.substring(0,5) == 'https'}">
-                                                <c:url value="${course.courseDetail.imagePath}" var="imgUrl"></c:url>
-                                            </c:if>
-                                            <img src="${imgUrl}" alt="${course.courseName}" class="item-image">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <!-- Placeholder for course without image -->
-                                        </c:otherwise>
-                                    </c:choose>
+                            
+                            <!-- Danh sách khóa học trong giỏ hàng -->
+                            <c:forEach var="item" items="${cart.courses}">
+                                <div class="cart-item" data-course-id="${item.id}">
+                                    <input type="checkbox" class="item-checkbox" checked name="selectedCourses" value="${item.id}" data-price="${item.coursePrice}">
+                                    <c:if test="${item.courseDetail.courseImage != ''}">
+                                          <c:if test ="${item.courseDetail.courseImage.substring(0,5) != 'https' }">
+                                             <c:url value="/image?fname=${item.courseDetail.courseImage}" var="imgUrl"></c:url>
+                                         </c:if>
+                                  <c:if test ="${item.courseDetail.courseImage.substring(0,5) == 'https' }">
+                                          <c:url value="${item.courseDetail.courseImage}" var="imgUrl"></c:url>
+                                 </c:if>
+                                </c:if>                   
+                                    <img src="${imgUrl}" alt="${item.courseName}" class="item-image">
                                     
                                     <div class="item-details">
-                                        <div class="item-title">${course.courseName}</div>
-                                        <div>
-                                            <span class="item-rating">
-                                                <i class="fas fa-star rating-star"></i>
-                                                <c:set var="totalRating" value="0" />
-                                                <c:set var="ratingCount" value="0" />
-                                                
-                                                <c:forEach var="review" items="${course.review}">
-                                                    <c:set var="totalRating" value="${totalRating + Integer.parseInt(review.rate)}" />
-                                                    <c:set var="ratingCount" value="${ratingCount + 1}" />
-                                                </c:forEach>
-                                                
-                                                <c:choose>
-                                                    <c:when test="${ratingCount > 0}">
-                                                        <fmt:formatNumber value="${totalRating / ratingCount}" pattern="#.#" /> (${ratingCount} đánh giá)
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        Chưa có đánh giá
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </span>
-                                        </div>
+                                        <div class="item-title">${item.courseName}</div>
+                                   
+                                      
                                         <div class="item-meta">
-                                            <c:set var="totalLessons" value="0" />
-                                            <c:set var="totalMinutes" value="0" />
-                                            
-                                            <c:forEach var="section" items="${course.sections}">
-                                                <c:set var="totalLessons" value="${totalLessons + fn:length(section.lessons)}" />
-                                                <c:forEach var="lesson" items="${section.lessons}">
-                                                    <c:set var="totalMinutes" value="${totalMinutes + lesson.duration}" />
-                                                </c:forEach>
-                                            </c:forEach>
-                                            
-                                            ${totalLessons} bài giảng - 
-                                            <fmt:formatNumber value="${totalMinutes / 60}" pattern="#" /> giờ 
-                                            <fmt:formatNumber value="${totalMinutes % 60}" pattern="#" /> phút
+                                            ${item.sections.size()} bài giảng
                                         </div>
+                                 
                                     </div>
                                     
                                     <div class="item-actions">
                                         <div class="item-price">
-                                            <c:set var="discountedPrice" value="${course.coursePrice}" />
-                                            <c:forEach var="discount" items="${course.discounts}">
-                                                <c:if test="${discount.isActive}">
-                                                    <c:set var="discountedPrice" value="${course.coursePrice - (course.coursePrice * discount.discountPercentage / 100)}" />
-                                                </c:if>
-                                            </c:forEach>
-                                            
-                                            <div class="current-price" data-price="${discountedPrice}">
-                                                <fmt:formatNumber value="${discountedPrice}" pattern="#,###" />đ
+                                            <div class="current-price">
+                                                <fmt:formatNumber value="${item.coursePrice}" type="currency" currencySymbol="" maxFractionDigits="0" />đ
                                             </div>
-                                            
-                                            <c:if test="${discountedPrice < course.coursePrice}">
-                                                <div class="original-price">
-                                                    <fmt:formatNumber value="${course.coursePrice}" pattern="#,###" />đ
-                                                </div>
-                                            </c:if>
                                         </div>
                                     </div>
                                 </div>
                             </c:forEach>
-                            <div style="text-align: right; margin-top: 20px;">
-                                <button type="submit" class="delete-selected-button">Xóa các khóa học đã chọn</button>
-                            </div>
+                            
+                 <div style="display: flex; justify-content: flex-end; margin: 20px 0;">
+  <button type="submit" class="delete-selected-button" style="
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+  ">
+    Xóa các khóa học đã chọn
+  </button>
+</div>
+
                         </form>
                     </div>
                     
@@ -250,35 +216,68 @@
                         <div class="order-title">Thông tin đơn hàng</div>
                         
                         <div class="order-row">
-                            <span class="order-label">Tạm tính (<span id="selected-count">${fn:length(cart.courses)}</span> sản phẩm)</span>
+                            <span class="order-label">Tạm tính (<span id="selected-count">${cart.courses.size()}</span> sản phẩm)</span>
                             <span class="order-value" id="subtotal">
-                                <fmt:formatNumber value="0" pattern="#,###" />đ
+                                <fmt:formatNumber value="${totalAmount}" type="currency" currencySymbol="" maxFractionDigits="0" />đ
                             </span>
                         </div>
                         
                         <div class="total-row">
                             <span class="total-label">Tổng cộng:</span>
                             <span class="total-value" id="totalAmount">
-                                <fmt:formatNumber value="0" pattern="#,###" />đ
+                                <fmt:formatNumber value="${totalAmount}" type="currency" currencySymbol="" maxFractionDigits="0" />đ
                             </span>
                         </div>
                         
-                        <form action="checkout" method="post" id="checkoutForm">
-                            <input type="hidden" name="useXu" id="xuInput" value="false">
+                        <form action="/utedemyProject/user/checkout" method="post" id="checkoutForm">
                             <div id="selectedCoursesContainer">
-                                <!-- Selected courses will be added here by JavaScript -->
+                                <c:forEach var="item" items="${cart.courses}">
+                                    <input type="hidden" name="selectedCourses" value="${item.id}">
+                                </c:forEach>
                             </div>
-                            <input type="hidden" name="totalAmount" id="totalAmountInput" value="0">
+                       <input type="hidden" name="totalAmount" id="totalAmountInput" value="${totalAmount}"> 
                             <button type="submit" class="checkout-btn">Thanh toán</button>
                         </form>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <!-- TRƯỜNG HỢP 2: GIỎ HÀNG RỖNG -->
+                    <div class="empty-cart">
+                        <p>Giỏ hàng của bạn đang trống</p>
+                        <i class="fas fa-shopping-cart empty-cart-icon"></i>
+                        <a href="/utedemyProject/home" class="continue-shopping-btn">Tiếp tục mua sắm</a>
                     </div>
                 </c:otherwise>
             </c:choose>
         </div>
         
+     <!--  <section class="top-courses" aria-labelledby="today-sale-title">
+            <h3 id="today-sale-title">BẠN CÓ THỂ QUAN TÂM</h3>
+            <div id="today-sale-courses" class="course-grid" aria-live="polite">
+                <c:if test="${not empty recommendedCourses}">
+                    <c:forEach var="course" items="${recommendedCourses}">
+                        <div class="course-card">
+                            <img src="${course.imageUrl}" alt="${course.title}" class="course-image">
+                            <div class="course-details">
+                                <h4>${course.title}</h4>
+                                <div class="course-instructor">${course.instructor}</div>
+                                <div class="course-rating">
+                                    <i class="fas fa-star"></i> ${course.rating} (${course.ratingCount})
+                                </div>
+                                <div class="course-price">
+                                    <fmt:formatNumber value="${course.price}" type="currency" currencySymbol="" maxFractionDigits="0" />đ
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+            </div>
+        </section> -->  
         <section class="top-courses" aria-labelledby="today-sale-title">
             <h3 id="today-sale-title">BẠN CÓ THỂ QUAN TÂM</h3>
-            <div id="today-sale-courses" class="course-grid" aria-live="polite"></div>
+            <div id="today-sale-courses" class="course-grid" aria-live="polite">
+                <!-- Có thể thêm các khóa học đề xuất ở đây -->
+            </div>
         </section>
     </main>
 
@@ -310,97 +309,100 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lấy tất cả checkbox khóa học
-            const checkboxes = document.querySelectorAll('.item-checkbox');
-            const selectAllCheckbox = document.getElementById('selectAll');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy tất cả checkbox khóa học
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const selectAllCheckbox = document.getElementById('selectAll');
+        
+        // Hàm tính toán lại tổng tiền
+        function recalculateTotal() {
+            let subtotal = 0;
+            let selectedCount = 0;
             
-            // Hàm tính toán lại tổng tiền
-            function recalculateTotal() {
-                let subtotal = 0;
-                let selectedCount = 0;
-                
-                checkboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        // Lấy giá của khóa học từ phần tử cha
-                        const cartItem = checkbox.closest('.cart-item');
-                        const priceElement = cartItem.querySelector('.current-price');
-                        
-                        // Lấy giá trị từ data-price attribute
-                        const price = parseFloat(priceElement.getAttribute('data-price') || 0);
-                        
-                        subtotal += price;
-                        selectedCount++;
-                    }
-                });
-                
-                // Cập nhật hiển thị tạm tính
-                document.getElementById('selected-count').textContent = selectedCount;
-                
-                // Cập nhật giá trị tạm tính
-                const subtotalElement = document.getElementById('subtotal');
-                subtotalElement.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
-                
-                // Cập nhật tổng cộng
-                const totalValue = document.getElementById('totalAmount');
-                totalValue.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
-                
-                // Cập nhật giá trị cho form thanh toán
-                const totalAmountInput = document.getElementById('totalAmountInput');
-                totalAmountInput.value = subtotal;
-                
-                // Cập nhật danh sách khóa học được chọn cho form thanh toán
-                const selectedCoursesContainer = document.getElementById('selectedCoursesContainer');
-                selectedCoursesContainer.innerHTML = ''; // Xóa danh sách cũ
-                
-                checkboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        const courseId = checkbox.value;
-                        const hiddenInput = document.createElement('input');
-                        hiddenInput.type = 'hidden';
-                        hiddenInput.name = 'selectedCourses';
-                        hiddenInput.value = courseId;
-                        selectedCoursesContainer.appendChild(hiddenInput);
-                    }
-                });
-            }
-            
-            // Thêm sự kiện cho tất cả checkbox khóa học
             checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    // Kiểm tra nếu tất cả đều được chọn thì chọn "Select All"
-                    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-                    selectAllCheckbox.checked = allChecked;
+                if (checkbox.checked) {
+                    // Tìm phần tử cha chứa khóa học
+                    const cartItem = checkbox.closest('.cart-item');
                     
-                    recalculateTotal();
-                });
+                    // Lấy giá hiện tại (current price) của khóa học
+                    const priceElement = cartItem.querySelector('.current-price');
+                    
+                    // Chuyển đổi giá từ định dạng "499,000đ" sang số
+                    const priceText = priceElement.textContent.trim();
+                    const price = parseFloat(priceText.replace(/[,.đ]/g, ''));
+                    
+                    subtotal += price;
+                    selectedCount++;
+                }
             });
             
-            // Thêm sự kiện cho checkbox "Select All"
-            selectAllCheckbox.addEventListener('change', function() {
-                const isChecked = this.checked;
-                
-                // Chọn/bỏ chọn tất cả các checkbox khóa học
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = isChecked;
-                });
+            // Cập nhật hiển thị tạm tính
+            document.getElementById('selected-count').textContent = selectedCount;
+            
+            // Cập nhật giá trị tạm tính
+            const subtotalElement = document.getElementById('subtotal');
+            subtotalElement.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
+            
+            // Cập nhật tổng cộng
+            const totalValue = document.getElementById('totalAmount');
+            totalValue.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
+            
+            // Cập nhật giá trị cho form thanh toán
+            const totalAmountInput = document.getElementById('totalAmountInput');
+            totalAmountInput.value = subtotal;
+            
+            // Cập nhật danh sách khóa học được chọn cho form thanh toán
+            const selectedCoursesContainer = document.getElementById('selectedCoursesContainer');
+            selectedCoursesContainer.innerHTML = ''; // Xóa danh sách cũ
+            
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const courseId = checkbox.value;
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'selectedCourses';
+                    hiddenInput.value = courseId;
+                    selectedCoursesContainer.appendChild(hiddenInput);
+                }
+            });
+        }
+        
+        // Thêm sự kiện cho tất cả checkbox khóa học
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                // Kiểm tra nếu tất cả đều được chọn thì chọn "Select All"
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                selectAllCheckbox.checked = allChecked;
                 
                 recalculateTotal();
             });
-            
-            // Tính toán ban đầu khi trang được tải
-            recalculateTotal();
-            
-            // Form checkout validation
-            document.getElementById('checkoutForm').addEventListener('submit', function(event) {
-                const selectedCoursesInputs = document.querySelectorAll('input[name="selectedCourses"]:checked');
-                
-                if (selectedCoursesInputs.length === 0) {
-                    event.preventDefault();
-                    alert('Vui lòng chọn ít nhất một khóa học để thanh toán!');
-                }
-            });
         });
+        
+        // Thêm sự kiện cho checkbox "Select All"
+        selectAllCheckbox.addEventListener('change', function() {
+            const isChecked = this.checked;
+            
+            // Chọn/bỏ chọn tất cả các checkbox khóa học
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+            
+            recalculateTotal();
+        });
+        
+        // Tính toán ban đầu khi trang được tải
+        recalculateTotal();
+        
+        // Form checkout validation
+        document.getElementById('checkoutForm')?.addEventListener('submit', function(event) {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            
+            if (selectedCount === 0) {
+                event.preventDefault();
+                alert('Vui lòng chọn ít nhất một khóa học để thanh toán!');
+            }
+        });
+    });
     </script>
 </body>
 </html>

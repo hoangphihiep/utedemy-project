@@ -339,20 +339,6 @@ header nav ul li:hover::after {
     align-items: center;
     margin-bottom: 15px;
 }
-
-.current-price {
-    font-size: 1.2rem;
-    color: var(--primary-blue);
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.original-price {
-    text-decoration: line-through;
-    color: #888;
-    font-size: 0.9rem;
-}
-
 .course-card .details-btn {
     width: 100%;
     padding: 12px;
@@ -394,19 +380,6 @@ header nav ul li:hover::after {
 .topic-tag:hover {
     background-color: var(--primary-blue);
     color: white;
-}
-
-.current-price {
-    font-size: 1.2rem;
-    color: var(--primary-blue);
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.original-price {
-    text-decoration: line-through;
-    color: #888;
-    font-size: 0.9rem;
 }
 
 .view-more {
@@ -1197,11 +1170,11 @@ header nav ul li:hover::after {
             color: #333;
         }
         
-        .original-price {
-            text-decoration: line-through;
-            color: #999;
-            font-size: 14px;
-        }
+       .item-price .original-price {
+       text-decoration: none !important;
+       color: #999;
+       font-size: 18px;
+}
         
         .order-title {
             font-size: 18px;
@@ -1288,3 +1261,68 @@ header nav ul li:hover::after {
             color: #ffd700;
             margin-right: 5px;
         }
+ .empty-message {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  text-align: center; /* Centers the text */
+}
+
+.empty-submessage {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  max-width: 500px;
+  text-align: center; /* Centers the text */
+  margin-left: auto; /* Centers the block element */
+  margin-right: auto; /* Centers the block element */
+}
+
+.continue-shopping-btn {
+  background-color: var(--primary-blue, #0066cc);
+  color: white;
+  padding: 0.9rem 2.2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: block; /* Changed from inline-flex to block for centering */
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.2);
+  margin-left: auto; /* Centers the button */
+  margin-right: auto; /* Centers the button */
+  width: fit-content; /* Makes the button only as wide as its content */
+}
+
+/* To center all elements together in a container */
+.container { /* Add this class to a parent div containing all elements */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.empty-cart {
+  text-align: center;
+  margin: 0 auto;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-cart p {
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+.empty-cart-icon {
+  font-size: 4rem; /* Kích thước biểu tượng */
+  color: #ccc; /* Màu xám nhạt */
+  margin: 20px 0; /* Khoảng cách trên dưới */
+  display: block; /* Hiển thị dạng block để căn giữa tốt hơn */
+}
+    
+        

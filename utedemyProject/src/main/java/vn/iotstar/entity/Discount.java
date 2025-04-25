@@ -51,6 +51,9 @@ public class Discount implements Serializable {
 	@Column(name = "code_amount")
 	private String codeAmount;
 	
+	@Column(name = "type")
+	private String type;
+	
 	@ManyToMany
     @JoinTable(
         name = "discount_course",
