@@ -46,7 +46,7 @@ public class CourseDetail implements Serializable {
 	@Column(name = "course_video", length = 255)
 	private String courseVideo;
 	
-	@Column(name = "learner_achievements", length = 500)
+	@Column(name = "learner_achievements", length = 1000)
     private String learnerAchievements;
 
     @Column(name = "course_learner", length = 500)

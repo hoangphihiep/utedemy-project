@@ -8,6 +8,7 @@ import java.util.Set;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -69,8 +70,8 @@ public class Course implements Serializable {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 	
-	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private Set<Review> review = new HashSet<>();
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Review> review = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "courses", cascade = CascadeType.ALL)
     private Set<FavoriteCourse> favoriteCourse = new HashSet<>();
