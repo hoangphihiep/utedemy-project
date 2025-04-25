@@ -26,6 +26,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString(exclude = {"createdBy"})
 @Table(name="review")
 @NamedQuery(name="Review.findAll", query="SELECT r from Review r")
 public class Review implements Serializable{
@@ -38,7 +39,7 @@ public class Review implements Serializable{
     private int id;
 	
 	@Column(name = "rate")
-    private String rate;
+    private int rate;
 	
 	@Column(name = "content")
     private String content;

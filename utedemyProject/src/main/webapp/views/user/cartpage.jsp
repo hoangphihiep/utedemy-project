@@ -2,13 +2,13 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unica - Học trực tuyến</title>
-    <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/utedemyProject/views/Css/cartpage.css">
@@ -177,8 +177,31 @@
                                     
                                     <div class="item-details">
                                         <div class="item-title">${item.courseName}</div>
-                                   
-                                      
+                                       <c:set var="totalReview" value="${fn:length(item.review)}" />
+<c:set var="totalRate" value="0" />
+
+<c:forEach var="rv" items="${item.review}">
+    <c:set var="totalRate" value="${totalRate + rv.rate}" />
+</c:forEach>
+
+<c:choose>
+    <c:when test="${totalReview > 0}">
+        <c:set var="averageRate" value="${totalRate / totalReview}" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="averageRate" value="0" />
+    </c:otherwise>
+</c:choose>
+
+<fmt:formatNumber var="averageRateFormatted" value="${averageRate}" type="number" maxFractionDigits="1" />
+
+<div>
+    <span class="item-rating">
+        <i class="fas fa-star rating-star"></i>
+        ${averageRateFormatted} (${totalReview} đánh giá)
+    </span>
+</div>
+                    
                                         <div class="item-meta">
                                             ${item.sections.size()} bài giảng
                                         </div>
@@ -236,7 +259,11 @@
                                 </c:forEach>
                             </div>
                        <input type="hidden" name="totalAmount" id="totalAmountInput" value="${totalAmount}"> 
-                            <button type="submit" class="checkout-btn">Thanh toán</button>
+                           <button type="submit" 
+    style="width: 100%; background-color: #e65c00; color: white; border: none; border-radius: 4px; padding: 15px; font-size: 16px; font-weight: bold; margin-top: 15px; cursor: pointer; text-transform: uppercase;">
+    Thanh toán
+</button>
+
                         </form>
                     </div>
                 </c:when>
@@ -251,34 +278,55 @@
             </c:choose>
         </div>
         
-     <!--  <section class="top-courses" aria-labelledby="today-sale-title">
+     <section class="top-courses" aria-labelledby="today-sale-title">
             <h3 id="today-sale-title">BẠN CÓ THỂ QUAN TÂM</h3>
             <div id="today-sale-courses" class="course-grid" aria-live="polite">
                 <c:if test="${not empty recommendedCourses}">
                     <c:forEach var="course" items="${recommendedCourses}">
                         <div class="course-card">
-                            <img src="${course.imageUrl}" alt="${course.title}" class="course-image">
+                        
+                        <c:if test="${course.courseDetail.courseImage != ''}">
+                                          <c:if test ="${course.courseDetail.courseImage.substring(0,5) != 'https' }">
+                                             <c:url value="/image?fname=${course.courseDetail.courseImage}" var="imgUrl_rcm"></c:url>
+                                         </c:if>
+                                  <c:if test ="${course.courseDetail.courseImage.substring(0,5) == 'https' }">
+                                          <c:url value="${course.courseDetail.courseImage}" var="imgUrl_rcm"></c:url>
+                                 </c:if>
+                         </c:if>                   
+                            <img src="${imgUrl_rcm}" alt="${course.courseName}" class="course-image">
                             <div class="course-details">
-                                <h4>${course.title}</h4>
-                                <div class="course-instructor">${course.instructor}</div>
+                                <h4>${course.courseName}</h4>
+                                <div class="course-instructor" style="text-align: left;">${course.teacher.fullname}</div>
                                 <div class="course-rating">
-                                    <i class="fas fa-star"></i> ${course.rating} (${course.ratingCount})
+                                 <c:set var="totalReview_rcm" value="${fn:length(course.review)}" />
+<c:set var="totalRate_rcm" value="0" />
+
+<c:forEach var="rv" items="${course.review}">
+    <c:set var="totalRate_rcm" value="${totalRate_rcm + rv.rate}" />
+</c:forEach>
+
+<c:choose>
+    <c:when test="${totalReview > 0}">
+        <c:set var="averageRate_rcm" value="${totalRate_rcm / totalReview_rcm}" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="averageRate_rcm" value="0" />
+    </c:otherwise>
+</c:choose>
+
+<fmt:formatNumber var="averageRateFormatted_rcm" value="${averageRate_rcm}" type="number" maxFractionDigits="1" />
+
+                                    <i class="fas fa-star rating-star"></i> ${totalRate_rcm} (${totalReview_rcm} đánh giá)
                                 </div>
-                                <div class="course-price">
-                                    <fmt:formatNumber value="${course.price}" type="currency" currencySymbol="" maxFractionDigits="0" />đ
+                               <div class="course-price" style="text-align: left;">
+                                    <fmt:formatNumber value="${course.coursePrice}" type="currency" currencySymbol="" maxFractionDigits="0" />đ
                                 </div>
                             </div>
                         </div>
                     </c:forEach>
                 </c:if>
             </div>
-        </section> -->  
-        <section class="top-courses" aria-labelledby="today-sale-title">
-            <h3 id="today-sale-title">BẠN CÓ THỂ QUAN TÂM</h3>
-            <div id="today-sale-courses" class="course-grid" aria-live="polite">
-                <!-- Có thể thêm các khóa học đề xuất ở đây -->
-            </div>
-        </section>
+        </section>  
     </main>
 
     <footer class="footer" role="contentinfo">

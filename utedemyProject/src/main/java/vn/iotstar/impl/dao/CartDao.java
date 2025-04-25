@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.ICartDao;
 import vn.iotstar.entity.Cart;
+import vn.iotstar.entity.Course;
 
 public class CartDao implements ICartDao{
 
@@ -57,8 +58,6 @@ public class CartDao implements ICartDao{
 	        e.printStackTrace();
 	        em.getTransaction().rollback();
 	        return false;
-	    } finally {
-	        em.close();
 	    }
 	}
 	public boolean deleteSelectedCourses(Cart cart, List<Integer> selectedCourseIds) {
@@ -85,11 +84,30 @@ public class CartDao implements ICartDao{
 	        e.printStackTrace();
 	        if (trans.isActive()) trans.rollback();
 	        return false; // Lỗi
-	    } finally {
-	        em.close();
 	    }
 	}
+	public List<Course> getRandomCoursesNotInCartByUserId(int userId, int limit) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        // Sử dụng JOIN FETCH để tránh LazyInitializationException và lấy các cart cùng lúc
+	        String jpql = "SELECT c FROM Course c " +
+	                      "WHERE c.id NOT IN (" +
+	                      "  SELECT co.id FROM Cart ca " +
+	                      "  JOIN ca.courses co " + // Thay FETCH bằng JOIN
+	                      "  WHERE ca.user.id = :userId" +
+	                      ") " +
+	                      "ORDER BY FUNCTION('RAND')";
+	        
+	        TypedQuery<Course> query = em.createQuery(jpql, Course.class);
+	        query.setParameter("userId", userId);
+	        query.setMaxResults(limit); // Số lượng random muốn lấy
 
+	        return query.getResultList(); // Trả về danh sách các course
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null; // Nếu có lỗi, trả về null
+	    }
+	}
 
 
 

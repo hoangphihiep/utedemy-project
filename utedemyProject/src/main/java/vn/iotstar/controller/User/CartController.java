@@ -15,7 +15,9 @@ import vn.iotstar.entity.Cart;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.CartService;
+import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.service.ICartService;
+import vn.iotstar.service.ICourseService;
 
 
 @SuppressWarnings("serial")
@@ -51,6 +53,22 @@ public class CartController extends HttpServlet{
 		System.out.println("Testcart"+cart);
 		session.setAttribute("totalAmount",totalAmount);
 		session.setAttribute("cart", cart);
+		
+		List<Course> recommendedCourses = cart_service.getRandomCoursesNotInCartByUserId(userId, 5);
+		// Giả sử recommendedCourses là danh sách các khóa học đề xuất
+		
+
+		System.out.println("Recommended Courses: ");
+		if (recommendedCourses != null && !recommendedCourses.isEmpty()) {
+		    for (Course course : recommendedCourses) {
+		        System.out.println("Course Name: " + course.getCourseName());
+		        // Nếu bạn muốn in thêm các thông tin khác, có thể tiếp tục
+		        // ví dụ: System.out.println("Course Description: " + course.getDescription());
+		    }
+		} else {
+		    System.out.println("No courses found.");
+		}
+		session.setAttribute("recommendedCourses",recommendedCourses);
 		
 		resp.sendRedirect("/utedemyProject/views/user/cartpage.jsp");
 		}
