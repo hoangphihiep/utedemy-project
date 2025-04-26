@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Table(name="voucher")
-@NamedQuery(name="Voucher.findAll", query="SELECT v from Course v")
+@NamedQuery(name="Voucher.findAll", query="SELECT v from Voucher v")
 public class Voucher implements Serializable {
 
 	private static final long serialVersionUID = 1L;

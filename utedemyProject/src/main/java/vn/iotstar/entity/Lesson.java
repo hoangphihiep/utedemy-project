@@ -33,17 +33,23 @@ public class Lesson implements Serializable {
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "title", nullable = false, length = 255)
+	@Column(name = "title", length = 255)
 	private String title;
 	
-	@Column(name = "description", nullable = false, length = 1000)
+	@Column(name = "description", length = 1000)
     private String description;
     
-	@Column(name = "videoUrl", nullable = false, length = 1000)
+	@Column(name = "videoUrl", length = 1000)
     private String videoUrl;
 	
+	@Column(name = "number_item")
+    private int numberItem;
+	
+	@Column(name = "is_free_lesson")
+    private boolean isFreeLesson;
+	
 	@ManyToOne
-    @JoinColumn(name = "section_id", nullable = false)
+    @JoinColumn(name = "section_id")
     private Section section;
 	
 	@OneToOne(mappedBy = "lesson")

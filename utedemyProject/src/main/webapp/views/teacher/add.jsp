@@ -13,33 +13,27 @@
 	</div>
 
 	<!-- Modal Dialog -->
-    <div class="modal" id="lessonModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Tạo phần học</h3>
-                <button class="close-button" id="closeModal">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Tiêu đề<span class="required">*</span></label>
-                    <input type="text" class="form-input" placeholder="Tổng quan" value="Tổng quan">
-                    <div class="char-count">10</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mô tả ngắn</label>
-                    <textarea class="form-input" rows="4" placeholder="Nhập mô tả"></textarea>
-                    <div class="char-count">200</div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" id="cancelModal">Hủy</button>
-                <button class="btn-save">Lưu</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal" id="lesson"> 
+	<div class="modal" id="lessonModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Tạo phần học</h3>
+				<button class="close-button" id="closeModal">×</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label class="form-label">Tiêu đề<span class="required">*</span></label>
+					<input type="text" id="sectionTitle" name="sectionTitle"
+						class="form-input">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn-cancel" id="cancelModal">Hủy</button>
+				<button type="button" class="btn-save">Lưu</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="lesson"> 
 	    <div class="modal-content"> 
 	        <div class="modal-header"> 
 	            <h3 class="modal-title">Cập nhật bài học</h3> 
@@ -48,12 +42,12 @@
 	        <div class="modal-body"> 
 	            <div class="form-group"> 
 	                <label class="form-label">Tiêu đề <span class="required">*</span></label> 
-	                <input type="text" class="form-input" placeholder="Nhập tiêu đề" value="Giới Thiệu Giao Diện"> 
+	                <input type="text" class="form-input" placeholder="Nhập tiêu đề" name="sectionTitle"> 
 	            </div> 
 	             
 	            <div class="form-group"> 
 	                <label class="form-label">Mô tả ngắn</label> 
-	                <textarea class="form-input" rows="4" placeholder="Nhập mô tả"></textarea> 
+	                <textarea class="form-input" rows="4" placeholder="Nhập mô tả" name="description"></textarea> 
 	            </div>
 	
 	            <div class="form-group">
@@ -65,7 +59,7 @@
 	            <div class="form-group">
 	                <label class="form-label">Nhập link Youtube/vimeo</label>
 	                <div class="video-input-container">
-	                    <input type="text" class="form-input video-input" placeholder="vd: https://www.youtube.com/embed?v=7fq7rQpOHuM" value="https://www.youtube.com/embed?v=7fq7rQpOHuM">
+	                    <input type="text" class="form-input video-input" placeholder="vd: https://www.youtube.com/embed?v=7fq7rQpOHuM" name="videoUrl">
 	                </div>
 	            </div>
 	        </div> 
@@ -94,6 +88,13 @@
 	        <input type="text" class="form-input" placeholder="Nhập mô tả">
 	        <div class="character-count">200</div>
 	      </div>
+	      
+	      <div class="form-group">
+	        <label class="form-label">Thời gian làm bài</label>
+	        <input type="number" class="form-input quiz-duration" placeholder="Thời gian làm bài (phút)">
+	        <div class="character-count">200</div>
+	      </div>
+	      
 	      <button class="quiz-actions">
 	           + Câu hỏi mới
 	      </button>

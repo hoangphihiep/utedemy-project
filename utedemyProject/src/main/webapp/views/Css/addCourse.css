@@ -362,7 +362,7 @@
             background-color: white;
             border-radius: 8px;
             width: 100%;
-            max-width: 600px;
+            max-width: 80vh;;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
@@ -389,6 +389,8 @@
         
         .modal-body {
             padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
         }
         
        	.form-group {
