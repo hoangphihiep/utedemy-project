@@ -8,28 +8,6 @@
         <div class="top-bar">
             <div class="logo-section">
                 <span class="unica-logo">unica</span>
-                <button class="category-btn">
-                    <i class="fas fa-th-large"></i> DANH MỤC
-                </button>
-                <div class="menu-container">
-                    <div class="primary-menu">
-                    <div class="menu-item has-submenu">
-  <div class="menu-title">
-    <i class="fas fa-rocket"></i> Kinh Doanh
-    <i class="fas fa-chevron-right"></i>
-  </div>
-  <div class="submenu">
-    <div class="menu-item">Quản Trị Kinh Doanh</div>
-    <div class="menu-item">Kinh Doanh Online</div>
-    <div class="menu-item">Khởi Nghiệp</div>
-    <div class="menu-item">Quản Trị Nhân Sự</div>
-    <div class="menu-item">Thương mại điện tử</div>
-    <div class="menu-item">Bán hàng</div>
-  </div>
-</div>
-
-                    </div>
-                </div>
             </div>
             <form action="${pageContext.request.contextPath}/user/search" method="post">
                 <div class="search-box-inner">
