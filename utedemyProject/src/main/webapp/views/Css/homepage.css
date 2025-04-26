@@ -964,65 +964,6 @@ header nav ul li:hover::after {
     border-radius: 20px;
     outline: none;
 }
-
-/* Navigation menu styles */
-.menu-container {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 100;
-    display: none;
-}
-
-.category-btn:hover + .menu-container,
-.menu-container:hover {
-    display: block;
-}
-
-.primary-menu {
-    width: 250px;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.menu-item {
-    padding: 12px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    position: relative;
-}
-
-.menu-item:hover {
-    background-color: #f5f5f5;
-}
-
-.menu-item i {
-    margin-right: 10px;
-    width: 20px;
-    text-align: center;
-}
-
-.menu-item .fa-chevron-right {
-    margin-left: 10px;
-    color: #999;
-}
-
-.submenu {
-    position: absolute;
-    left: 100%;
-    top: 0;
-    width: 250px;
-    background-color: white;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-    display: none;
-}
-
-.menu-item:hover .submenu {
-    display: block;
-}
 .live-search-results {
     position: absolute;
     top: 100%;
