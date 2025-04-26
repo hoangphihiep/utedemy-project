@@ -3,8 +3,6 @@
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/utedemyProject/views/Css/header.css">
  <header class="header-container">
         <div class="top-bar">
@@ -15,86 +13,21 @@
                 </button>
                 <div class="menu-container">
                     <div class="primary-menu">
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-rocket"></i> Kinh Doanh
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                            <div class="submenu">
-                                <div class="menu-item">Quản Trị Kinh Doanh</div>
-                                <div class="menu-item">Kinh Doanh Online</div>
-                                <div class="menu-item">Khởi Nghiệp</div>
-                                <div class="menu-item">Quản Trị Nhân Sự</div>
-                                <div class="menu-item">Thương mại điện tử</div>
-                                <div class="menu-item">Bán hàng</div>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-language"></i> Ngoại Ngữ
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-paint-brush"></i> Thiết Kế
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-lightbulb"></i> Kỹ Năng
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-code"></i> Lập Trình & CNTT
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-heartbeat"></i> Sức Khoẻ Và Làm Đẹp
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-bullhorn"></i> Marketing
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-desktop"></i> Tin Học Văn Phòng
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-coffee"></i> Phong Cách Sống
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-heart"></i> Hôn Nhân Và Gia Đình
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-chart-line"></i> Tài Chính Kế Toán
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="menu-item">
-                            <div>
-                                <i class="fas fa-music"></i> Âm Nhạc
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
+                    <div class="menu-item has-submenu">
+  <div class="menu-title">
+    <i class="fas fa-rocket"></i> Kinh Doanh
+    <i class="fas fa-chevron-right"></i>
+  </div>
+  <div class="submenu">
+    <div class="menu-item">Quản Trị Kinh Doanh</div>
+    <div class="menu-item">Kinh Doanh Online</div>
+    <div class="menu-item">Khởi Nghiệp</div>
+    <div class="menu-item">Quản Trị Nhân Sự</div>
+    <div class="menu-item">Thương mại điện tử</div>
+    <div class="menu-item">Bán hàng</div>
+  </div>
+</div>
+
                     </div>
                 </div>
             </div>

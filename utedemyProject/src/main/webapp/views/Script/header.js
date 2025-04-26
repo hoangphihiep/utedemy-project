@@ -1,57 +1,84 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const avatarDropdown = document.getElementById('avatarDropdown');
-  const userDropdown = document.getElementById('userDropdown');
+  // Select necessary DOM elements
   const categoryBtn = document.querySelector('.category-btn');
   const menuContainer = document.querySelector('.menu-container');
+  const menuItems = document.querySelectorAll('.primary-menu > .menu-item');
+  const avatarDropdown = document.getElementById('avatarDropdown');
+  const userDropdown = document.getElementById('userDropdown');
 
-  // Avatar dropdown
-  if (avatarDropdown && userDropdown) {
-    avatarDropdown.addEventListener('click', function (e) {
-      e.stopPropagation();
-      userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
-    });
-  }
-
-  // Category dropdown
+  // 1. Toggle category menu on button click
   if (categoryBtn && menuContainer) {
     categoryBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      menuContainer.style.display = menuContainer.style.display === 'block' ? 'none' : 'block';
+      menuContainer.classList.toggle('show');
     });
   }
 
-  // Primary menu submenus
-  const menuItems = document.querySelectorAll('.primary-menu .menu-item');
-  menuItems.forEach(item => {
-    const menuTitle = item.querySelector('.menu-title');
-    const submenu = item.querySelector('.submenu');
+  // 2. Handle menu item clicks for submenus
+  menuItems.forEach(function (item) {
+    item.addEventListener('click', function (e) {
+      e.stopPropagation(); // Prevent closing the menu
 
-    if (menuTitle && submenu) {
-      menuTitle.addEventListener('click', function (e) {
-        e.stopPropagation();
-
-        // Hide other submenus
-        document.querySelectorAll('.primary-menu .submenu').forEach(menu => {
-          if (menu !== submenu) menu.style.display = 'none';
+      const submenu = this.querySelector('.submenu');
+      if (submenu) {
+        // Close all other submenus
+        document.querySelectorAll('.submenu.show').forEach(function (menu) {
+          if (menu !== submenu) {
+            menu.classList.remove('show');
+          }
         });
 
-        // Toggle this submenu
-        submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-      });
-    }
-  });
-
-  // Click outside to close everything
-  document.addEventListener('click', function () {
-    if (userDropdown) userDropdown.style.display = 'none';
-    if (menuContainer) menuContainer.style.display = 'none';
-
-    document.querySelectorAll('.primary-menu .submenu').forEach(menu => {
-      menu.style.display = 'none';
+        // Toggle current submenu
+        submenu.classList.toggle('show');
+      }
     });
   });
 
-  // Prevent closing when clicking inside dropdowns
-  if (userDropdown) userDropdown.addEventListener('click', e => e.stopPropagation());
-  if (menuContainer) menuContainer.addEventListener('click', e => e.stopPropagation());
+  // 3. Prevent submenu items from closing the submenu
+  document.querySelectorAll('.submenu .menu-item').forEach(function (item) {
+    item.addEventListener('click', function (e) {
+      e.stopPropagation(); // Prevent closing the submenu
+      // Add custom behavior for submenu item clicks if needed
+    });
+  });
+
+  // 4. Toggle avatar dropdown
+  if (avatarDropdown && userDropdown) {
+    avatarDropdown.addEventListener('click', function (e) {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+  }
+
+  // 5. Close all menus when clicking outside
+  document.addEventListener('click', function () {
+    // Close category menu
+    if (menuContainer && menuContainer.classList.contains('show')) {
+      menuContainer.classList.remove('show');
+    }
+
+    // Close all submenus
+    document.querySelectorAll('.submenu.show').forEach(function (submenu) {
+      submenu.classList.remove('show');
+    });
+
+    // Close avatar dropdown
+    if (userDropdown && userDropdown.classList.contains('show')) {
+      userDropdown.classList.remove('show');
+    }
+  });
+
+  // 6. Prevent menu container from closing when clicked
+  if (menuContainer) {
+    menuContainer.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  // 7. Prevent user dropdown from closing when clicked
+  if (userDropdown) {
+    userDropdown.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+  }
 });
