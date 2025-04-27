@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <title>Unica - Học online mọi kỹ nằng từ chuyện gia hàng đầu</title>
     <link rel="stylesheet" href="/utedemyProject/views/Css/Course.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="/utedemyProject/views/Script/Course.js"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
 </head>
 
 <header class="header-bar">
@@ -23,12 +24,11 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
         </div>
-        
+
         <!-- Popup tiến độ -->
         <div class="progress-popup" id="progressPopup">
             <div class="progress-content">
                 <div class="progress-header">Đã học ??/?? bài học</div>
-                <div class="progress-text">Hoàn thành khóa học để nhận giấy chứng nhận.</div>
             </div>
         </div>
 </header>
@@ -37,7 +37,8 @@
 <div class="course-container">
     <!-- Phần video -->
     <div class="course-video-area">
-        <iframe src="https://www.youtube.com/embed/jtFsZRHUyPE"
+        <iframe id="lesson-video"
+        		src=""
                 frameborder="0"
                 allowfullscreen>
         </iframe>
@@ -45,45 +46,82 @@
 		<!-- Controller Video -->
 		<div class="control-selection">
                 <div class="right-controls">
-                    <button class="btn-report"><i class="fas fa-exclamation-circle"></i> Báo lỗi</button>
+                    <button class="btn-report" id="btn-report"><i class="fas fa-exclamation-circle"></i> Báo lỗi</button>
+					<div id="reportModal" class="modal" style="display: none;">
+					  <div class="modal-content">
+					    <span class="close">&times;</span>
+					    <h2>Báo lỗi video</h2>
+					    <div class="options">
+					      <label><input type="radio" name="errorType" value="Không xem được video"> Không xem được video</label>
+					      <label><input type="radio" name="errorType" value="Nội dung video"> Nội dung video</label>
+					    </div>
+					    <textarea placeholder="Nhập nội dung bạn muốn báo lỗi..." id="errorContent"></textarea>
+					    <button id="submitReport" class="submit-btn">Gửi</button>
+					  </div>
+					</div>
                     <div class="autoplay-toggle">
                         <span>Autoplay</span>
                         <label class="switch">
-                            <input type="checkbox" checked>
+                            <input type="checkbox">
                             <span class="slider round"></span>
                         </label>
                     </div>
-                    <button class="btn-prv"><i class="fas fa-chevron-left"> Bài Trước</i></button>
+                    <button class="btn-prv"><i class="fas fa-chevron-left"> </i> Bài Trước</button>
                     <button class="btn-next">Bài sau <i class="fas fa-chevron-right"></i></button>
 				</div>
 		</div>
-		
-		<!-- Controller Video -->
-		<h2>Bài 1: bla bla bla blu blu blu ble ble ble....</h2>
 
-        <!-- Tabs -->
+		<h2 id="lesson-title"></h2>
+		<div id="lesson-description"></div>
+
         <div class="course-tabs">
 		  <div class="tab-menu">
 		    <div class="active" data-tab="overview">Tổng quan</div>
 		    <div data-tab="discussion">Thảo luận</div>
 		    <div data-tab="reviews">Đánh giá</div>
 		  </div>
-		
 		  <div class="tab-content active" data-content="overview">
-		    <h3>Giới thiệu khóa học</h3>
-		    <p>...</p>
-		    <h3>Giảng viên</h3>
-		    <p>...</p>
-		  </div>
-		
+			  <div class="overview-section">
+			    <div id="course-intro">
+			    </div>
+			  </div>
+			  <div class="overview-section">
+			    <div id="instructor-info">
+			    </div>
+			  </div>
+			</div>
 		  <div class="tab-content" data-content="discussion">
-		    <h3>Thảo luận</h3>
-		    <p>Chưa có nội dung thảo luận</p>
+			<textarea name="comment" id="comment"></textarea>
+			<button class="btn-submit-comment">Gửi</button>
+		    <h3 class="headerIncomment">Tất cả thảo luận trong khóa học này:</h3>
+			<div id="comment-filter">
+			  <label for="comment-sort">Sắp xếp theo: </label>
+			  <select id="comment-sort">
+			    <option value="recent">Mới nhất</option>
+			    <option value="likes">Nhiều lượt thích</option>
+			  </select>
+			</div>
+		    <div id="comment-container"></div>
+		    <div class="reply-list"></div>
+  			<div class="comment-reply-editor" style="display: none;"></div>
 		  </div>
-		
+
 		  <div class="tab-content" data-content="reviews">
-		    <h3>Đánh giá</h3>
-		    <p>...</p>
+		    <div id="rating-summary" class="rating-summary"></div>
+		    <h3 class="header-reviews">Đánh giá</h3>
+		    <div id="rating-filter">
+			  <label for="rating-sort">Sắp xếp theo: </label>
+			  <select id="rating-sort">
+			    <option value="All">Tất cả đánh giá</option>
+			    <option value="5-stars">Đánh giá 5 sao</option>
+			    <option value="4-stars">Đánh giá 4 sao</option>
+			    <option value="3-stars">Đánh giá 3 sao</option>
+			    <option value="2-stars">Đánh giá 2 sao</option>
+			    <option value="1-stars">Đánh giá 1 sao</option>
+			  </select>
+			  <div id="reviews-container"></div>
+			  <button id="load-more-btn">Xem thêm đánh giá</button>
+			</div>
 		  </div>
 		</div>
 
@@ -91,56 +129,45 @@
 
     <!-- Phần sidebar -->
 <div class="course-sidebar">
-    <h3>Nội dung khóa học</h3>
+    <h3 class="header-lesson-container">Nội dung khóa học</h3>
 
-    <div class="lesson-group">
+	<div id="lesson-container" class="lesson-group">
         <div class="lesson-section">
             <div class="lesson-group-title" onclick="toggleLesson(this)">
-                Phần 1: Tổng quan và cài đặt ứng dụng khai thuế
                 <span class="arrow">&#9660;</span>
             </div>
             <div class="lesson-list">
                 <div class="lesson-item active">
-                    	<span>Bài 1: Giới thiệu khóa học</span><span>04:47</span>
                 </div>
                 <div class="lesson-item">
-                    <span>Bài 2: Cài đặt phần mềm hỗ trợ kê khai thuế</span><span>11:48</span>
                 </div>
             </div>
         </div>
 
         <div class="lesson-section">
             <div class="lesson-group-title" onclick="toggleLesson(this)">
-                Phần 2: Thiết lập hệ thống và sửa lỗi
                 <span class="arrow">&#9654;</span>
             </div>
             <div class="lesson-list" style="display: none;">
                 <div class="lesson-item">
-                    <span>Bài 3: Sửa lỗi phần mềm</span><span>05:26</span>
                 </div>
                 <div class="lesson-item">
-                    <span>Bài 4: Khai báo thông tin cho phần mềm HTKK</span><span>16:00</span>
                 </div>
             </div>
         </div>
 
         <div class="lesson-section">
             <div class="lesson-group-title" onclick="toggleLesson(this)">
-                Phần 3: Công cụ hỗ trợ và quản lý dữ liệu
                 <span class="arrow">&#9654;</span>
             </div>
             <div class="lesson-list" style="display: none;">
                 <div class="lesson-item">
-                    <span>Bài 5: Tìm hiểu về năm tài chính</span><span>11:51</span>
                 </div>
                 <div class="lesson-item">
-                    <span>Bài 6: Cài đặt các công cụ hỗ trợ</span><span>07:07</span>
                 </div>
                 <div class="lesson-item">
-                    <span>Bài 7: Định dạng lại ngày, tháng</span><span>10:15</span>
                 </div>
                 <div class="lesson-item">
-                    <span>Bài 8: Sao lưu phục hồi dữ liệu</span><span>04:58</span>
                 </div>
             </div>
         </div>
