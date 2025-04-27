@@ -1,6 +1,7 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -10,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
@@ -36,9 +39,13 @@ public class OrderItem implements Serializable {
 	@Column(name = "id")
     private int id;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "course_id", referencedColumnName = "id")
-    private Course course;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+	    name = "orderitem_course",
+	    joinColumns = @JoinColumn(name = "orderitem_id"),
+	    inverseJoinColumns = @JoinColumn(name = "course_id")
+	)
+	private Set<Course> courses = new HashSet<>();
 	
 	@Column(name = "finished_fee")
 	private double finishedFee;
