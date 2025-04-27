@@ -51,8 +51,14 @@
     <!-- User is not logged in - show login and signup buttons -->
     <a href="/cart"><i class="fas fa-shopping-cart cart-icon"></i></a>
     <a href="/favorites"><i class="fas fa-heart heart-icon"></i></a>
+    <a href="/utedemyProject/login">
     <button class="login-btn">Đăng nhập</button>
+    </a>
+     <a href="/utedemyProject/user/register">
     <button class="signup-btn">Đăng ký</button>
+        </a>
+
+
   </c:if>
         </div>
 

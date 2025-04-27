@@ -77,7 +77,9 @@
             <div class="hero-content">
                 <h2 id="recruitment-title">Trở thành Giảng viên Unica</h2>
                 <p>Giúp mọi người trở nên tốt hơn - bao gồm cả chính bạn</p>
-                <button class="btn btn-register" aria-label="Register as Instructor">Đăng ký ngay</button>
+                 <form action="${pageContext.request.contextPath}/user/homeRegisterTeacher" method="get" style="display:inline;">
+				    <button type="submit" class="btn btn-register" aria-label="Register as Instructor">Đăng ký ngay</button>
+				</form>
             </div>
             <div class="hero-image">
                 <img src="/api/placeholder/500/400" alt="Instructor Illustration">
@@ -129,7 +131,7 @@
           <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
           <c:out value="{" escapeXml="false"/>
               id: ${course[6] != null ? course[6] : 0},
-              title: "${course[0]}%",
+              title: "${course[0]}",
               instructor: "${course[1]}",
               rating: ${course[2] != null ? course[2] : 0},
               price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số

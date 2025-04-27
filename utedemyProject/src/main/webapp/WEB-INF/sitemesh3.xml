@@ -5,9 +5,13 @@
 	<mapping path="/teacher/adBasicInformation" name="teacher" decorator="addCourse.jsp" />
 	<mapping path="/teacher/homePage" name="teacher" decorator="teacher.jsp" />
 	<mapping path="/teacher/addCourse" name="teacher" decorator="teacher.jsp" />
+	<mapping path="/user/registerTeacher" name="user" decorator="registerTeacher.jsp" />
+	<mapping path="/user/contract" name="user" decorator="registerTeacher.jsp" />
+	
 	<mapping path="/admin/homePage" name="admin" decorator="admin.jsp" />
+	<mapping path="/admin/accountManagement" name="admin" decorator="admin.jsp" />
 	
-	
-	    <mapping path="/user/homepage" name="user" decorator="user.jsp" />
+	<mapping path="/user/homepage" name="user" decorator="user.jsp" />
+	<mapping path="/user/homeRegisterTeacher" name="user" decorator="user.jsp" />
 	
 </sitemesh>

@@ -3,6 +3,7 @@ package vn.iotstar.dao;
 import java.util.Set;
 
 import vn.iotstar.entity.Role;
+import vn.iotstar.entity.Teacher;
 import vn.iotstar.entity.User;
 
 public interface IUserDao {
@@ -26,4 +27,5 @@ public interface IUserDao {
 
     boolean updateUserInformation(User user);
 	
+    public void registerTeacher(int idUser, Teacher teacher);
 }

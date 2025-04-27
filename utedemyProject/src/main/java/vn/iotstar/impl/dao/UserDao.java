@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.IUserDao;
 import vn.iotstar.entity.Role;
+import vn.iotstar.entity.Teacher;
 import vn.iotstar.entity.User;
 
 public class UserDao implements IUserDao {
@@ -187,4 +188,78 @@ public class UserDao implements IUserDao {
             return false;
         }
     }
+
+	@Override
+	public void registerTeacher(int idUser, Teacher teacher) {
+		EntityManager enma = JPAConfig.getEntityManager();
+	    EntityTransaction trans = enma.getTransaction();
+
+	    try {
+	        trans.begin();
+	        User user = enma.find(User.class, idUser);
+
+	        if (user == null) {
+	            System.out.println("\n🔹 User không tồn tại\n");
+	            return;
+	        }
+
+	        System.out.println("\n🔹 User đã tồn tại, lấy thông tin...\n");
+
+	        // Kiểm tra Role "Teacher"
+	        TypedQuery<Role> roleQuery = enma.createQuery("SELECT r FROM Role r WHERE r.id = :id", Role.class);
+	        roleQuery.setParameter("id", 2); // ID của role "Teacher"
+	        Role teacherRole = roleQuery.getSingleResult();
+
+	        // Thêm role "Teacher" nếu chưa có
+	        boolean hasTeacherRole = false;
+	        for (Role role : user.getRoles()) {
+	            if (role.getId() == teacherRole.getId()) {
+	                hasTeacherRole = true;
+	                break;
+	            }
+	        }
+	        
+	        if (!hasTeacherRole) {
+	            user.addRole(teacherRole);
+	            enma.merge(user);
+	            enma.flush(); // Đảm bảo thay đổi được lưu vào DB trước khi tiếp tục
+	        }
+
+	        // Kiểm tra xem User đã là Teacher hay chưa bằng JPQL
+	        TypedQuery<Long> countQuery = enma.createQuery(
+	            "SELECT COUNT(t) FROM Teacher t WHERE t.id = :userId", Long.class);
+	        countQuery.setParameter("userId", idUser);
+	        long teacherExists = countQuery.getSingleResult();
+
+	        if (teacherExists == 0) {
+	            // Chưa là Teacher => Tạo Teacher mới
+	            System.out.println("\n🔹 Đăng ký trở thành giảng viên...\n");
+	            
+	            // Chú ý: Không tạo Teacher từ đầu, mà dùng query SQL để insert trực tiếp
+	            String insertTeacherSQL = 
+	                "INSERT INTO teacher (id, taxCode, identityCard, frontIdentityUrl, backIdentityUrl, " +
+	                "description, socialUrl, bankAccountNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	                
+	            enma.createNativeQuery(insertTeacherSQL)
+	                .setParameter(1, idUser)
+	                .setParameter(2, teacher.getTaxCode())
+                    .setParameter(3, teacher.getIdentityCard())
+                    .setParameter(4, teacher.getFrontIdentityUrl())
+                    .setParameter(5, teacher.getBackIdentityUrl())
+                    .setParameter(6, teacher.getDescription())
+                    .setParameter(7, teacher.getSocialUrl())
+                    .setParameter(8, teacher.getBankAccountNumber())
+	                .executeUpdate();
+	        } else {
+	            System.out.println("\n🔹 User đã là giảng viên, không cần đăng ký lại!\n");
+	        }
+
+	        trans.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        trans.rollback();
+	        throw e;
+	        }
+		
+	}
 }

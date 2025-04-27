@@ -4,6 +4,7 @@ import java.util.Set;
 
 import vn.iotstar.dao.IUserDao;
 import vn.iotstar.entity.Role;
+import vn.iotstar.entity.Teacher;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.dao.UserDao;
 import vn.iotstar.service.IUserService;
@@ -109,5 +110,9 @@ public class UserService implements IUserService {
     public boolean updateUserInformation(User user) {
     	return userDao.updateUserInformation(user);
     }
+	@Override
+	public void registerTeacher(int idUser, Teacher teacher) {
+		userDao.registerTeacher(idUser, teacher);
+	}
 
 }
