@@ -23,19 +23,14 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString(exclude = "roles")
 @Table(name="users")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -75,7 +70,7 @@ public class User implements Serializable {
 	@Column(name = "password")
 	protected String password;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
@@ -107,9 +102,9 @@ public class User implements Serializable {
 	@Column(name = "is_active")
     private boolean isActive;
 	
-	@ManyToMany(mappedBy = "usedByUsers")
-    private Set<Discount> usedDiscounts = new HashSet<>();
-	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Orders> order  = new HashSet<>();
+	
+	@ManyToMany(mappedBy = "usedByUsers")
+    private Set<Discount> usedDiscounts = new HashSet<>();
 }

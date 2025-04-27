@@ -10,6 +10,11 @@ import vn.iotstar.dao.ICourseDao;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseType;
+import vn.iotstar.entity.Lesson;
+import vn.iotstar.entity.Question;
+import vn.iotstar.entity.Quiz;
+import vn.iotstar.entity.Section;
+import vn.iotstar.entity.Answer;
 
 public class CourseDao implements ICourseDao {
 
@@ -189,22 +194,35 @@ public class CourseDao implements ICourseDao {
 	@Override
 	public boolean updateCourse(Course course) {
 		EntityManager enma = JPAConfig.getEntityManager();
-		EntityTransaction trans = enma.getTransaction();
-		try {
-			trans.begin();
-			// gọi phuong thức để insert, update, delete
-			enma.merge(course);
-			trans.commit();
-			return true;
-		} catch (Exception e) {
-			if (trans.isActive()) {
+	    EntityTransaction trans = enma.getTransaction();
+	    try {
+	        trans.begin();
+	        
+	        // Lấy các collection hiện tại để tránh xung đột
+	        Course existingCourse = enma.find(Course.class, course.getId());
+	        if (existingCourse != null) {
+	            // Giữ nguyên các collection để tránh sửa đổi đồng thời
+	            course.setSections(existingCourse.getSections());
+	            course.setReview(existingCourse.getReview());
+	            course.setFavoriteCourse(existingCourse.getFavoriteCourse());
+	            course.setCart(existingCourse.getCart());
+	            course.setVouchers(existingCourse.getVouchers());
+	            course.setDiscounts(existingCourse.getDiscounts());
+	        }
+	        
+	        // Sau đó merge
+	        enma.merge(course);
+	        trans.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
 	            trans.rollback();
 	        }
 	        e.printStackTrace();
-			return false;
-		} finally {
-			enma.close();
-		}
+	        return false;
+	    } finally {
+	        enma.close();
+	    }
 	}
 
 	@Override
@@ -248,5 +266,433 @@ public class CourseDao implements ICourseDao {
 	        em.close();
 	    }
 	}
+	@Override
+	public boolean updateCourseDetail(CourseDetail courseDetail) {
+		EntityManager enma = JPAConfig.getEntityManager();
+		EntityTransaction trans = enma.getTransaction();
+		try {
+			trans.begin();
+			// gọi phuong thức để insert, update, delete
+			enma.merge(courseDetail);
+			trans.commit();
+			return true;
+		} catch (Exception e) {
+			if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+			return false;
+		} finally {
+			enma.close();
+		}
+	}
+	@Override
+	public boolean saveLesson(Lesson lesson) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    
+	    try {
+	        trans.begin();
+	        em.persist(lesson);
+	        trans.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+	public Section findByIdSection(int id) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        Section section = em.find(Section.class, id);
+	        trans.commit();
+	        return section;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public boolean saveQuiz(Quiz quiz) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    
+	    try {
+	        trans.begin();
+	        em.persist(quiz);
+	        trans.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public int maxQuizId() {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        String jpql = "SELECT MAX(q.id) FROM Quiz q";
+	        Query query = em.createQuery(jpql);
+	        Integer maxId = (Integer) query.getSingleResult();
+	        trans.commit();
+	        return maxId != null ? maxId : 0;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return 0;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public Quiz findByIdQuiz(int id) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        Quiz quiz = em.find(Quiz.class, id);
+	        trans.commit();
+	        return quiz;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public boolean saveQuestion(Question question) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+
+	    try {
+	        trans.begin();
+	        em.persist(question);
+	        trans.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public int maxQuestionId() {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        String jpql = "SELECT MAX(q.id) FROM Question q";
+	        Query query = em.createQuery(jpql);
+	        Integer maxId = (Integer) query.getSingleResult();
+	        trans.commit();
+	        return maxId != null ? maxId : 0;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return 0;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public Question findByIdQuestion(int id) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        Question question = em.find(Question.class, id);
+	        trans.commit();
+	        return question;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public boolean saveAnswer(Answer answer) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    
+	    try {
+	        trans.begin();
+	        em.persist(answer);
+	        trans.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public boolean updateSection(Section section) {
+		EntityManager enma = JPAConfig.getEntityManager();
+		EntityTransaction trans = enma.getTransaction();
+		try {
+			trans.begin();
+			// gọi phuong thức để insert, update, delete
+			enma.merge(section);
+			trans.commit();
+			return true;
+		} catch (Exception e) {
+			if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+			return false;
+		} finally {
+			enma.close();
+		}
+	}
+	
+	@Override
+	public Lesson findByIdLesson(int id) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        Lesson lesson = em.find(Lesson.class, id);
+	        trans.commit();
+	        return lesson;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public boolean updateLesson(Lesson lesson) {
+		EntityManager enma = JPAConfig.getEntityManager();
+		EntityTransaction trans = enma.getTransaction();
+		try {
+			trans.begin();
+			// gọi phuong thức để insert, update, delete
+			enma.merge(lesson);
+			trans.commit();
+			return true;
+		} catch (Exception e) {
+			if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+			return false;
+		} finally {
+			enma.close();
+		}
+	}
+	
+	@Override
+	public boolean updateQuiz(Quiz quiz) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction tx = em.getTransaction();
+	    try {
+	        tx.begin();
+
+	        Quiz existing = em.find(Quiz.class, quiz.getId());
+	        if (existing != null) {
+	            existing.setTitle(quiz.getTitle());
+	            existing.setDescription(quiz.getDescription());
+	            existing.setDuration(quiz.getDuration());
+	            existing.getQuestions().clear();
+	            for (Question q : quiz.getQuestions()) {
+	                q.setQuiz(existing);
+	                
+	                for (Answer a : q.getAnswers()) {
+	                    a.setQuestion(q);
+	                }
+	                
+	                existing.getQuestions().add(q);
+	            }
+
+	            em.merge(existing);
+	        }
+	        
+	        tx.commit();
+	        return true;
+	    } catch (Exception e) {
+	        tx.rollback();
+	        throw new RuntimeException(e);
+	        
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public boolean deleteSection(int id) throws Exception {
+		EntityManager enma = JPAConfig.getEntityManager();
+	    EntityTransaction trans = enma.getTransaction();
+	    try {
+	        trans.begin();
+	        Section section = enma.find(Section.class, id);
+	        if (section != null) {
+	            enma.remove(section);
+	            trans.commit();
+	            return true;
+	        } else {
+	            trans.rollback();
+	            return false;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        throw e; // hoặc return false;
+	    } finally {
+	        enma.close();
+	    }
+	}
+	
+	@Override
+	public boolean deleteLesson(int id) throws Exception {
+		EntityManager enma = JPAConfig.getEntityManager();
+	    EntityTransaction trans = enma.getTransaction();
+	    try {
+	        trans.begin();
+	        Lesson lesson = enma.find(Lesson.class, id);
+	        if (lesson != null) {
+	            enma.remove(lesson);
+	            trans.commit();
+	            return true;
+	        } else {
+	            trans.rollback();
+	            return false;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        throw e;
+	    } finally {
+	        enma.close();
+	    }
+	}
+	
+	@Override
+	public boolean deleteQuiz(int id) throws Exception {
+		EntityManager enma = JPAConfig.getEntityManager();
+	    EntityTransaction trans = enma.getTransaction();
+	    try {
+	        trans.begin();
+	        Quiz quiz = enma.find(Quiz.class, id);
+	        if (quiz != null) {
+	            enma.remove(quiz);
+	            trans.commit();
+	            return true;
+	        } else {
+	            trans.rollback();
+	            return false;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        throw e;
+	    } finally {
+	        enma.close();
+	    }
+	}
+	
+	@Override
+	public int maxSectionId() {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    try {
+	        trans.begin();
+	        String jpql = "SELECT MAX(s.id) FROM Section s";
+	        Query query = em.createQuery(jpql);
+	        Integer maxId = (Integer) query.getSingleResult();
+	        trans.commit();
+	        return maxId != null ? maxId : 0;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return 0;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public boolean saveSection(Section section) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
+	    
+	    try {
+	        trans.begin();
+	        em.persist(section);
+	        trans.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
 }
 

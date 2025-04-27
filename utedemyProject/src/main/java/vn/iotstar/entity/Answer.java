@@ -1,7 +1,8 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
-import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,6 +38,7 @@ public class Answer implements Serializable {
     private String content;
 
     @Column(name = "is_correct")
+    @JsonProperty("isCorrect") 
     private boolean isCorrect;
 
     @ManyToOne

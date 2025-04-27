@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="/utedemyProject/views/Css/addCourse.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 	<div class="header">
@@ -42,6 +43,7 @@
 			<sitemesh:write property="body" />
 		</div>
 	</div>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script type="text/javascript">
 		// Thêm event listener cho nút lưu
 		document.querySelector('.save-button').addEventListener('click', function() {
@@ -124,22 +126,43 @@
 			  
 			  // Xử lý phản hồi
 			  xhr.onload = function() {
-			    if (xhr.status >= 200 && xhr.status < 300) {
-			      // Thành công
-			      alert('Đã lưu thành công!');
-			    } else {
-			      // Lỗi
-			      alert('Lỗi khi lưu: ' + xhr.statusText);
-			    }
-			  };
+				    if (xhr.status >= 200 && xhr.status < 300) {
+				        Swal.fire({
+				            title: 'Đã lưu thành công!',
+				            text: 'Bạn có muốn tiếp tục chỉnh sửa hay quay lại trang chính?',
+				            icon: 'success',
+				            showCancelButton: true,
+				            confirmButtonText: 'Tiếp tục',
+				            cancelButtonText: 'Về trang chủ'
+				        }).then((result) => {
+				            if (result.isConfirmed) {
+				                // Ở lại trang
+				            } else {
+				                // Chuyển về trang chủ
+				                window.location.href = "/utedemyProject/teacher/homePage";
+				            }
+				        });
+				    } else {
+				        Swal.fire({
+				            title: 'Lỗi khi lưu!',
+				            text: xhr.statusText,
+				            icon: 'error'
+				        });
+				    }
+				};
 			  
 			  // Xử lý lỗi mạng
 			  xhr.onerror = function() {
-			    alert('Lỗi kết nối đến máy chủ!');
-			  };
+				  Swal.fire({
+				    title: 'Lỗi kết nối!',
+				    text: 'Không thể kết nối tới máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau.',
+				    icon: 'error'
+				  });
+				};
 			  
 			  // Gửi dữ liệu (nếu là FormData thì gửi trực tiếp, nếu không thì chuyển sang JSON)
 			  if (data instanceof FormData) {
+				Swal.showLoading();
 			    xhr.send(data);
 			  } else {
 			    xhr.send(JSON.stringify(data));

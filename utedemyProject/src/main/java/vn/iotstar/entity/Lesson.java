@@ -1,7 +1,6 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,15 +15,12 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(exclude = "section")
 @Table(name="lesson")
 @NamedQuery(name="Lesson.findAll", query="SELECT l from Lesson l")
@@ -48,6 +44,9 @@ public class Lesson implements Serializable {
 	
 	@Column(name = "number_item")
     private int numberItem;
+	
+	@Column(name = "is_free_lesson")
+    private boolean isFreeLesson;
 	
 	@ManyToOne
     @JoinColumn(name = "section_id")

@@ -17,17 +17,14 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Table(name="voucher")
-@NamedQuery(name="Voucher.findAll", query="SELECT v from Course v")
+@NamedQuery(name="Voucher.findAll", query="SELECT v from Voucher v")
 public class Voucher implements Serializable {
 
 	private static final long serialVersionUID = 1L;

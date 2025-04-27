@@ -23,7 +23,7 @@
             </div>
         <% } %>
         
-        <form action="${pageContext.request.contextPath}/user/forgotPassword" method="post" id="forgotPasswordForm">
+        <form action="${pageContext.request.contextPath}/user/forgotPassword" method="POST" id="forgotPasswordForm">
             <div class="label">EMAIL</div>
             <input type="text" class="input-field" name="email" id="email" placeholder="Email" required>
             <div id="emailError" class="error-message"></div>

@@ -19,12 +19,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
@@ -87,6 +84,6 @@ public class Course implements Serializable {
 	@OneToOne(mappedBy = "course")
     private OrderItem orderItem;
 	
-	@Column(name = "is_active")
-    private boolean isActive;
+	@Column(name = "status")
+    private int status;
 }
