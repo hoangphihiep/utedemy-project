@@ -1,45 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học đệm hát Guitar cùng Haketu</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/utedemyProject/views/Css/CourseDetail.css">
-</head>
 <body>
-    <!-- Phần Header -->
-    <header class="top-header">
-        <div class="header-container">
-            <div class="logo-section">
-                <img src="https://via.placeholder.com/100x30?text=HAKETU" alt="Haketu Logo" class="logo-img">
-                <div class="nav-category">
-                    <button class="nav-category-btn">
-                        DANH MỤC <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-                <div class="search-bar">
-                    <input type="text" placeholder="Tìm kiếm khóa học, giảng viên...">
-                    <i class="fas fa-search"></i>
-                </div>
-            </div>
-
-            <div class="right-section">
-                <a href="#" class="header-link">Doanh nghiệp</a>
-                <a href="#" class="header-link">Học viên</a>
-                <a href="#" class="header-link">Vào học</a>
-                <button class="icon-btn">
-                    <i class="far fa-heart"></i>
-                </button>
-                <button class="icon-btn">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">3</span>
-                </button>
-                <img src="https://via.placeholder.com/28x28" alt="Avatar" class="avatar">
-            </div>
-        </div>
-    </header>
     <!-- Course Panel -->
     <div class="guitar-course-panel">
         <a href="#" class="breadcrumb-item">
@@ -500,64 +462,6 @@
             chỉ với <strong>199K / tháng</strong>
         </div>
     </div>
-
-
-    <!-- Footer -->
-    <footer class="unica-footer">
-        <div class="footer-container">
-            <div class="footer-section logo-section">
-                <img src="https://via.placeholder.com/150x50?text=UNICA+LOGO" alt="Unica Logo" class="main-logo">
-                <p class="slogan">Học online cùng chuyên gia</p>
-                <div class="contact-info">
-                    <p><i class="fas fa-phone"></i> Hotline 1: 9000568</p>
-                    <p><i class="fas fa-phone"></i> Hotline 2: 009-488 8096</p>
-                    <p><i class="fas fa-envelope"></i> Email: csh@junica.vn</p>
-                    <p><i class="fas fa-clock"></i> 08000 - TP430, thứ 2 - thứ 7</p>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h3>Về Unica</h3>
-                <ul class="footer-links">
-                    <li><i class="fas fa-chevron-right"></i> Giới thiệu về Unica</li>
-                    <li><i class="fas fa-chevron-right"></i> Hưởng đầu sử dụng</li>
-                    <li><i class="fas fa-chevron-right"></i> Kích hợp khóa học</li>
-                    <li><i class="fas fa-chevron-right"></i> Đóc chia tế</li>
-                    <li><i class="fas fa-chevron-right"></i> Điều khoản dịch vụ</li>
-                    <li><i class="fas fa-chevron-right"></i> Chính sách bảo nội</li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Hộp tác</h3>
-                <ul class="footer-links">
-                    <li><i class="fas fa-chevron-right"></i> Đăng ký giảng viên</li>
-                    <li><i class="fas fa-chevron-right"></i> Giải pháp e-learning</li>
-                    <li><i class="fas fa-chevron-right"></i> Đào tạo doanh nghiệp</li>
-                    <li><i class="fas fa-chevron-right"></i> Đào tạo trhuose</li>
-                    <li><i class="fas fa-chevron-right"></i> Affiliate</li>
-                    <li><i class="fas fa-chevron-right"></i> Quay dung video</li>
-                </ul>
-            </div>
-
-            <div class="footer-section app-section">
-                <h3>Mobile</h3>
-                <div class="app-download">
-                    <a href="#" class="app-link">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on App Store" class="app-logo">
-                    </a>
-                    <a href="#" class="app-link">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" class="app-logo">
-                    </a>
-                </div>
-                <p class="app-text">Powered on the App Store</p>
-                <p class="app-text">All rights</p>
-                <p class="app-text">Google Play</p>
-            </div>
-        </div>
-    </footer>
-
-
     <script>
         // Xử lý click vào nút yêu thích
         document.getElementById('wishlistBtn').addEventListener('click', function() {

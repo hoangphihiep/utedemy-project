@@ -19,20 +19,26 @@ public class HomeController extends HttpServlet {
 	 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURI();
-		req.setCharacterEncoding("UTF-8");
-		resp.setCharacterEncoding("UTF-8");
-		
-    	List<Object[]> bestSellerCourses = courseService.getBestSellingCourses(5);
-    	req.setAttribute("bestSellerCourses", bestSellerCourses);
+	    String url = req.getRequestURI();
+	    req.setCharacterEncoding("UTF-8");
+	    resp.setCharacterEncoding("UTF-8");
+	    
+	    List<Object[]> bestSellerCourses = courseService.getBestSellingCourses(5);
+	    System.out.println("Best Seller Courses: " + bestSellerCourses); // In dữ liệu
+	    for (Object[] course : bestSellerCourses) {
+	        System.out.println("Course ID: " + course[5]); // In ID
+	    }
+	    req.setAttribute("bestSellerCourses", bestSellerCourses);
 
-    	List<Object[]> todaySaleCourses = courseService.getTodaySaleCourses(10);
-    	req.setAttribute("todaySaleCourses", todaySaleCourses);
-	
-	    if (url.contains("/user/homepage"))
-		{
-			req.getRequestDispatcher("/views/user/homepage.jsp").forward(req, resp);
-		}
-		
+	    List<Object[]> todaySaleCourses = courseService.getTodaySaleCourses(10);
+	    System.out.println("Today Sale Courses: " + todaySaleCourses); // In dữ liệu
+	    for (Object[] course : todaySaleCourses) {
+	        System.out.println("Course ID: " + course[6]); // In ID
+	    }
+	    req.setAttribute("todaySaleCourses", todaySaleCourses);
+
+	    if (url.contains("/user/homepage")) {
+	        req.getRequestDispatcher("/views/user/homepage.jsp").forward(req, resp);
+	    }
 	}
 }

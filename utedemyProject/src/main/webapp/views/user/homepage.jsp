@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="request" />
+
 <link rel="stylesheet" href="/utedemyProject/views/Css/homepage.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
@@ -86,6 +89,25 @@
     </main>
 
   <script>
+  
+//Hàm điều hướng đến trang chi tiết khóa học
+  function redirectToCourseDetail(courseId) {
+    const contextPath = "<c:out value='${contextPath}'/>";
+    // Đảm bảo courseId là số hoặc chuỗi hợp lệ
+    const id = Number(courseId) || null;
+    if (id && id > 0) {
+        console.log('Course ID:', id);
+        // Nối chuỗi thủ công và kiểm tra
+        const redirectUrl = contextPath + "/course/courseDetail?courseId=" + id;
+        console.log('Redirecting to:', redirectUrl);
+        window.location.href = redirectUrl;
+    } else {
+        console.error('Course ID is missing or invalid:', courseId);
+        alert('Không thể xem chi tiết khóa học. Vui lòng thử lại sau.');
+    }
+}
+  
+  
   document.addEventListener('DOMContentLoaded', () => {
       const featuredInstructors = [
           {
@@ -111,34 +133,36 @@
       ];
       
       const bestsellerCourses = [
-          <c:forEach var="course" items="${bestSellerCourses}" varStatus="status">
-          <c:out value="{" escapeXml="false"/>
-              id: ${course[5] != null ? course[5] : 0},
-              title: "<c:out value='${course[0]}'/>",
-              instructor: "<c:out value='${course[1]}'/>",
-              rating: ${course[2] != null ? course[2] : 0},
-              price: ${course[3] != null ? course[3] : 0},
-              originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
-              image: "<c:out value='${course[4] != null ? course[4] : "/api/placeholder/300/200"}'/>",
-              badge: "Bán chạy"
-          <c:out value="}" escapeXml="false"/><c:if test="${!status.last}">,</c:if>
-          </c:forEach>
-      ];
+    	    <c:forEach var="course" items="${bestSellerCourses}" varStatus="status">
+    	    {
+    	        id: ${course[5] != null ? course[5] : 0},
+    	        title: "${fn:escapeXml(course[0])}",
+    	        instructor: "${fn:escapeXml(course[1])}",
+    	        rating: ${course[2] != null ? course[2] : 0},
+    	        price: ${course[3] != null ? course[3] : 0},
+    	        originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
+    	        image: "${course[4] != null ? fn:escapeXml(course[4]) : '/api/placeholder/300/200'}",
+    	        badge: "Bán chạy"
+    	    }${!status.last ? ',' : ''}
+    	    </c:forEach>
+    	];
+    	console.log('bestsellerCourses:', bestsellerCourses); // Log dữ liệu
 
-      const todaySaleCourses = [
-          <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
-          <c:out value="{" escapeXml="false"/>
-              id: ${course[6] != null ? course[6] : 0},
-              title: "${course[0]}%",
-              instructor: "${course[1]}",
-              rating: ${course[2] != null ? course[2] : 0},
-              price: ${course[3] != null ? course[3] * 1 : 0}, // ép thành số
-              originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
-              image: "${course[4] != null ? course[4] : '/api/placeholder/300/200'}",
-              badge: "Giảm ${course[5]}%"
-          <c:out value="}" escapeXml="false"/><c:if test="${!status.last}">,</c:if>
-          </c:forEach>
-      ];
+    	const todaySaleCourses = [
+    	    <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
+    	    {
+    	        id: ${course[6] != null ? course[6] : 0},
+    	        title: "${fn:escapeXml(course[0])}%",
+    	        instructor: "${fn:escapeXml(course[1])}",
+    	        rating: ${course[2] != null ? course[2] : 0},
+    	        price: ${course[3] != null ? course[3] * 1 : 0},
+    	        originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
+    	        image: "${course[4] != null ? fn:escapeXml(course[4]) : '/api/placeholder/300/200'}",
+    	        badge: "Giảm ${course[5] != null ? course[5] : 0}%"
+    	    }${!status.last ? ',' : ''}
+    	    </c:forEach>
+    	];
+    	console.log('todaySaleCourses:', todaySaleCourses); // Log dữ liệu
 
 
       const bannerSlides = [
@@ -203,174 +227,165 @@
           });
       }
       
-      function renderTodaySaleCourses() {
-      	  const container = document.getElementById('today-sale-courses');
-      	  if (!container) return;
-
-      	  container.innerHTML = '';
-
-      	  todaySaleCourses.forEach(course => {
-      	    let card = document.createElement('div');
-      	    card.classList.add('course-card');
-
-      	    let img = document.createElement('img');
-      	    img.src = course.image;
-      	    img.alt = course.title;
-
-      	    let content = document.createElement('div');
-      	    content.classList.add('course-card-content');
-
-      	    let title = document.createElement('h4');
-      	    title.textContent = course.title;
-
-      	    let instructor = document.createElement('p');
-      	    instructor.textContent = course.instructor;
-
-      	    let ratingContainer = document.createElement('div');
-      	    ratingContainer.classList.add('course-rating');
-
-      	    let stars = document.createElement('div');
-      	    stars.classList.add('stars');
-      	    stars.style.setProperty('--rating', course.rating);
-
-      	    let reviews = document.createElement('span');
-      	    let ratingValue = Number(course.rating);
-      	    reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
-
-      	    let pricing = document.createElement('div');
-      	    pricing.classList.add('course-pricing');
-              
-      	    let currentPrice = document.createElement('span');
-      	    currentPrice.classList.add('real-price');
-      	    currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
-
-      	    let originalPrice = document.createElement('span');
-      	    originalPrice.classList.add('product-price');
-      	    originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
-
-            let badge = document.createElement('div');
-            badge.classList.add('course-badge');
-            badge.textContent = course.badge;
-              
-            let actions = document.createElement('div');
-            actions.classList.add('course-actions');
-
-            let cartBtn = document.createElement('button');
-            cartBtn.classList.add('icon-btn', 'add-to-cart');
-            cartBtn.innerHTML = '<i class="fas fa-cart-shopping cart-icon"></i>';
-            cartBtn.title = 'Thêm vào giỏ';
-            cartBtn.addEventListener('click', () => {
-                console.log('🛒 Thêm vào giỏ:', course.id);
-                // TODO: Thêm logic xử lý giỏ hàng ở đây
-            });
-
-            let favBtn = document.createElement('button');
-            favBtn.classList.add('icon-btn', 'add-to-favorite');
-            favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
-            favBtn.title = 'Yêu thích';
-            favBtn.addEventListener('click', () => {
-                console.log('❤️ Yêu thích:', course.id);
-                // TODO: Thêm logic xử lý yêu thích ở đây
-            });
-              
-      	    let detailsBtn = document.createElement('button');
-      	    detailsBtn.classList.add('details-btn');
-      	    detailsBtn.textContent = 'Xem chi tiết';
-
-      	  	actions.append(cartBtn, favBtn, detailsBtn);
-      	    
-      	    ratingContainer.append(stars, reviews);
-      	    pricing.append(currentPrice, originalPrice, badge);
-      	    content.append(title, instructor, ratingContainer, pricing, actions);
-      	    card.append(img, content);
-      	    container.appendChild(card);
-      	  });
-      	}
-      
       function renderBestsellerCourses() {
-          const container = document.getElementById('bestseller-courses');
-          if (!container) return;
-          
-          container.innerHTML = '';
-          
-          bestsellerCourses.forEach(course => {
-              let card = document.createElement('div');
-              card.classList.add('course-card');
-              
-              let img = document.createElement('img');
-              img.src = course.image;
-              img.alt = course.title;
-              
-              let content = document.createElement('div');
-              content.classList.add('course-card-content');
-              
-              let title = document.createElement('h4');
-              title.textContent = course.title;
-              
-              let instructor = document.createElement('p');
-              instructor.textContent = course.instructor;
-              
-              let ratingContainer = document.createElement('div');
-              ratingContainer.classList.add('course-rating');
-              
-              let stars = document.createElement('div');
-              stars.classList.add('stars');
-              stars.style.setProperty('--rating', course.rating);
+    	    const container = document.getElementById('bestseller-courses');
+    	    if (!container) return;
 
-              let reviews = document.createElement('span');
-              let ratingValue = Number(course.rating);
-              reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
-              
-              let pricing = document.createElement('div');
-      	    pricing.classList.add('course-pricing');
-              
-      	    let currentPrice = document.createElement('span');
-      	    currentPrice.classList.add('real-price');
-      	    currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
+    	    container.innerHTML = '';
 
-      	    let originalPrice = document.createElement('span');
-      	    originalPrice.classList.add('product-price');
-      	    originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
+    	    bestsellerCourses.forEach(course => {
+    	        console.log('Rendering course with ID:', course.id); // Thêm log để kiểm tra
+    	        let card = document.createElement('div');
+    	        card.classList.add('course-card');
 
-              let badge = document.createElement('div');
-              badge.classList.add('course-badge');
-              badge.textContent = course.badge;
-              
-              let actions = document.createElement('div');
-              actions.classList.add('course-actions');
+    	        let img = document.createElement('img');
+    	        img.src = course.image;
+    	        img.alt = course.title;
 
-              let cartBtn = document.createElement('button');
-              cartBtn.classList.add('icon-btn', 'add-to-cart');
-              cartBtn.innerHTML = '<i class="fas fa-cart-shopping cart-icon"></i>';
-              cartBtn.title = 'Thêm vào giỏ';
-              cartBtn.addEventListener('click', () => {
-                  console.log('🛒 Thêm vào giỏ:', course.id);
-                  // TODO: Thêm logic xử lý giỏ hàng ở đây
-              });
+    	        let content = document.createElement('div');
+    	        content.classList.add('course-card-content');
 
-              let favBtn = document.createElement('button');
-              favBtn.classList.add('icon-btn', 'add-to-favorite');
-              favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
-              favBtn.title = 'Yêu thích';
-              favBtn.addEventListener('click', () => {
-                  console.log('❤️ Yêu thích:', course.id);
-                  // TODO: Thêm logic xử lý yêu thích ở đây
-              });
-              
-              let detailsBtn = document.createElement('button');
-              detailsBtn.classList.add('details-btn');
-              detailsBtn.textContent = 'Xem chi tiết';
-              
-              actions.append(cartBtn, favBtn, detailsBtn);
-              
-              ratingContainer.append(stars, reviews);
-      	    pricing.append(currentPrice, originalPrice, badge);
-              content.append(title, instructor, ratingContainer, pricing, actions);
-              card.append(img, content);
-              container.appendChild(card);
-          });
-      }
+    	        let title = document.createElement('h4');
+    	        title.textContent = course.title;
 
+    	        let instructor = document.createElement('p');
+    	        instructor.textContent = course.instructor;
+
+    	        let ratingContainer = document.createElement('div');
+    	        ratingContainer.classList.add('course-rating');
+
+    	        let stars = document.createElement('div');
+    	        stars.classList.add('stars');
+    	        stars.style.setProperty('--rating', course.rating);
+
+    	        let reviews = document.createElement('span');
+    	        let ratingValue = Number(course.rating);
+    	        reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
+
+    	        let pricing = document.createElement('div');
+    	        pricing.classList.add('course-pricing');
+
+    	        let currentPrice = document.createElement('span');
+    	        currentPrice.classList.add('real-price');
+    	        currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
+
+    	        let originalPrice = document.createElement('span');
+    	        originalPrice.classList.add('product-price');
+    	        originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
+
+    	        let badge = document.createElement('div');
+    	        badge.classList.add('course-badge');
+    	        badge.textContent = course.badge;
+
+    	        let actions = document.createElement('div');
+    	        actions.classList.add('course-actions');
+
+    	        let cartBtn = document.createElement('button');
+    	        cartBtn.classList.add('icon-btn', 'add-to-cart');
+    	        cartBtn.innerHTML = '<i class="fas fa-cart-shopping cart-icon"></i>';
+    	        cartBtn.title = 'Thêm vào giỏ';
+    	        cartBtn.addEventListener('click', () => console.log('🛒 Thêm vào giỏ:', course.id));
+
+    	        let favBtn = document.createElement('button');
+    	        favBtn.classList.add('icon-btn', 'add-to-favorite');
+    	        favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
+    	        favBtn.title = 'Yêu thích';
+    	        favBtn.addEventListener('click', () => console.log('❤️ Yêu thích:', course.id));
+
+    	        let detailsBtn = document.createElement('button');
+    	        detailsBtn.classList.add('details-btn');
+    	        detailsBtn.textContent = 'Xem chi tiết';
+    	        detailsBtn.addEventListener('click', () => redirectToCourseDetail(course.id));
+
+    	        actions.append(cartBtn, favBtn, detailsBtn);
+    	        ratingContainer.append(stars, reviews);
+    	        pricing.append(currentPrice, originalPrice, badge);
+    	        content.append(title, instructor, ratingContainer, pricing, actions);
+    	        card.append(img, content);
+    	        container.appendChild(card);
+    	    });
+    	}
+
+    	function renderTodaySaleCourses() {
+    	    const container = document.getElementById('today-sale-courses');
+    	    if (!container) return;
+
+    	    container.innerHTML = '';
+
+    	    todaySaleCourses.forEach(course => {
+    	        console.log('Rendering course with ID:', course.id); // Thêm log để kiểm tra
+    	        let card = document.createElement('div');
+    	        card.classList.add('course-card');
+
+    	        let img = document.createElement('img');
+    	        img.src = course.image;
+    	        img.alt = course.title;
+
+    	        let content = document.createElement('div');
+    	        content.classList.add('course-card-content');
+
+    	        let title = document.createElement('h4');
+    	        title.textContent = course.title;
+
+    	        let instructor = document.createElement('p');
+    	        instructor.textContent = course.instructor;
+
+    	        let ratingContainer = document.createElement('div');
+    	        ratingContainer.classList.add('course-rating');
+
+    	        let stars = document.createElement('div');
+    	        stars.classList.add('stars');
+    	        stars.style.setProperty('--rating', course.rating);
+
+    	        let reviews = document.createElement('span');
+    	        let ratingValue = Number(course.rating);
+    	        reviews.textContent = '(' + ratingValue.toFixed(1) + ')';
+
+    	        let pricing = document.createElement('div');
+    	        pricing.classList.add('course-pricing');
+
+    	        let currentPrice = document.createElement('span');
+    	        currentPrice.classList.add('real-price');
+    	        currentPrice.textContent = Number(course.price).toLocaleString('vi-VN') + 'đ';
+
+    	        let originalPrice = document.createElement('span');
+    	        originalPrice.classList.add('product-price');
+    	        originalPrice.textContent = Number(course.originalPrice).toLocaleString('vi-VN') + 'đ';
+
+    	        let badge = document.createElement('div');
+    	        badge.classList.add('course-badge');
+    	        badge.textContent = course.badge;
+
+    	        let actions = document.createElement('div');
+    	        actions.classList.add('course-actions');
+
+    	        let cartBtn = document.createElement('button');
+    	        cartBtn.classList.add('icon-btn', 'add-to-cart');
+    	        cartBtn.innerHTML = '<i class="fas fa-cart-shopping cart-icon"></i>';
+    	        cartBtn.title = 'Thêm vào giỏ';
+    	        cartBtn.addEventListener('click', () => console.log('🛒 Thêm vào giỏ:', course.id));
+
+    	        let favBtn = document.createElement('button');
+    	        favBtn.classList.add('icon-btn', 'add-to-favorite');
+    	        favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
+    	        favBtn.title = 'Yêu thích';
+    	        favBtn.addEventListener('click', () => console.log('❤️ Yêu thích:', course.id));
+
+    	        let detailsBtn = document.createElement('button');
+    	        detailsBtn.classList.add('details-btn');
+    	        detailsBtn.textContent = 'Xem chi tiết';
+    	        detailsBtn.addEventListener('click', () => redirectToCourseDetail(course.id));
+
+    	        actions.append(cartBtn, favBtn, detailsBtn);
+    	        ratingContainer.append(stars, reviews);
+    	        pricing.append(currentPrice, originalPrice, badge);
+    	        content.append(title, instructor, ratingContainer, pricing, actions);
+    	        card.append(img, content);
+    	        container.appendChild(card);
+    	    });
+    	}
+	   
+	      
       function formatPrices(className) {
           var elements = document.querySelectorAll('.' + className);
           elements.forEach(function(element) {
@@ -439,7 +454,7 @@
           }
 
           function prevSlide() {
-              goToSlide(currentSlide - 1);1
+              goToSlide(currentSlide - 1);
           }
 
           // Auto slide

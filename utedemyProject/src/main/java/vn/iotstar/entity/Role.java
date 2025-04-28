@@ -21,7 +21,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(of = "id") 
 @ToString(exclude = {"users"})
 @Table(name="role")
 @NamedQuery(name="Role.findAll", query="SELECT r from Role r")

@@ -9,5 +9,7 @@
 	
 	
 	    <mapping path="/user/homepage" name="user" decorator="user.jsp" />
+	    <mapping path="/user/cart" name="user" decorator="cart.jsp" />
+	    <mapping path="/course/courseDetail" name="user" decorator="coursedetail.jsp" />
 	
 </sitemesh>

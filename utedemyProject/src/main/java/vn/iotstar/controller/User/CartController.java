@@ -2,6 +2,7 @@ package vn.iotstar.controller.User;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -40,8 +41,12 @@ public class CartController extends HttpServlet{
 		if (url.contains("cart"))
 		{
 		Cart cart = cart_service.findByUserId(userId);
+		Set<Course> courses = Collections.emptySet(); // khởi tạo mặc định tránh lỗi
 		
-		Set<Course> courses = cart.getCourses();
+		if (cart != null) {
+		    courses = cart.getCourses();
+		    // xử lý tiếp với courses ở đây
+		}
 		
 		double totalAmount = 0;
 		for (Course course : courses) {
@@ -70,7 +75,7 @@ public class CartController extends HttpServlet{
 		}
 		session.setAttribute("recommendedCourses",recommendedCourses);
 		
-		resp.sendRedirect("/utedemyProject/views/user/cartpage.jsp");
+		req.getRequestDispatcher("/views/user/cartpage.jsp").forward(req, resp);
 		}
 		
 	}

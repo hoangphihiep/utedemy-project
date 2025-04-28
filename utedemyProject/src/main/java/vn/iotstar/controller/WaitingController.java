@@ -33,16 +33,20 @@ public class WaitingController extends HttpServlet {
 			User u = (User) session.getAttribute("account");
 			System.out.println("hungdebug"+u.getId());
 			Set<Role> roles = user_service.getRolesByUserId(u.getId());
-			System.out.println("User roles: " + roles);
-			 int roleId = 0;
+			
+			for (Role role : roles) {
+			    System.out.println("heheheRole ID: " + role.getId() + ", Role Name: " + role.getName());
+			}
+			 int roleId = 1;
 			 // nếu user là teacher thì lấy role teacher
 
 			 for (Role role : roles) {
-			     if (role.getId() == 2) {
-			    	 roleId = 2;
+			     if (role.getId() == 3) {
+			    	 roleId = 3;
 			         break;
-			     } else if (role.getId() == 1 && roleId == 0) {
-			    	 roleId = 1;
+			     }if (role.getId() == 2) {
+			    	 roleId = 2;
+			    	 break;
 			     }
 			 }
 			

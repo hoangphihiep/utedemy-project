@@ -1,11 +1,13 @@
 package vn.iotstar.impl.dao;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.IUserDao;
@@ -138,26 +140,45 @@ public class UserDao implements IUserDao {
 	        em.close();
 	    }
 	}
-	@Override
 	public Set<Role> getRolesByUserId(int userId) {
 	    EntityManager em = JPAConfig.getEntityManager();
 	    try {
-	        // Ép Hibernate fetch roles ngay khi query
-	        String jpql = "SELECT u FROM User u JOIN FETCH u.roles WHERE u.id = :userId";
-	        TypedQuery<User> query = em.createQuery(jpql, User.class);
+	        // Use the exact SQL query that worked in your database
+	        String sql = "SELECT r.id, r.name FROM role r " +
+	                     "JOIN user_roles ur ON r.id = ur.role_id " +
+	                     "WHERE ur.user_id = :userId";
+	        
+	        Query query = em.createNativeQuery(sql);
 	        query.setParameter("userId", userId);
 	        
-	        User user = query.getSingleResult();
-	        System.out.println("domdom" + user);
-	        return user.getRoles(); // đã được fetch trong JOIN FETCH
-
+	        List<Object[]> results = query.getResultList();
+	        System.out.println("Raw query returned " + results.size() + " results");
+	        
+	        // Print each raw result
+	        for (int i = 0; i < results.size(); i++) {
+	            Object[] row = results.get(i);
+	            System.out.println("Result " + i + ": ID=" + row[0] + ", Name=" + row[1]);
+	        }
+	        
+	        Set<Role> roles = new HashSet<>();
+	        for (Object[] result : results) {
+	            Role role = new Role();
+	            role.setId(((Number) result[0]).intValue());
+	            role.setName((String) result[1]);
+	            roles.add(role);
+	            System.out.println("Added role to set: ID=" + role.getId() + ", Name=" + role.getName());
+	        }
+	        
+	        System.out.println("Final roles set size: " + roles.size());
+	        return roles;
 	    } catch (Exception e) {
+	        System.out.println("Exception occurred in getRolesByUserId: " + e.getMessage());
 	        e.printStackTrace();
 	        return new HashSet<>();
-	    } finally {
-	        em.close(); // Đóng sau khi dữ liệu đã được load
 	    }
 	}
+
+
 	@Override
     public void update(User user) {
         EntityManager em = JPAConfig.getEntityManager();

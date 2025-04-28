@@ -24,6 +24,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -32,6 +33,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Data
 @ToString(exclude = "roles")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name="users")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQuery(name="User.findAll", query="SELECT u from User u")
