@@ -24,15 +24,14 @@ public class CourseDao implements ICourseDao {
 	public List<Object[]> findBestSellingCourseDetails(int limit) {
 	    EntityManager em = JPAConfig.getEntityManager();
 	    try {
-	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, c.id " +
-	                "FROM OrderItem o " +
-	                "JOIN o.course c " +
-	                "JOIN c.teacher t " +
+	        String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, c.id " +
+	                "FROM Course c " +
+	                "LEFT JOIN c.teacher t " +
 	                "LEFT JOIN c.review r " +
-	                "JOIN c.courseDetail cd " +
+	                "LEFT JOIN c.courseDetail cd " +
+	                "LEFT JOIN c.orderItems o " +
 	                "GROUP BY c.id, c.courseName, t.fullname, c.coursePrice, cd.courseImage " +
 	                "ORDER BY COUNT(o.id) DESC";
-
 	        TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
 	        query.setMaxResults(limit);
 	        return query.getResultList();
@@ -40,6 +39,7 @@ public class CourseDao implements ICourseDao {
 	        em.close();
 	    }
 	}
+
 
 	@Override
 	public List<CourseType> listCourseType() {
