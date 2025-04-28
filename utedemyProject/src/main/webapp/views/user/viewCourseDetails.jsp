@@ -4,6 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
 <!DOCTYPE html>
 <html lang="vi">
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/views/Css/viewCourseDetails.css">
+    <script src="${pageContext.request.contextPath}/views/Script/viewCourseDetails.js"></script>
 <body>
     <c:if test="${not empty error}">
         <div class="error-message" style="color: red; text-align: center; margin: 10px 0;">
