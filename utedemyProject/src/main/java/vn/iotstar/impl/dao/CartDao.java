@@ -11,6 +11,7 @@ import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.ICartDao;
 import vn.iotstar.entity.Cart;
 import vn.iotstar.entity.Course;
+import vn.iotstar.entity.User;
 
 public class CartDao implements ICartDao{
 
@@ -108,9 +109,56 @@ public class CartDao implements ICartDao{
 	        return null; // Nếu có lỗi, trả về null
 	    }
 	}
+	@Override
+	public boolean addCourseToCart(int userId, int courseId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    EntityTransaction trans = em.getTransaction();
 
+	    try {
+	        trans.begin();
 
+	        // Tìm cart theo userId hoặc tạo mới nếu chưa có
+	        TypedQuery<Cart> cartQuery = em.createQuery(
+	            "SELECT c FROM Cart c WHERE c.user.id = :userId", Cart.class);
+	        cartQuery.setParameter("userId", userId);
 
+	        Cart cart;
+	        List<Cart> result = cartQuery.getResultList();
+	        if (!result.isEmpty()) {
+	            cart = result.get(0);
+	        } else {
+	            cart = new Cart();
+	            User user = em.find(User.class, userId);
+	            if (user == null) {
+	                trans.rollback();
+	                return false;
+	            }
+	            cart.setUser(user);
+	            em.persist(cart); // lưu cart mới
+	        }
+
+	        // Tìm course theo courseId
+	        Course course = em.find(Course.class, courseId);
+	        if (course == null) {
+	            trans.rollback();
+	            return false;
+	        }
+
+	        // Thêm course vào cart
+	        cart.getCourses().add(course);
+
+	        // merge lại cart
+	        em.merge(cart);
+
+	        trans.commit();
+	        return true; // Thêm thành công
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (trans.isActive()) trans.rollback();
+	        return false;
+	    }
+	}
 
 
 }

@@ -25,5 +25,9 @@ public class CartService implements ICartService{
 	public List<Course> getRandomCoursesNotInCartByUserId(int userId, int limit){
 		return cartDao.getRandomCoursesNotInCartByUserId(userId, limit);
 	}
+	@Override
+	public boolean addCourseToCart(int userId, int courseId) {
+		return cartDao.addCourseToCart(userId, courseId);
+	}
 
 }

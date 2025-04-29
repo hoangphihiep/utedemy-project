@@ -122,7 +122,7 @@
                             </span>
                         </div>
                         
-                        <form action="/utedemyProject/user/checkout" method="post" id="checkoutForm">
+                        <form action="/utedemyProject/user/viewcheckout" id="checkoutForm">
                             <div id="selectedCoursesContainer">
                                 <c:forEach var="item" items="${cart.courses}">
                                     <input type="hidden" name="selectedCourses" value="${item.id}">

@@ -39,13 +39,9 @@ public class OrderItem implements Serializable {
 	@Column(name = "id")
     private int id;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-	    name = "orderitem_course",
-	    joinColumns = @JoinColumn(name = "orderitem_id"),
-	    inverseJoinColumns = @JoinColumn(name = "course_id")
-	)
-	private Set<Course> courses = new HashSet<>();
+	@ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 	
 	@Column(name = "finished_fee")
 	private double finishedFee;

@@ -284,7 +284,34 @@
     	        cartBtn.classList.add('icon-btn', 'add-to-cart');
     	        cartBtn.innerHTML = '<i class="fas fa-cart-shopping cart-icon"></i>';
     	        cartBtn.title = 'Thêm vào giỏ';
-    	        cartBtn.addEventListener('click', () => console.log('🛒 Thêm vào giỏ:', course.id));
+    	        
+    	        cartBtn.addEventListener('click', () => {
+    	        	  fetch("addcart", {
+    	        	    method: "POST",
+    	        	    headers: {
+    	        	      "Content-Type": "application/x-www-form-urlencoded"
+    	        	    },
+    	        	    body: "id=" + course.id
+    	        	  })
+    	        	  .then(response => {
+    	        	    if (response.ok) {
+    	        	      return response.text(); // đọc response dạng text
+    	        	    } else {
+    	        	      throw new Error("Thêm vào giỏ thất bại");
+    	        	    }
+    	        	  })
+    	        	  .then(data => {
+    	        	    if (data === "success") {
+    	        	      console.log("🛒 Đã thêm vào giỏ: " + course.id);
+    	        	      showToast("Bạn đã thêm thành công vào giỏ hàng 🛒", "success");
+    	        	    } else {
+    	        	      console.error("Có lỗi xảy ra khi thêm vào giỏ");
+    	        	      showToast("Đã xảy ra lỗi vui lòng thử lại sau", "error");
+    	        	    }
+    	        	  })
+    	        	  .catch(error => console.error("Lỗi: " + error));
+    	        	});
+
 
     	        let favBtn = document.createElement('button');
     	        favBtn.classList.add('icon-btn', 'add-to-favorite');
@@ -489,6 +516,56 @@
       renderBestsellerCourses();
       initializeSlider();
   });
+  let currentToast = null; 
+
+  function showToast(message, type = "success") {
+    if (currentToast) {
+      currentToast.remove();
+      currentToast = null;
+    }
+
+    const toast = document.createElement("div");
+    toast.innerText = message;
+    toast.style.position = "fixed";
+    toast.style.top = "50%";
+    toast.style.left = "50%";
+    toast.style.transform = "translate(-50%, -500%)";
+    toast.style.color = "white";
+    toast.style.padding = "15px 30px";
+    toast.style.borderRadius = "8px";
+    toast.style.boxShadow = "0 2px 10px rgba(0,0,0,0.3)";
+    toast.style.zIndex = "9999";
+    toast.style.fontSize = "18px";
+    toast.style.textAlign = "center";
+    toast.style.minWidth = "200px";
+
+    switch (type) {
+      case "error":
+        toast.style.background = "#f44336";
+        break;
+      case "success":
+        toast.style.background = "#4caf50";
+        break;
+      case "warning":
+        toast.style.background = "#ff9800";
+        break;
+      case "info":
+        toast.style.background = "#2196f3";
+        break;
+      default:
+        toast.style.background = "#4caf50";
+    }
+
+    document.body.appendChild(toast);
+    currentToast = toast;
+
+    setTimeout(() => {
+      if (currentToast === toast) {
+        toast.remove();
+        currentToast = null;
+      }
+    }, 3000);
+  }
   </script>
 </body>
 </html>

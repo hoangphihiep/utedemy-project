@@ -14,4 +14,7 @@ public interface ICartDao {
 	 public boolean deleteSelectedCourses(Cart cart, List<Integer> selectedCourseIds);
 	 
 	 public List<Course> getRandomCoursesNotInCartByUserId(int userId, int limit);
+
+	boolean addCourseToCart(int userId, int courseId);
+
 }

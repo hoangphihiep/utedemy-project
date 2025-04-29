@@ -115,6 +115,8 @@ public class verifyOTPController extends HttpServlet{
 							
 							boolean success = deleteOTP(req.getSession()); 
 		                    if (success) {
+		                    	session = req.getSession(true);
+								session.setAttribute("id", user_added.getFullname());
 		                    	out.print("{\"success\": true, \"redirectUrl\": \"" + req.getContextPath() + "/user/homepage\"}");
 		                    }  	
 	                    }

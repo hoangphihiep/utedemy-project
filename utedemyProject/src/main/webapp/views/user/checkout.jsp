@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -24,42 +26,62 @@
                 <div class="section-title">Thông tin sản phẩm</div>
                 <div id="alert-container"></div>
                 
-                <c:forEach items="${cartItems}" var="item" varStatus="status">
+                <c:forEach items="${order.orderItems}" var="item" varStatus="status">
                     <div class="product-item" id="product-item-${item.course.id}">
                         <div class="product-image">
-                            <img src="${pageContext.request.contextPath}${item.course.imageUrl}" alt="${item.course.title}">
+                          <c:if test="${item.course.courseDetail.courseImage != ''}">
+                                          <c:if test ="${item.course.courseDetail.courseImage.substring(0,5) != 'https' }">
+                                             <c:url value="/image?fname=${item.course.courseDetail.courseImage}" var="imgUrl"></c:url>
+                                         </c:if>
+                                  <c:if test ="${item.course.courseDetail.courseImage.substring(0,5) == 'https' }">
+                                          <c:url value="${item.course.courseDetail.courseImage}" var="imgUrl"></c:url>
+                                 </c:if>
+                                </c:if>                   
+                            <img src="${imgUrl}" alt="${item.course.title}">   
                         </div>
                         <div class="product-details">
-                            <div class="product-title">${item.course.title}</div>
-                            <div class="product-quantity">Số lượng: ${item.quantity}</div>
-                            <div class="discount-input">
-                                <input type="text" placeholder="Nhập mã giảm giá" class="discount-code" data-product-id="${item.course.id}" 
-                                    <c:if test="${not empty item.discountCode}">value="${item.discountCode}" disabled</c:if>>
-                                <button onclick="applyDiscount(${item.course.id})" 
-                                    <c:if test="${not empty item.discountCode}">disabled style="background-color: #aaa;"</c:if>>
-                                    <c:choose>
-                                        <c:when test="${not empty item.discountCode}">Đã áp dụng</c:when>
-                                        <c:otherwise>Áp dụng</c:otherwise>
-                                    </c:choose>
-                                </button>
-                            </div>
-                            <div class="discount-applied" id="discount-applied-${item.course.id}" 
-                                <c:if test="${item.discountAmount <= 0}">style="display: none;"</c:if>>
-                                <c:if test="${item.discountAmount > 0}">
-                                    Đã áp dụng mã giảm giá: -<fmt:formatNumber value="${item.discountAmount}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
-                                    
-                                    <span class="discount-type">
-                                        <c:choose>
-                                            <c:when test="${item.isPercentageDiscount()}">
-                                                (Giảm ${item.discountValue}%)
-                                            </c:when>
-                                            <c:otherwise>
-                                                (Giảm cố định)
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </span>
-                                </c:if>
-                            </div>
+                            <div class="product-title">${item.course.courseName}</div>
+                           <div class="discount-input">
+    <input type="text" placeholder="Nhập mã giảm giá" class="discount-code" data-product-id="${item.course.id}"
+        <c:choose>
+            <c:when test="${not empty item.discounts}">
+                value="${fn:join(item.discounts[0].disCode, ',')}" disabled
+            </c:when>
+            <c:otherwise>
+                value="" 
+            </c:otherwise>
+        </c:choose>
+    >
+    <button onclick="applyDiscount(${item.course.id})"
+        <c:if test="${not empty item.discountCode}">
+            disabled style="background-color: #aaa;"
+        </c:if>>
+        <c:choose>
+            <c:when test="${not empty item.discountCode}">Đã áp dụng</c:when>
+            <c:otherwise>Áp dụng</c:otherwise>
+        </c:choose>
+    </button>
+</div>
+
+                           <div class="discount-applied" id="discount-applied-${item.course.id}" 
+    <c:if test="${item.discount[0].discountAmount <= 0}">
+        style="display: none;"
+    </c:if>>
+    <c:if test="${item.discount[0].discountAmount > 0}">
+        Đã áp dụng mã giảm giá: -<fmt:formatNumber value="${item.discount[0].discountAmount}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+
+        <span class="discount-type">
+            <c:choose>
+                <c:when test="${item.discount[0].isPercentageDiscount()}">
+                    (Giảm ${item.discount[0].discountValue}%)
+                </c:when>
+                <c:otherwise>
+                    (Giảm cố định)
+                </c:otherwise>
+            </c:choose>
+        </span>
+    </c:if>
+</div>
                         </div>
                         <div class="product-price">
                             <div id="price-${item.course.id}">

@@ -136,6 +136,26 @@ public class CartController extends HttpServlet{
 		            }
 		        }
 		}
+		if (url.contains("addcart")) {
+			System.out.println("đã vô đây");
+		    String courseId = req.getParameter("id");
+		 
+		    	System.out.println("bị null");
+		    boolean check = cart_service.addCourseToCart(u.getId(), Integer.parseInt(courseId));
+
+		    resp.setContentType("text/plain");
+		    resp.setCharacterEncoding("UTF-8");
+
+		    if (check) {
+		        resp.getWriter().write("success");
+		    } else {
+		        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		        resp.getWriter().write("fail");
+		    }
+		    return;
+
+		}
+
 		
 		
 	}

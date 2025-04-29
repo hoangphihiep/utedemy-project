@@ -41,7 +41,7 @@
           <a href="/business">Doanh nghiệp</a>
           <a href="/profile">Cập nhật hồ sơ</a>
           <a href="/wallet">Ví của bạn</a>
-          <a href="/logout">Đăng xuất</a>
+          <a href="/utedemyProject/logout">Đăng xuất</a>
         </div>
       </div>
     </div>
