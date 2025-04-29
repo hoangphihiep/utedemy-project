@@ -4,7 +4,6 @@ import vn.iotstar.dao.ICourseDetailDAO;
 import vn.iotstar.impl.dao.CourseDetailDAO;
 import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.service.ICourseDetailService;
-import org.hibernate.Hibernate;
 
 public class CourseDetailService implements ICourseDetailService {
 
@@ -16,11 +15,6 @@ public class CourseDetailService implements ICourseDetailService {
 
     @Override
     public CourseDetail getCourseDetailById(int id) {
-        CourseDetail courseDetail = courseDetailDAO.findById(id);
-        if (courseDetail != null && courseDetail.getCourse() != null) {
-            // Tải trước collection review
-            Hibernate.initialize(courseDetail.getCourse().getReview());
-        }
-        return courseDetail;
+        return courseDetailDAO.findByCourseId(id);
     }
 }

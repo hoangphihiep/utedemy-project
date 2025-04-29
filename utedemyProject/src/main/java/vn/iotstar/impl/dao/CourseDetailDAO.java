@@ -4,7 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import vn.iotstar.dao.ICourseDetailDAO;
+import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
+import vn.iotstar.entity.Section;
 import org.hibernate.Hibernate;
 
 public class CourseDetailDAO implements ICourseDetailDAO {
@@ -23,10 +25,33 @@ public class CourseDetailDAO implements ICourseDetailDAO {
             if (courseDetail != null && courseDetail.getCourse() != null) {
                 // Tải trước collection review
                 Hibernate.initialize(courseDetail.getCourse().getReview());
+                
+                // Tải trước collection sections
+                Hibernate.initialize(courseDetail.getCourse().getSections());
+                
+                // Tải trước các collection lessons và quizs trong từng section
+                for (Section section : courseDetail.getCourse().getSections()) {
+                    Hibernate.initialize(section.getLessons());
+                    Hibernate.initialize(section.getQuizs());
+                }
             }
             return courseDetail;
         } finally {
             em.close();
         }
     }
+    @Override
+    public CourseDetail findByCourseId(int courseId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Course course = em.find(Course.class, courseId);
+            if (course != null) {
+                return course.getCourseDetail();
+            }
+            return null;
+        } finally {
+         //   em.close();
+        }
+    }
+
 }

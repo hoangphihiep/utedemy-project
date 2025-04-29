@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học đệm hát Guitar cùng Haketu</title>
+   <title>Xem chi tiết khóa học</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/utedemyProject/views/Css/CourseDetail.css">
 </head>
@@ -16,6 +16,5 @@
 			<sitemesh:write property="body" />
 			<!-- End content -->
 		</div>
-		<%@ include file="/commons/user/footer.jsp"%>
 </body>
 </html>

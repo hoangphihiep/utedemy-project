@@ -196,6 +196,8 @@
                     </c:forEach>
                 </c:if>
             </div>
+            <!-- http://localhost:8082/utedemyProject/course/courseDetail?courseId=22 -->
+            <!--  bấm nut course.id -->
         </section>  
     </main>
 

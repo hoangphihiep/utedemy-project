@@ -10,7 +10,10 @@ import vn.iotstar.service.ICourseDetailService;
 import vn.iotstar.impl.service.CourseDetailService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -86,7 +89,27 @@ public class CourseDetailController extends HttpServlet {
             // Lấy thông tin từ Course
             Course course = courseDetail.getCourse();
             if (course != null) {
-                // Lấy thông tin Teacher
+                // Lấy danh sách Section
+            	Set<Section> sectionsSet = course.getSections();
+                List<Section> sections = new ArrayList<>(sectionsSet);
+                sections.sort(Comparator.comparingInt(Section::getId)); // Sắp xếp theo id tăng dần
+                
+                
+             // Sắp xếp Lessons và Quizs trong mỗi Section
+                for (Section section : sections) {
+                    // Sắp xếp Lessons theo numberItem
+                    List<Lesson> lessons = new ArrayList<>(section.getLessons());
+                    lessons.sort(Comparator.comparingInt(Lesson::getNumberItem));
+                    section.setLessons(new LinkedHashSet<>(lessons)); // Cập nhật lại lessons đã sắp xếp
+
+                    // Sắp xếp Quizs theo id
+                    List<Quiz> quizs = new ArrayList<>(section.getQuizs());
+                    quizs.sort(Comparator.comparingInt(Quiz::getId));
+                    section.setQuizs(new LinkedHashSet<>(quizs)); // Cập nhật lại quizs đã sắp xếp
+                }
+                req.setAttribute("sections", sections);
+                
+             // Lấy thông tin Teacher
                 Teacher teacher = course.getTeacher();
                 if (teacher != null) {
                     req.setAttribute("teacher", teacher);
@@ -102,6 +125,16 @@ public class CourseDetailController extends HttpServlet {
                     req.setAttribute("teacherSocialUrl", teacher.getSocialUrl() != null 
                         ? teacher.getSocialUrl() 
                         : "#");
+                    // Thêm các trường address, email, phoneNumber
+                    req.setAttribute("teacherAddress", teacher.getAddress() != null 
+                        ? teacher.getAddress() 
+                        : "Không có thông tin");
+                    req.setAttribute("teacherEmail", teacher.getEmail() != null 
+                        ? teacher.getEmail() 
+                        : "Không có thông tin");
+                    req.setAttribute("teacherPhoneNumber", teacher.getPhoneNumber() != null 
+                        ? teacher.getPhoneNumber() 
+                        : "Không có thông tin");
                 } else {
                     setDefaultTeacherAttributes(req);
                 }
@@ -121,20 +154,14 @@ public class CourseDetailController extends HttpServlet {
                     ? course.getCourseName() 
                     : "Tổng quan về thuế");
 
-                // Tính giá hiện tại và giá gốc dựa trên logic của "Siêu Ưu Đãi Hôm Nay"
+                // Tính giá hiện tại và giá gốc
                 double coursePrice = course.getCoursePrice();
                 double originalPrice = coursePrice * 1.5; // Giá gốc hiển thị (nhân 1.5)
-                double currentPrice = coursePrice; // Giá hiện tại (giả sử không có giảm giá mặc định)
-                double discountPercentage = 0;
-
-                // Giả sử logic giảm giá: Nếu khóa học thuộc "Siêu Ưu Đãi Hôm Nay", giảm 33% (giá hiện tại = 2/3 giá gốc thực tế)
-                // Ở đây, ta giả sử coursePrice đã là giá sau khi giảm (300.000đ), nên tính ngược lại giá gốc thực tế
-                double realOriginalPrice = coursePrice * 1.5; // 300.000 * 1.5 = 450.000
-                discountPercentage = 33; // Giảm 33% (tương ứng với 300.000/450.000)
-                currentPrice = coursePrice; // 300.000đ
+                double currentPrice = coursePrice; // Giá hiện tại
+                double discountPercentage = 33; // Giảm 33%
 
                 req.setAttribute("currentPrice", currentPrice);
-                req.setAttribute("originalPrice", realOriginalPrice);
+                req.setAttribute("originalPrice", originalPrice);
                 req.setAttribute("discountPercentage", discountPercentage);
 
                 // Lấy danh sách Review
@@ -145,37 +172,10 @@ public class CourseDetailController extends HttpServlet {
                     req.setAttribute("reviews", null);
                 }
             } else {
-                setDefaultTeacherAttributes(req);
-                req.setAttribute("courseTypeName", "Tài Chính Kế Toán");
-                req.setAttribute("courseName", "Tổng quan về thuế");
-                req.setAttribute("currentPrice", 400000); // Giả sử giá hiện tại mặc định
-                req.setAttribute("originalPrice", 600000); // Giả sử giá gốc mặc định
-                req.setAttribute("discountPercentage", 33);
-                req.setAttribute("reviews", null);
+                setDefaultCourseAttributes(req);
             }
         } else {
-            req.setAttribute("error", "Không tìm thấy thông tin chi tiết khóa học với ID: " + courseId);
-            req.setAttribute("courseIntroduction", "Khóa học giúp bạn có cái nhìn bao quát nhất về Thuế, hiểu được thuế và áp dụng được trong công việc, cuộc sống.");
-            req.setAttribute("courseImage", "/api/placeholder/350/200");
-            req.setAttribute("courseVideo", "");
-            req.setAttribute("description", "Hầu hết công dân nào cũng biết mình có quyền và nghĩa vụ phải đóng thuế cho nhà nước, nhưng thuế là gì, vì sao phải đóng thuế, đối tượng phải đóng thuế là ai cũng như cách đóng thuế như thế nào lại rất ít người biết...");
-            req.setAttribute("courseLearner", "9732 Học viên");
-            req.setAttribute("learnerAchievements", Arrays.asList(
-                "Có hiểu biết và cái nhìn tổng quan bao quát nhất về Thuế",
-                "Biết cách cài đặt các ứng dụng khai thuế, các trang website hỗ trợ kê khai thuế",
-                "Thành thạo sử dụng các công cụ khai thuế nhanh chóng và chính xác",
-                "Biết cách quản lý thuế hiệu quả như giao dịch với cơ quan thuế, cách chuẩn bị và nộp hồ sơ đầy đủ cho tài khoản ngân hàng, cách tính thuế và nộp tiền thuế",
-                "Hiểu được lệ phí môn bài trong thuế: cách tính và khai báo lệ phí môn bài, thực hành nộp lệ phí môn bài chi tiết, cụ thể và đơn giản nhất",
-                "Biết cách nộp tờ khai, tiền thuế qua mạng một cách an toàn, đảm bảo: kết xuất hồ sơ khai thuế, hướng dẫn nộp tờ khai và tiền thuế qua mạng, cách lập thứ tự soát quá trình nộp thuế..."
-            ));
-
-            setDefaultTeacherAttributes(req);
-            req.setAttribute("courseTypeName", "Tài Chính Kế Toán");
-            req.setAttribute("courseName", "Tổng quan về thuế");
-            req.setAttribute("currentPrice", 400000);
-            req.setAttribute("originalPrice", 600000);
-            req.setAttribute("discountPercentage", 33);
-            req.setAttribute("reviews", null);
+            setDefaultCourseAttributes(req);
         }
 
         req.getRequestDispatcher("/views/user/viewCourseDetails.jsp").forward(req, resp);
@@ -186,5 +186,35 @@ public class CourseDetailController extends HttpServlet {
         req.setAttribute("teacherAvatar", "/api/placeholder/100/100");
         req.setAttribute("teacherDescription", "Nơi huấn luyện kế toán thực tế chất lượng, uy tín, tận tâm, trách nhiệm và chuyên nghiệp");
         req.setAttribute("teacherSocialUrl", "#");
+        // Đặt giá trị mặc định cho address, email, phoneNumber
+        req.setAttribute("teacherAddress", "Không có thông tin");
+        req.setAttribute("teacherEmail", "Không có thông tin");
+        req.setAttribute("teacherPhoneNumber", "Không có thông tin");
+    }
+    
+    private void setDefaultCourseAttributes(HttpServletRequest req) {
+        req.setAttribute("error", "Không tìm thấy thông tin chi tiết khóa học với ID: " + req.getParameter("courseId"));
+        req.setAttribute("courseIntroduction", "Khóa học giúp bạn có cái nhìn bao quát nhất về Thuế, hiểu được thuế và áp dụng được trong công việc, cuộc sống.");
+        req.setAttribute("courseImage", "/api/placeholder/350/200");
+        req.setAttribute("courseVideo", "");
+        req.setAttribute("description", "Hầu hết công dân nào cũng biết mình có quyền và nghĩa vụ phải đóng thuế cho nhà nước, nhưng thuế là gì, vì sao phải đóng thuế, đối tượng phải đóng thuế là ai cũng như cách đóng thuế như thế nào lại rất ít người biết...");
+        req.setAttribute("courseLearner", "9732 Học viên");
+        req.setAttribute("learnerAchievements", Arrays.asList(
+            "Có hiểu biết và cái nhìn tổng quan bao quát nhất về Thuế",
+            "Biết cách cài đặt các ứng dụng khai thuế, các trang website hỗ trợ kê khai thuế",
+            "Thành thạo sử dụng các công cụ khai thuế nhanh chóng và chính xác",
+            "Biết cách quản lý thuế hiệu quả như giao dịch với cơ quan thuế, cách chuẩn bị và nộp hồ sơ đầy đủ cho tài khoản ngân hàng, cách tính thuế và nộp tiền thuế",
+            "Hiểu được lệ phí môn bài trong thuế: cách tính và khai báo lệ phí môn bài, thực hành nộp lệ phí môn bài chi tiết, cụ thể và đơn giản nhất",
+            "Biết cách nộp tờ khai, tiền thuế qua mạng một cách an toàn, đảm bảo: kết xuất hồ sơ khai thuế, hướng dẫn nộp tờ khai và tiền thuế qua mạng, cách lập thứ tự soát quá trình nộp thuế..."
+        ));
+
+        setDefaultTeacherAttributes(req);
+        req.setAttribute("courseTypeName", "Tài Chính Kế Toán");
+        req.setAttribute("courseName", "Tổng quan về thuế");
+        req.setAttribute("currentPrice", 400000);
+        req.setAttribute("originalPrice", 600000);
+        req.setAttribute("discountPercentage", 33);
+        req.setAttribute("reviews", null);
+        req.setAttribute("sections", null);
     }
 }
