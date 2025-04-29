@@ -191,21 +191,48 @@
                                <div class="course-price" style="text-align: left;">
                                     <fmt:formatNumber value="${course.coursePrice}" type="currency" currencySymbol="" maxFractionDigits="0" />đ
                                 </div>
+									
                             </div>
+									<button class="details-btn" data-course-id="${course.id}">Xem chi tiết</button>
                         </div>
+                         
                     </c:forEach>
                 </c:if>
+                           
             </div>
             <!-- http://localhost:8082/utedemyProject/course/courseDetail?courseId=22 -->
             <!--  bấm nut course.id -->
+
+
         </section>  
     </main>
 
     <script>
+    function redirectToCourseDetail(courseId) {
+        const contextPath = "<c:out value='${contextPath}'/>";
+        // Đảm bảo courseId là số hoặc chuỗi hợp lệ
+        const id = Number(courseId) || null;
+        if (id && id > 0) {
+            console.log('Course ID:', id);
+            // Nối chuỗi thủ công và kiểm tra
+            const redirectUrl = contextPath + "/utedemyProject/course/courseDetail?courseId=" + id;
+            console.log('Redirecting to:', redirectUrl);
+            window.location.href = redirectUrl;
+        } else {
+            console.error('Course ID is missing or invalid:', courseId);
+            alert('Không thể xem chi tiết khóa học. Vui lòng thử lại sau.');
+        }
+    }
+      
+    
+    
+    
     document.addEventListener('DOMContentLoaded', function() {
         // Lấy tất cả checkbox khóa học
+        console.log('DOM fully loaded and parsed'); 
         const checkboxes = document.querySelectorAll('.item-checkbox');
         const selectAllCheckbox = document.getElementById('selectAll');
+
         
         // Hàm tính toán lại tổng tiền
         function recalculateTotal() {
@@ -230,23 +257,23 @@
             });
             
             // Cập nhật hiển thị tạm tính
-            document.getElementById('selected-count').textContent = selectedCount;
+           // document.getElementById('selected-count').textContent = selectedCount;
             
             // Cập nhật giá trị tạm tính
             const subtotalElement = document.getElementById('subtotal');
-            subtotalElement.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
+           // subtotalElement.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
             
             // Cập nhật tổng cộng
             const totalValue = document.getElementById('totalAmount');
-            totalValue.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
+           // totalValue.textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
             
             // Cập nhật giá trị cho form thanh toán
             const totalAmountInput = document.getElementById('totalAmountInput');
-            totalAmountInput.value = subtotal;
+            //totalAmountInput.value = subtotal;
             
             // Cập nhật danh sách khóa học được chọn cho form thanh toán
             const selectedCoursesContainer = document.getElementById('selectedCoursesContainer');
-            selectedCoursesContainer.innerHTML = ''; // Xóa danh sách cũ
+            //selectedCoursesContainer.innerHTML = ''; // Xóa danh sách cũ
             
             checkboxes.forEach(checkbox => {
                 if (checkbox.checked) {
@@ -272,7 +299,7 @@
         });
         
         // Thêm sự kiện cho checkbox "Select All"
-        selectAllCheckbox.addEventListener('change', function() {
+      	selectAllCheckbox.addEventListener('change', function() {
             const isChecked = this.checked;
             
             // Chọn/bỏ chọn tất cả các checkbox khóa học
@@ -295,6 +322,23 @@
                 alert('Vui lòng chọn ít nhất một khóa học để thanh toán!');
             }
         });
+        
+        const viewDetailsBtns = document.querySelectorAll('.details-btn');
+        console.log('Found viewDetailsBtns:', viewDetailsBtns.length); // Kiểm tra số lượng nút tìm thấy
+        // Đăng ký sự kiện click cho từng nút "Xem chi tiết"
+        viewDetailsBtns.forEach(viewDetailsBtn => {
+        	
+            // Lấy ID của khóa học từ thuộc tính data-course-id
+            const courseId = viewDetailsBtn.getAttribute('data-course-id');
+            
+            console.log('Adding event listener for button with Course ID:', courseId);  // Debug log kiểm tra
+            // Thêm sự kiện click cho nút
+            viewDetailsBtn.addEventListener('click', function() {
+                console.log('Button clicked! Course ID:', courseId);  // Debug log để kiểm tra ID khóa học
+                redirectToCourseDetail(courseId);
+            });
+        });
+        
     });
     </script>
 </body>

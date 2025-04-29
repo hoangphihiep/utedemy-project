@@ -158,3 +158,4 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '${pageContext.request.contextPath}/homepage.jsp';
     });
 });
+

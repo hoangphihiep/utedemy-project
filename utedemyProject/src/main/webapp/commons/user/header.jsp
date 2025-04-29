@@ -39,7 +39,7 @@
           <a href="/member">Hội viên</a>
           <a href="/activate-course">Kích hoạt khóa học</a>
           <a href="/business">Doanh nghiệp</a>
-          <a href="/profile">Cập nhật hồ sơ</a>
+          <a href="${pageContext.request.contextPath}/user/InformationManagement">Cập nhật hồ sơ</a>
           <a href="/wallet">Ví của bạn</a>
           <a href="/utedemyProject/logout">Đăng xuất</a>
         </div>

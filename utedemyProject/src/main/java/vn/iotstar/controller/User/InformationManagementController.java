@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import vn.iotstar.service.IUserService;
 import vn.iotstar.utils.Constant;
@@ -35,11 +36,27 @@ public class InformationManagementController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("account");  // Lấy thông tin người dùng từ session
 
-        int userId = 1; 
-        User user = userService.getUserById(userId);
+        
 
         if (user != null) {
+        	int userId = user.getId(); 
+        	user = userService.getUserById(userId);
+        	
+        	// Kiểm tra nếu các trường address, dateOfBirth, hoặc gender là null, gán giá trị mặc định
+            if (user.getAddress() == null || user.getAddress().isEmpty()) {
+                user.setAddress("Địa chỉ không có");
+            }
+            if (user.getDateOfBirth() == null) {
+                user.setDateOfBirth(Date.valueOf("2000-01-01")); // Ngày sinh mặc định
+            }
+            if (user.getGender() == null || user.getGender().isEmpty()) {
+                user.setGender("Chưa xác định"); // Giới tính mặc định
+            }
+            
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String birthdateStr = user.getDateOfBirth() != null ? 
                 dateFormat.format(user.getDateOfBirth()) : "";
@@ -66,11 +83,13 @@ public class InformationManagementController extends HttpServlet {
         String gender = req.getParameter("gender");
         Part filePart = req.getPart("profileImage");
 
-        int userId = 1; 
-        User currentUser = userService.getUserById(userId);
+        // Lấy userId từ session
+        HttpSession session = req.getSession();
+        User currentUser = (User) session.getAttribute("account");  // Lấy thông tin người dùng từ session
 
+        // Nếu user chưa đăng nhập
         if (currentUser == null) {
-            req.setAttribute("error", "Người dùng không tồn tại");
+            req.setAttribute("error", "Người dùng chưa đăng nhập");
             req.getRequestDispatcher("/views/user/InformationManagement.jsp").forward(req, resp);
             return;
         }
@@ -78,16 +97,30 @@ public class InformationManagementController extends HttpServlet {
         // Kiểm tra dữ liệu và lấy danh sách lỗi
         List<String> errors = validateData(fullname, email, phone, address, birthdate, gender);
 
+        // Nếu không có lỗi
         if (errors.isEmpty()) {
             try {
                 // Cập nhật thông tin cơ bản
                 currentUser.setFullname(fullname);
                 currentUser.setEmail(email);
                 currentUser.setPhoneNumber(phone);
+                
+                // Kiểm tra và gán giá trị mặc định cho các trường nếu null
+                if (address == null || address.trim().isEmpty()) {
+                    address = "Địa chỉ không có";
+                }
                 currentUser.setAddress(address);
+
+                if (gender == null || gender.trim().isEmpty()) {
+                    gender = "Chưa xác định";
+                }
                 currentUser.setGender(gender);
 
-                // Xử lý ngày sinh
+                if (birthdate == null || birthdate.trim().isEmpty()) {
+                    birthdate = "2000-01-01"; // Ngày mặc định
+                }
+
+                // Chuyển đổi ngày sinh
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 dateFormat.setLenient(false);
                 java.util.Date parsedDate = dateFormat.parse(birthdate);
@@ -95,7 +128,6 @@ public class InformationManagementController extends HttpServlet {
 
                 // Xử lý ảnh đại diện
                 if (filePart != null && filePart.getSize() > 0) {
-                    // Tạo thư mục nếu chưa tồn tại
                     String uploadPath = Constant.DIR;
                     File uploadDir = new File(uploadPath);
                     if (!uploadDir.exists()) uploadDir.mkdir();
@@ -120,9 +152,7 @@ public class InformationManagementController extends HttpServlet {
 
                 if (isUpdated) {
                     req.setAttribute("message", "Thông tin đã được cập nhật thành công!");
-                    // Format lại ngày sinh để hiển thị
-                    String birthdateStr = dateFormat.format(currentUser.getDateOfBirth());
-                    req.setAttribute("birthdate", birthdateStr);
+                    req.setAttribute("birthdate", birthdate);
                 } else {
                     req.setAttribute("error", "Cập nhật thông tin không thành công");
                 }
@@ -132,21 +162,16 @@ public class InformationManagementController extends HttpServlet {
                 req.setAttribute("error", "Lỗi khi xử lý: " + e.getMessage());
             }
         } else {
-            // Truyền danh sách lỗi đến JSP
-            req.setAttribute("errors", errors);
+            req.setAttribute("errors", errors);  // Truyền lỗi nếu có
         }
 
-        // Luôn trả về thông tin user mới nhất
-        User updatedUser = userService.getUserById(userId);
-        if (updatedUser.getDateOfBirth() != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String birthdateStr = dateFormat.format(updatedUser.getDateOfBirth());
-            req.setAttribute("birthdate", birthdateStr);
-        }
+        // Lấy lại thông tin user đã cập nhật
+        User updatedUser = userService.getUserById(currentUser.getId());
         req.setAttribute("user", updatedUser);
 
         req.getRequestDispatcher("/views/user/InformationManagement.jsp").forward(req, resp);
     }
+
 
     private List<String> validateData(String fullname, String email, String phone, 
             String address, String birthdate, String gender) {

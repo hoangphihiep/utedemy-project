@@ -245,14 +245,15 @@
         </div>
 
         <div class="instructor-bio">
-            <p><strong class="teacher-name">${teacherName}</strong></p> 
-            <p>Giảng viên về khoa học máy tính</p>
-            <p>Địa chỉ: ${teacherAddress}</p>
-            <p>Email: ${teacherEmail}</p>
-            <p>Số điện thoại: ${teacherPhoneNumber}</p>
-            <p>${teacherDescription}</p>
-            <p><a href="${teacherSocialUrl}" target="_blank">Liên kết mạng xã hội</a></p>
-        </div>
+    <p><strong class="teacher-name">${teacherName}</strong></p>
+    <p><i class="fas fa-graduation-cap"></i> Giảng viên về khoa học máy tính</p>
+    <p><i class="fas fa-map-marker-alt"></i> Địa chỉ: ${teacherAddress}</p>
+    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:${teacherEmail}">${teacherEmail}</a></p>
+    <p><i class="fas fa-phone-alt"></i> Số điện thoại: ${teacherPhoneNumber}</p>
+    <p><i class="fas fa-info-circle"></i> ${teacherDescription}</p>
+    <p><a href="${teacherSocialUrl}" target="_blank"><i class="fas fa-link"></i> Liên kết mạng xã hội</a></p>
+</div>
+
     </div>
 </div>
 
