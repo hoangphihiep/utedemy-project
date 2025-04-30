@@ -7,8 +7,11 @@
  <header class="header-container">
         <div class="top-bar">
             <div class="logo-section">
-                <span class="unica-logo">unica</span>
-            </div>
+    <a href="${pageContext.request.contextPath}/user/homepage">
+        <span class="unica-logo">unica</span>
+    </a>
+</div>
+
             <form action="${pageContext.request.contextPath}/user/search" method="post">
                 <div class="search-box-inner">
                     <input type="text" name="keyword" placeholder="Tìm khóa học, giảng viên">
@@ -39,7 +42,7 @@
           <a href="/member">Hội viên</a>
           <a href="/activate-course">Kích hoạt khóa học</a>
           <a href="/business">Doanh nghiệp</a>
-          <a href="/profile">Cập nhật hồ sơ</a>
+          <a href="${pageContext.request.contextPath}/user/InformationManagement">Cập nhật hồ sơ</a>
           <a href="/wallet">Ví của bạn</a>
           <a href="/utedemyProject/logout">Đăng xuất</a>
         </div>

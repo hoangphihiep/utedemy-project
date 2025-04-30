@@ -153,9 +153,29 @@
                     <button type="submit" class="btn btn-primary">CẬP NHẬT</button>
                     <button type="button" class="btn btn-secondary">Đổi mật khẩu</button>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="window.location.href='${pageContext.request.contextPath}/views/user/homepage.jsp'">TRUY CẬP</button>
+				<button type="button" class="btn btn-primary" onclick="redirectToHomepage()">TRUY CẬP</button>
+
+
             </div>
         </form>
+        
     </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy nút TRUY CẬP
+        const accessBtn = document.querySelector('.btn.btn-primary:last-child');
+
+        // Thêm sự kiện click
+        accessBtn.addEventListener('click', function() {
+            // Lấy contextPath từ JSP
+            const contextPath = "${pageContext.request.contextPath}"; // Lấy giá trị chính xác từ JSP
+            
+            // Chuyển hướng sang trang homepage.jsp
+            window.location.href = contextPath + "/user/homepage";
+        });
+    });
+</script>
+    
 </body>
 </html>

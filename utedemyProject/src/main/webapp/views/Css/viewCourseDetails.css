@@ -603,7 +603,11 @@
 		}
 		
 		.instructor-bio {
-		    margin-top: 15px;
+		    background-color: #f9f9f9;
+		    padding: 20px;
+		    border-radius: 8px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    font-family: Arial, sans-serif;
 		}
 		
 		.instructor-experience li {
@@ -671,16 +675,35 @@
 		
 		.instructor-bio p {
 		    font-size: 16px;
-		    color: #444;
-		    margin-bottom: 15px;
+		    margin: 10px 0;
+		    color: #333;
 		}
 		.teacher-name {
-	    font-size: 25px; /* Điều chỉnh kích thước chữ */
-	    font-weight: bold;
-	    color: #333; /* Màu sắc chữ */
-	    margin-bottom: 15px; /* Khoảng cách dưới */
+		    font-size: 18px;
+		    font-weight: bold;
+		    color: #007bff;
 		}
+		.instructor-bio i {
+		    color: #007bff;
+		    margin-right: 8px;
+		    font-size: 18px;
+		}
+		.instructor-bio a {
+		    color: #007bff;
+		    text-decoration: none;
+		    font-weight: bold;
+		}
+			.instructor-bio a:hover {
+		    text-decoration: underline;
+		}	
 		
+		.instructor-bio p i {
+		    color: #007bff;
+		}
+		.instructor-bio .fas {
+		    font-size: 20px; /* Adjust icon size */
+		    vertical-align: middle;
+		}
 		.instructor-experience {
 		    list-style: none;
 		    padding: 0;
