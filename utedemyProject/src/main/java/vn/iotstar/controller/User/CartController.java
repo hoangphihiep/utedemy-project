@@ -150,7 +150,7 @@ public class CartController extends HttpServlet{
 		        resp.getWriter().write("success");
 		    } else {
 		        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		        resp.getWriter().write("fail");
+		        resp.getWriter().write("error");
 		    }
 		    return;
 

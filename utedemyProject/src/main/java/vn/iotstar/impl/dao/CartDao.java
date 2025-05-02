@@ -134,7 +134,7 @@ public class CartDao implements ICartDao{
 	                return false;
 	            }
 	            cart.setUser(user);
-	            em.persist(cart); // lưu cart mới
+	            em.persist(cart);
 	        }
 
 	        // Tìm course theo courseId
@@ -142,6 +142,12 @@ public class CartDao implements ICartDao{
 	        if (course == null) {
 	            trans.rollback();
 	            return false;
+	        }
+
+	        // Check nếu course đã tồn tại trong cart
+	        if (cart.getCourses().contains(course)) {
+	            trans.rollback();
+	            return false;  // đã có rồi, không thêm nữa
 	        }
 
 	        // Thêm course vào cart
@@ -159,6 +165,7 @@ public class CartDao implements ICartDao{
 	        return false;
 	    }
 	}
+
 
 
 }

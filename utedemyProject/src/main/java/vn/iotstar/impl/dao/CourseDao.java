@@ -128,7 +128,7 @@ public class CourseDao implements ICourseDao {
 	    }
 	}
 
-	@Override
+	/*@Override
 	public Course findByIdCourse(int id) {
 		EntityManager em = JPAConfig.getEntityManager();
 	    EntityTransaction trans = em.getTransaction();
@@ -144,9 +144,28 @@ public class CourseDao implements ICourseDao {
 	        e.printStackTrace();
 	        return null;
 	    } finally {
+	       // em.close();
+	    }
+	}*/
+	@Override
+	public Course findByIdCourse(int id) {
+	    System.out.println("Get EntityManager");
+	    EntityManager em = JPAConfig.getEntityManager();
+	    System.out.println("Got EntityManager");
+	    try {
+	        System.out.println("Before find");
+	        Course course = em.find(Course.class, id);
+	        System.out.println("After find");
+	        return course;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    } finally {
 	        em.close();
 	    }
 	}
+
+
 
 	@Override
 	public int maxCourseId() {

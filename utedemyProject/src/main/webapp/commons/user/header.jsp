@@ -23,7 +23,7 @@
            <c:if test="${not empty sessionScope.account}">
     <!-- User is logged in - show cart, favorites and avatar with dropdown -->
     <div class="user-menu-container">
-      <a href="/cart"><i class="fas fa-shopping-cart cart-icon"></i></a>
+      <a href="${pageContext.request.contextPath}/user/cart"><i class="fas fa-shopping-cart cart-icon"></i></a>
       <a href="/favorites"><i class="fas fa-heart heart-icon"></i></a>
       
       <div class="dropdown">    
@@ -44,6 +44,7 @@
           <a href="/business">Doanh nghiệp</a>
           <a href="${pageContext.request.contextPath}/user/InformationManagement">Cập nhật hồ sơ</a>
           <a href="/wallet">Ví của bạn</a>
+           <a href="${pageContext.request.contextPath}/user/viewcheckout">Xem đơn hàng đang đặt</a>
           <a href="/utedemyProject/logout">Đăng xuất</a>
         </div>
       </div>
@@ -52,8 +53,8 @@
   
   <c:if test="${empty sessionScope.account}">
     <!-- User is not logged in - show login and signup buttons -->
-    <a href="/cart"><i class="fas fa-shopping-cart cart-icon"></i></a>
-    <a href="/favorites"><i class="fas fa-heart heart-icon"></i></a>
+    <a href="${pageContext.request.contextPath}/login"><i class="fas fa-shopping-cart cart-icon"></i></a>
+    <a href="${pageContext.request.contextPath}/login"><i class="fas fa-heart heart-icon"></i></a>
     <a href="/utedemyProject/login">
     <button class="login-btn">Đăng nhập</button>
     </a>
