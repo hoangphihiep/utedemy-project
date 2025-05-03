@@ -1,12 +1,15 @@
 package vn.iotstar.impl.dao;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import vn.iotstar.configs.JPAConfig;
@@ -208,4 +211,23 @@ public class UserDao implements IUserDao {
             return false;
         }
     }
+	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-hibernate-mysql");
+
+    @Override
+    public List<User> getAllUsers() {
+        EntityManager em = emf.createEntityManager();
+        List<User> users = new ArrayList<>();
+        try {
+            String sql = "SELECT u FROM User u";
+            users = em.createQuery(sql, User.class).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+        return users;
+    }
+    
 }

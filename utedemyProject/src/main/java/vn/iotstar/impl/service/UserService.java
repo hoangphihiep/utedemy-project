@@ -1,5 +1,6 @@
 package vn.iotstar.impl.service;
 
+import java.util.List;
 import java.util.Set;
 
 import vn.iotstar.dao.IUserDao;
@@ -108,6 +109,11 @@ public class UserService implements IUserService {
     @Override
     public boolean updateUserInformation(User user) {
     	return userDao.updateUserInformation(user);
+    }
+    @Override
+    public List<User> getAllUsers()
+    {
+    	return userDao.getAllUsers();
     }
 
 }

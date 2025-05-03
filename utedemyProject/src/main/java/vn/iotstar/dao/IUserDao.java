@@ -1,5 +1,6 @@
 package vn.iotstar.dao;
 
+import java.util.List;
 import java.util.Set;
 
 import vn.iotstar.entity.Role;
@@ -25,5 +26,6 @@ public interface IUserDao {
 	void update(User user);
 
     boolean updateUserInformation(User user);
+    public List<User> getAllUsers();
 	
 }

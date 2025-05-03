@@ -25,10 +25,15 @@
 			<div class="category-btn">DANH MỤC</div>
 		</div>
 
-		<div class="search-box">
-			<input type="text" placeholder="${keyWord}" value="${keyWord}">
-			<button>🔍</button>
-		</div>
+		<form action="${pageContext.request.contextPath}/user/filter"
+			method="post">
+			<div class="search-box">
+				<input type="text" name="keyword" placeholder="Search..."
+					value="${keyWord}">
+				<button type="submit">🔍</button>
+			</div>
+		</form>
+
 
 		<div class="nav-links">
 			<a href="#" class="nav-btn login-btn">Doanh nghiệp</a> <a href="#"
@@ -51,68 +56,33 @@
 				</button>
 
 				<div class="sort-dropdown">
-					<button class="sort-btn">
+					<!-- 					<button class="sort-btn">
 						<span>Sắp xếp theo</span> <span>Học nhiều nhất</span> <span>▼</span>
-					</button>
+					</button> -->
+					<select class="sort-dropdown" name="sort" id="sort-select">
+						<form action="${pageContext.request.contextPath}/user/search"
+							method="post">
+							<select name="sortBy">
+								<option value="highest-rated">Đánh giá cao nhất</option>
+								<option value="most-popular">Học nhiều nhất</option>
+								<!-- Thêm các tùy chọn khác -->
+							</select>
+							<button type="submit">Lọc</button>
+						</form>
+
+					</select>
 				</div>
 			</div>
 		</div>
 
 		<!-- Nút hiển thị lại bộ lọc -->
 		<button class="show-filter-btn">Hiển thị bộ lọc</button>
-
-		<form action="${pageContext.request.contextPath}/user/filter"
-			method="post">
-			<div class="content-wrapper">
-				<!-- Sidebar Filters -->
-				<div class="sidebar">
-					<div class="filter-section">
-						<h3 class="filter-title">Đánh giá</h3>
-						<div class="rating-filter">
-							<label class="rating-item"> <input type="radio"
-								name="rating" value="4.5"> <span class="star-rating">★
-									★ ★ ★ ★</span> <span>Từ 4.5 trở lên</span>
-							</label> <label class="rating-item"> <input type="radio"
-								name="rating" value="4"> <span class="star-rating">★
-									★ ★ ★ ☆</span> <span>Từ 4.0 trở lên</span>
-							</label> <label class="rating-item"> <input type="radio"
-								name="rating" value="3.5"> <span class="star-rating">★
-									★ ★ ☆ ☆</span> <span>Từ 3.5 trở lên</span>
-							</label> <label class="rating-item"> <input type="radio"
-								name="rating" value="3.0"> <span class="star-rating">★
-									★ ★ ☆ ☆</span> <span>Từ 3.0 trở lên</span>
-							</label>
-						</div>
-					</div>
-					<div class="filter-section">
-						<h3 class="filter-title">Thời lượng video</h3>
-						<div class="duration-filter">
-							<label class="duration-item"> <input type="checkbox"
-								name="duration"> <span>0 đến 1 giờ (1)</span>
-							</label> <label class="duration-item"> <input type="checkbox"
-								name="duration"> <span>1 đến 3 giờ (26)</span>
-							</label> <label class="duration-item"> <input type="checkbox"
-								name="duration"> <span>3 đến 6 giờ (38)</span>
-							</label> <label class="duration-item"> <input type="checkbox"
-								name="duration"> <span>6 đến 17 giờ (37)</span>
-							</label>
-						</div>
-					</div>
-					<div class="filter-section">
-						<!-- <button type="submit" class="btn-filter">Lọc</button> -->
-						<button type="submit"
-							style="padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; border: none; border-radius: 15px; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">
-							Lọc khóa học</button>
-					</div>
-				</div>
-		</form>
 		<div class="course-list">
-			<c:forEach items="${CourseName}" var="i">
+			<c:forEach items="${CourseList}" var="i">
 				<div class="course-card">
 					<%-- 
 						<img src="/api/placeholder/240/150" alt="${i.course.courseName}"
 							class="course-image"> --%>
-
 					<div class="course-details">
 						<div>
 							<h3 class="course-title">${i.course.courseName}</h3>
@@ -158,8 +128,7 @@
 								<!-- Hiển thị tổng số đánh giá -->
 								<span class="rating-count">(${reviewCount})</span>
 							</div>
-							<img
-								src="${pageContext.request.contextPath}/image/${i.course.courseDetail.courseImage}" />
+							hello
 							<c:set var="v" value="0" />
 							<c:set var="prevSectionId" value="" />
 							<c:forEach var="lesson" items="${Lesson}">
@@ -198,7 +167,15 @@
 				</div>
 			</c:forEach>
 		</div>
-
+		<%-- 		<c:out value="${sessionScope.keyWord}" />
+ --%>
+		<form action="${pageContext.request.contextPath}/user/search"
+			method="post">
+			<input type="hidden" name="keyword" value="${sessionScope.keyWord}" />
+			<button type="submit"
+				style="padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; border: none; border-radius: 15px; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">
+				Quay lại tìm kiếm</button>
+		</form>
 		<!-- Chat Bubble -->
 		<div class="chat-bubble">
 			💬 <span class="notification">1</span>
