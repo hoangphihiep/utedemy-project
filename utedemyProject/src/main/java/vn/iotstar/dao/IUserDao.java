@@ -29,4 +29,6 @@ public interface IUserDao {
 
 	public List<User> getAllUsers();
 
+	public List<User> getUsersByRole(String roleName);
+
 }

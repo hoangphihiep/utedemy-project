@@ -73,5 +73,6 @@ public interface ICourseDao {
 	public boolean deleteQuiz(int id) throws Exception;
 
 	public List<Course> getCoursesByUserId(int userId);
-
+	
+	
 }

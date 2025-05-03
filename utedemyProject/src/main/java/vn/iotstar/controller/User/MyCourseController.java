@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import vn.iotstar.impl.service.CourseDetailService;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.service.ICourseDetailService;
 import vn.iotstar.entity.*;
 
 @WebServlet(urlPatterns = { "/user/mycourse" })
@@ -19,6 +21,7 @@ public class MyCourseController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ICourseService courseService = new CourseService();
 	private IUserService userService = new UserService();
+	private ICourseDetailService c = new CourseDetailService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,12 +37,29 @@ public class MyCourseController extends HttpServlet {
 		int userId = 1; // Test
 		List<User> users = userService.getAllUsers();
 		List<Course> courses = courseService.getCoursesByUserId(userId);
+		List<User> userList = userService.getUsersByRole("teacher");
+		List<CourseProgress> courseProList = c.getAllCourseProgress();
 		req.setAttribute("Users", users);
 		for (User user : users) {
-			System.out.println("Test userName: " + user.getFullname());
-			if (user.getId() == userId) {
-				req.setAttribute("Users", user.getFullname());
+			for (User teacher : userList) {
+				for (CourseProgress j : courseProList) {
+					System.out.println("Test userName: " + user.getFullname());
+					if (user.getId() == userId) {
+						req.setAttribute("Users", user.getFullname());
+					}
+					if (teacher.getId() == userId && j.getUser().getId() == userId) {
+						req.setAttribute("teacherList", teacher.getFullname());
+						req.setAttribute("Percentage", j.getProgressPercentage());
+					}
+
+				}
+
 			}
+		}
+
+		System.out.println("Danh sach kh: ");
+		for (Course c : courses) {
+			System.out.println(c.getCourseName());
 		}
 		req.setAttribute("myCourseList", courses);
 		req.getRequestDispatcher("/views/user/mycourse.jsp").forward(req, resp);

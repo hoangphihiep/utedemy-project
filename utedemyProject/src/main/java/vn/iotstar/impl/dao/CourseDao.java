@@ -1,5 +1,6 @@
 package vn.iotstar.impl.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -11,6 +12,7 @@ import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.ICourseDao;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
+import vn.iotstar.entity.CourseProgress;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.Question;
@@ -699,12 +701,20 @@ public class CourseDao implements ICourseDao {
 
 	public List<Course> getCoursesByUserId(int userId) {
 		EntityManager em = emf.createEntityManager();
+		List<Course> courseResults = new ArrayList<>();
 		try {
-			return em.createQuery("SELECT c FROM Course c WHERE c.user.id = :userId", Course.class)
-					.setParameter("userId", userId).getResultList();
-		} finally {
-			em.close();
+			String queryStr = "SELECT oi.course FROM OrderItem oi WHERE oi.order.user.id = :userId";
+			TypedQuery<Course> query = em.createQuery(queryStr, Course.class);
+			query.setParameter("userId", userId);
+			courseResults = query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally { 
+			if (em != null && em.isOpen())
+				em.close();
 		}
+		return courseResults;
 	}
-
+	
+	
 }

@@ -1,5 +1,12 @@
-@charset "UTF-8";
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
 body {
 	font-family: Arial, sans-serif;
 	background: #f5f5f5;
@@ -136,46 +143,54 @@ body {
 	font-weight: bold;
 	color: #333;
 }
+</style>
+</head>
+<body>
+	<div class="header">
+		<div class="search-box">
+			<input type="text" placeholder="Tìm kiếm khóa học...">
+			<button>Tìm kiếm</button>
+		</div>
+	</div>
 
-.course-container {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 20px;
-	margin: 20px;
-}
+	<div class="filter-bar">
+		<button>Tất cả</button>
+		<button>Excel</button>
+		<button>Bán hàng</button>
+		<button>Thuyết trình</button>
+		<button>+ Danh mục</button>
+	</div>
 
-.course-card {
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	overflow: hidden;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 10px;
-}
+	<div class="course-grid">
+		<div class="course-card">
+			<img alt="">
+			<div class="content">
+				<h3>Tên khóa học</h3>
+				<p>Giảng viên: Tên giảng viên</p>
+				<div class="footer">
+					<button>Vào học ngay</button>
+					<div class="footer">
+						<div class="progress-circle">0%</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-.content {
-	text-align: center;
-	padding: 10px;
-}
+		<div class="course-card">
+			<img alt="">
+			<div class="content">
+				<h3>Tên khóa học</h3>
+				<p>Giảng viên: Tên giảng viên</p>
+				<div class="footer">
+					<button>Vào học ngay</button>
+					<div class="progress-circle">0%</div>
+				</div>
+			</div>
+		</div>
 
-.footer {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-}
+		<!-- Thêm nhiều thẻ tương tự nếu cần -->
+	</div>
 
-.progress-circle {
-	width: 40px;
-	height: 40px;
-	border: 2px solid #ccc;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 14px;
-	font-weight: bold;
-	color: #333;
-}
+	<div class="chatbox">Em có thể giúp gì cho anh chị ạ?</div>
+</body>
+</html>

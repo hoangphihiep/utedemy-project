@@ -46,63 +46,55 @@
 				style="width: 30px; height: 30px; border-radius: 50%;">
 		</div>
 	</header>
+	<!-- phuc -->
 <body>
-	<div class="Pannel">
-		<p>The member: ${Users}</p>
-		<div>
-			<a href="#" class="border-link">Khoa học</a> <a href="Profile.jsp">Ho
-				so ca nhan</a> <a href="LikePage.jsp">Yeu thich</a> <a
-				href="Explore.jsp">Kham pha</a> <a href="Experience.jsp">Trainghiem</a>
+	<div class="header">
+		<div class="search-box">
+			<input type="text" placeholder="Tìm kiếm khóa học...">
+			<button>Tìm kiếm</button>
 		</div>
 	</div>
-	<div>
-		<select>
-			<option>--Sắp xếp theo--</option>
-			<option>Moi nhat</option>
-			<option>Cu nhat</option>
-			<option>Gia tang dan</option>
-			<option>Gia giam dan</option>
-		</select> <select>
-			<option>--Sắp xếp theo--</option>
-			<option>Moi nhat</option>
-			<option>Cu nhat</option>
-			<option>Gia tang dan</option>
-			<option>Gia giam dan</option>
-		</select> <select>
-			<option>--Sắp xếp theo--</option>
-			<option>Moi nhat</option>
-			<option>Cu nhat</option>
-			<option>Gia tang dan</option>
-			<option>Gia giam dan</option>
-		</select> <select>
-			<option>--Sắp xếp theo--</option>
-			<option>Moi nhat</option>
-			<option>Cu nhat</option>
-			<option>Gia tang dan</option>
-			<option>Gia giam dan</option>
-		</select> <input type="text" placeholder="Tim kiem khoa hoc...">
-		<button>Tim</button>
+
+	<div class="filter-bar">
+		<button>Tất cả</button>
+		<button>Excel</button>
+		<button>Bán hàng</button>
+		<button>Thuyết trình</button>
+		<button>+ Danh mục</button>
 	</div>
-	<c:forEach var="course" items="${myCourseList}">
-		<div class="myCourseList">
-			<div class="CourseSet">
-				<div>
-					<h2>${course.courseName}</h2>
-					<c:set var="a" value="images/${course.courseDetail.courseImage}" />
-					<img src="${pageContext.request.contextPath}/${a}" alt="Picture">
-				</div>
-				<div>
-					<button>->Vao hoc ngay</button>
-					<span>10%</span>
+	<div class="course-container">
+		<c:forEach var="course" items="${myCourseList}">
+			<div class="course-card">
+				<img src="${course.courseDetail.courseImage}" alt="Picture"
+					style="width: 200px; height: auto;">
+				<div class="content">
+					<h3>${course.courseName}</h3>
+					<p>Giảng viên: ${teacherList}</p>
+					<div class="footer">
+						<button>Vào học ngay</button>
+						<div class="progress-circle">${percentage}</div>
+					</div>
 				</div>
 			</div>
-	</c:forEach>
+		</c:forEach>
+	</div>
 
-	<%-- <c:forEach var="c" items="${CourseDetails}">
-		<c:set var="a" value="images/${c.courseImage}" />
-		<img src="${pageContext.request.contextPath}/${a}" alt="Picture"
-			width="200" />
-	</c:forEach> --%>
+	<!-- <div class="course-card">
+			<img alt="">
+			<div class="content">
+				<h3>Tên khóa học</h3>
+				<p>Giảng viên: Tên giảng viên</p>
+				<div class="footer">
+					<button>Vào học ngay</button>
+					<div class="progress-circle">0%</div>
+				</div>
+			</div>
+		</div> -->
+
+	<!-- Thêm nhiều thẻ tương tự nếu cần -->
+	</div>
+
+	<div class="chatbox">Em có thể giúp gì cho anh chị ạ?</div>
 </body>
 </body>
 </html>

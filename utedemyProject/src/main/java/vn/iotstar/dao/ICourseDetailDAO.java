@@ -1,9 +1,14 @@
 package vn.iotstar.dao;
 
+import java.util.List;
+
 import vn.iotstar.entity.CourseDetail;
+import vn.iotstar.entity.CourseProgress;
 
 public interface ICourseDetailDAO {
-    CourseDetail findById(int id);
+	CourseDetail findById(int id);
 
-	CourseDetail findByCourseId(int courseId); 
+	CourseDetail findByCourseId(int courseId);
+
+	public List<CourseProgress> getAllCourseProgress();
 }
