@@ -206,7 +206,7 @@ public class UserDao implements IUserDao {
 		}
 	}
 
-	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-hibernate-mysql");
 
 	@Override
 	public List<User> getAllUsers() {
@@ -220,5 +220,5 @@ public class UserDao implements IUserDao {
 		}
 		return users;
 	}
-	
+
 }

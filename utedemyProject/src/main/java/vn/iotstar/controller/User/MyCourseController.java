@@ -29,9 +29,9 @@ public class MyCourseController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		HttpSession session = req.getSession();
-		Integer userId = (Integer) session.getAttribute("userId");
-//		int userId = 1; // Test
+//		HttpSession session = req.getSession();
+//		Integer userId = (Integer) session.getAttribute("userId");
+		int userId = 1; // Test
 		List<User> users = userService.getAllUsers();
 		List<Course> courses = courseService.getCoursesByUserId(userId);
 		req.setAttribute("Users", users);

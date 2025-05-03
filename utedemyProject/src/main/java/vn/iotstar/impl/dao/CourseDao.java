@@ -695,7 +695,7 @@ public class CourseDao implements ICourseDao {
 		}
 	}
 
-	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-hibernate-mysql");
 
 	public List<Course> getCoursesByUserId(int userId) {
 		EntityManager em = emf.createEntityManager();
