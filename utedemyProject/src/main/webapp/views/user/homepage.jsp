@@ -1,94 +1,135 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="request" />
+<c:set var="contextPath" value="${pageContext.request.contextPath}"
+	scope="request" />
 
 <link rel="stylesheet" href="/utedemyProject/views/Css/homepage.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="vi">
 <body>
-   
 
-    <main>
-    
-        <section class="hero-banner-slider" aria-label="Course Promotions">
-            <div class="slider-container">
-                <div class="slider-content">
-                    <!-- Existing slider items with added accessibility -->
-                    <div class="slider-item" role="group" aria-roledescription="slide">
-                        <!-- Existing content with semantic improvements -->
-                    </div>
-                </div>
-                <div class="slider-controls">
-                    <button class="slider-prev" aria-label="Previous Slide">&#10094;</button>
-                    <button class="slider-next" aria-label="Next Slide">&#10095;</button>
-                </div>
-                <div class="slider-dots" role="tablist"></div>
-            </div>
-        </section>
-        <nav class="category-menu">
-            <div class="category-menu-inner">
-                <ul>
-                    <li><a href="#office-it">Tin học văn phòng</a></li>
-                    <li><a href="#design">Thiết kế</a></li>
-                    <li><a href="#languages">Ngoại ngữ</a></li>
-                    <li><a href="#marketing">Marketing</a></li>
-                    <li><a href="#finance">Tài chính kế toán</a></li>
-                    <li><a href="#technology">Công nghệ</a></li>
-                    <li><a href="#health-beauty">Sức khỏe - Làm đẹp</a></li>
-                    <li><a href="#family">Hôn nhân gia đình</a></li>
-                    <li><a href="#books">Sách hay nên đọc</a></li>
-                    <li><a href="#inhouse">Đào tạo inhouse</a></li>
-                </ul>
-            </div>
-        </nav>
-        <section class="top-courses" aria-labelledby="bestseller-title"> 
-            <h3 id="bestseller-title">TOP BÁN CHẠY</h3>
-            <div id="bestseller-courses" class="course-grid" aria-live="polite"></div>
-          </section>
+	<header
+		style="display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;">
+		<!-- Logo và Danh Mục -->
+		<div style="display: flex; align-items: center; margin-right: 20px;">
+			<img src="logo.png" alt="Unica"
+				style="height: 30px; margin-right: 10px;"> <span
+				style="font-weight: bold;">DANH MỤC</span>
+		</div>
 
-          <section class="top-courses" aria-labelledby="today-sale-title">
-            <h3 id="today-sale-title">SIÊU ƯU ĐÃI HÔM NAY</h3>
-            <div id="today-sale-courses" class="course-grid" aria-live="polite"></div>
-          </section>
+		<!-- Thanh Tìm kiếm -->
+		<div style="flex: 1; position: relative;">
+			<input type="text" placeholder="Tìm khóa học, giảng viên"
+				style="width: 100%; padding: 8px 35px 8px 15px; border: 1px solid #ccc; border-radius: 20px;">
+			<span
+				style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+				🔍 </span>
+		</div>
 
-       <section class="topics-of-interest" aria-labelledby="topics-title">
-    <h3 id="topics-title">CHỦ ĐỀ CÓ THỂ BẠN QUAN TÂM</h3>
-    <div class="topic-tags" role="list">
-        <a href="#office-it" role="listitem" class="topic-tag">Tin học văn phòng</a>
-        <a href="#design" role="listitem" class="topic-tag">Thiết kế</a>
-        <a href="#languages" role="listitem" class="topic-tag">Ngoại ngữ</a>
-        <a href="#marketing" role="listitem" class="topic-tag">Marketing</a>
-        <a href="#finance" role="listitem" class="topic-tag">Tài chính kế toán</a>
-        <a href="#technology" role="listitem" class="topic-tag">Công nghệ</a>
-        <a href="#health-beauty" role="listitem" class="topic-tag">Sức khỏe - Làm đẹp</a>
-        <a href="#family" role="listitem" class="topic-tag">Hôn nhân gia đình</a>
-        <a href="#books" role="listitem" class="topic-tag">Sách hay nên đọc</a>
-        <a href="#inhouse" role="listitem" class="topic-tag">Đào tạo inhouse</a>
-    </div>
-</section>
+		<!-- Menu bên phải -->
+		<div
+			style="display: flex; align-items: center; gap: 15px; margin-left: 20px;">
+			<a href="#">Doanh nghiệp</a> <a href="#">Hội viên</a>
 
-        <section class="featured-instructors" aria-labelledby="instructors-title">
-            <h3 id="instructors-title">GIẢNG VIÊN TIÊU BIỂU</h3>
-            <div class="instructors-container" aria-live="polite"></div>
-        </section>
+			<form action="${pageContext.request.contextPath}/user/mycourse"
+				method="post" style="margin: 0;">
+				<button
+					style="background-color: #2d8cf0; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">
+					➔ Vào học</button>
+			</form>
 
-        <section class="instructor-recruitment hero" aria-labelledby="recruitment-title">
-            <div class="hero-content">
-                <h2 id="recruitment-title">Trở thành Giảng viên Unica</h2>
-                <p>Giúp mọi người trở nên tốt hơn - bao gồm cả chính bạn</p>
-                <button class="btn btn-register" aria-label="Register as Instructor">Đăng ký ngay</button>
-            </div>
-            <div class="hero-image">
-                <img src="/api/placeholder/500/400" alt="Instructor Illustration">
-            </div>
-        </section>
-    </main>
+			<span>🤍</span>
+			<spann>🛒</span> <img src="avatar.jpg" alt="Avatar"
+				style="width: 30px; height: 30px; border-radius: 50%;">
+		</div>
+	</header>
 
-  <script>
+	<main>
+
+		<section class="hero-banner-slider" aria-label="Course Promotions">
+			<div class="slider-container">
+				<div class="slider-content">
+					<!-- Existing slider items with added accessibility -->
+					<div class="slider-item" role="group" aria-roledescription="slide">
+						<!-- Existing content with semantic improvements -->
+					</div>
+				</div>
+				<div class="slider-controls">
+					<button class="slider-prev" aria-label="Previous Slide">&#10094;</button>
+					<button class="slider-next" aria-label="Next Slide">&#10095;</button>
+				</div>
+				<div class="slider-dots" role="tablist"></div>
+			</div>
+		</section>
+		<nav class="category-menu">
+			<div class="category-menu-inner">
+				<ul>
+					<li><a href="#office-it">Tin học văn phòng</a></li>
+					<li><a href="#design">Thiết kế</a></li>
+					<li><a href="#languages">Ngoại ngữ</a></li>
+					<li><a href="#marketing">Marketing</a></li>
+					<li><a href="#finance">Tài chính kế toán</a></li>
+					<li><a href="#technology">Công nghệ</a></li>
+					<li><a href="#health-beauty">Sức khỏe - Làm đẹp</a></li>
+					<li><a href="#family">Hôn nhân gia đình</a></li>
+					<li><a href="#books">Sách hay nên đọc</a></li>
+					<li><a href="#inhouse">Đào tạo inhouse</a></li>
+				</ul>
+			</div>
+		</nav>
+		<section class="top-courses" aria-labelledby="bestseller-title">
+			<h3 id="bestseller-title">TOP BÁN CHẠY</h3>
+			<div id="bestseller-courses" class="course-grid" aria-live="polite"></div>
+		</section>
+
+		<section class="top-courses" aria-labelledby="today-sale-title">
+			<h3 id="today-sale-title">SIÊU ƯU ĐÃI HÔM NAY</h3>
+			<div id="today-sale-courses" class="course-grid" aria-live="polite"></div>
+		</section>
+
+		<section class="topics-of-interest" aria-labelledby="topics-title">
+			<h3 id="topics-title">CHỦ ĐỀ CÓ THỂ BẠN QUAN TÂM</h3>
+			<div class="topic-tags" role="list">
+				<a href="#office-it" role="listitem" class="topic-tag">Tin học
+					văn phòng</a> <a href="#design" role="listitem" class="topic-tag">Thiết
+					kế</a> <a href="#languages" role="listitem" class="topic-tag">Ngoại
+					ngữ</a> <a href="#marketing" role="listitem" class="topic-tag">Marketing</a>
+				<a href="#finance" role="listitem" class="topic-tag">Tài chính
+					kế toán</a> <a href="#technology" role="listitem" class="topic-tag">Công
+					nghệ</a> <a href="#health-beauty" role="listitem" class="topic-tag">Sức
+					khỏe - Làm đẹp</a> <a href="#family" role="listitem" class="topic-tag">Hôn
+					nhân gia đình</a> <a href="#books" role="listitem" class="topic-tag">Sách
+					hay nên đọc</a> <a href="#inhouse" role="listitem" class="topic-tag">Đào
+					tạo inhouse</a>
+			</div>
+		</section>
+
+		<section class="featured-instructors"
+			aria-labelledby="instructors-title">
+			<h3 id="instructors-title">GIẢNG VIÊN TIÊU BIỂU</h3>
+			<div class="instructors-container" aria-live="polite"></div>
+		</section>
+
+		<section class="instructor-recruitment hero"
+			aria-labelledby="recruitment-title">
+			<div class="hero-content">
+				<h2 id="recruitment-title">Trở thành Giảng viên Unica</h2>
+				<p>Giúp mọi người trở nên tốt hơn - bao gồm cả chính bạn</p>
+				<button class="btn btn-register" aria-label="Register as Instructor">Đăng
+					ký ngay</button>
+			</div>
+			<div class="hero-image">
+				<img src="/api/placeholder/500/400" alt="Instructor Illustration">
+			</div>
+		</section>
+	</main>
+
+	<script>
   
 //Hàm điều hướng đến trang chi tiết khóa học
   function redirectToCourseDetail(courseId) {

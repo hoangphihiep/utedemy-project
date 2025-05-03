@@ -150,6 +150,11 @@ public class CourseService implements ICourseService {
 	public boolean deleteQuiz(int id) throws Exception {
 		return courseDao.deleteQuiz(id);
 	}
+	@Override
+	public List<Course> getCoursesByUserId(int userId)
+	{
+		return courseDao.getCoursesByUserId(userId);
+	}
 
 }
 
