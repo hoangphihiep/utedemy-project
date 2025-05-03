@@ -12,6 +12,7 @@ import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
+import vn.iotstar.entity.User;
 
 public class CourseService implements ICourseService {
 
@@ -149,6 +150,18 @@ public class CourseService implements ICourseService {
 	@Override
 	public boolean deleteQuiz(int id) throws Exception {
 		return courseDao.deleteQuiz(id);
+	}
+
+
+	@Override
+	public List<Course> findByIdTeacher(User user) {
+		return courseDao.findByIdTeacher(user);
+	}
+
+
+	@Override
+	public List<Course> findAllCourse() {
+		return courseDao.findAllCourse();
 	}
 
 }

@@ -1,12 +1,19 @@
 package vn.iotstar.controller.Teacher;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import jakarta.servlet.ServletException;
@@ -15,20 +22,26 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import vn.iotstar.entity.Answer;
+import vn.iotstar.entity.Course;
+import vn.iotstar.entity.CourseDetail;
+import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.service.ICourseService;
+import vn.iotstar.utils.Constant;
 
 @MultipartConfig(
 	    fileSizeThreshold = 1024 * 1024, // 1 MB
 	    maxFileSize = 1024 * 1024 * 10,  // 10 MB
 	    maxRequestSize = 1024 * 1024 * 15 // 15 MB
 	)
-@WebServlet(urlPatterns = {"/teacher/editSection","/teacher/editLesson","/teacher/updateTarget","/teacher/updateCourse","/teacher/updateBasicInformation",
+@WebServlet(urlPatterns = {"/teacher/editSection","/teacher/editLesson","/teacher/editTarget","/teacher/updateTarget","/teacher/updateCourse","/teacher/editBasicInformation","/teacher/updateBasicInformation",
 		"/teacher/updateSection","/teacher/deleteSection","/teacher/updateLesson","/teacher/deleteLesson","/teacher/editQuiz", "/teacher/updateQuiz", "/teacher/deleteQuiz"})
 public class UpdateCourseController extends HttpServlet{
 
@@ -39,6 +52,7 @@ public class UpdateCourseController extends HttpServlet{
 		String url = req.getRequestURI();
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
+		HttpSession session = req.getSession();
 		if (url.contains("/teacher/editSection")) 
 		{
 			int sectionId = Integer.parseInt(req.getParameter("sectionId"));
@@ -100,13 +114,64 @@ public class UpdateCourseController extends HttpServlet{
 		        resp.getWriter().write("{\"error\":\"Quiz not found\"}");
 		    }
 		}
+		if (url.contains("/teacher/editBasicInformation")) 
+		{
+			String idCourseStr = req.getParameter("id");
+			int idCourse = Integer.parseInt(idCourseStr);
+			Course course = courseService.findByIdCourse(idCourse);
+			session.setAttribute("courseSession1", course);
+			//Course course = (Course)session.getAttribute("courseSession");
+			System.out.println ("Ten khoa học: " + course.getCourseName());
+			CourseType courseType = courseService.findByIDCourseType(course.getCourseType().getId());
+			List<CourseType> listCourseType = courseService.listCourseType();
+			req.setAttribute("listCourseType", listCourseType);
+			req.setAttribute("course", course);
+			req.setAttribute("courseType", courseType);
+			req.getRequestDispatcher("/views/teacher/editBasicInformation.jsp").forward(req, resp);
+		}
+		if (url.contains("/teacher/editTarget")) 
+		{
+			Course course = (Course)session.getAttribute("courseSession1");
+			CourseDetail courseDetail = courseService.findByIdCourseDetail(course.getCourseDetail().getId());
+			courseDetail.getCourseLearner();
+			courseDetail.getLearnerAchievements();
+			req.setAttribute("learner", courseDetail.getCourseLearner());
+			req.setAttribute("target", courseDetail.getLearnerAchievements());
+			req.getRequestDispatcher("/views/teacher/editTarget.jsp").forward(req, resp);
+		}
+		if (url.contains("/teacher/edit")) 
+		{
+			Course course = (Course)session.getAttribute("courseSession1");
+			if (course != null) {
+			    System.out.println("📘 Course: " + course.getCourseName());
+			    for (Section section : course.getSections()) {
+			        System.out.println("  📂 Section: " + section.getTitle());
+			        for (Lesson lesson : section.getLessons()) {
+			            System.out.println("    🎓 Lesson: " + lesson.getTitle());
+			            System.out.println("        📹 Video URL: " + lesson.getVideoUrl());
+			        }
+			        for (Quiz quiz : section.getQuizs()) {
+			            System.out.println("    ❓ Quiz: " + quiz.getTitle());
+			            for (Question question : quiz.getQuestions()) {
+			                System.out.println("      🔸 Question: " + question.getDescription());
+			                for (Answer answer : question.getAnswers()) {
+			                    System.out.println("        ➡️ Answer: " + answer.getContent() + " (Correct: " + answer.isCorrect() + ")");
+			                }
+			            }
+			        }
+			    }
+			} else {
+			    System.out.println("❌ Course not found.");
+			}
+			req.getRequestDispatcher("/views/teacher/edit.jsp").forward(req, resp);
+		}
 	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI();
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		//HttpSession session = req.getSession();
+		HttpSession session = req.getSession();
 		if (url.contains("/teacher/updateSection")) 
 		{
 			resp.setContentType("application/json");
@@ -271,6 +336,147 @@ public class UpdateCourseController extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		if (url.contains("/teacher/updateBasicInformation")) 
+		{
+			// Set response type
+	        resp.setContentType("application/json");
+
+	        try {
+
+	            // Extract values from JSON
+	        	String courseTitle = req.getParameter("courseTitle");
+	            String shortDescription = req.getParameter("shortDescription");
+	            String courseTypeId = req.getParameter("courseTypeId");
+	            String coursePrice = req.getParameter("coursePrice");
+	            String courseIntroduction = req.getParameter("courseIntroduction");
+	            String videoLink = req.getParameter("videoLink");
+	            // Get course ID from session
+
+	            Course course = (Course)session.getAttribute("courseSession1");
+	            course.setCourseName(courseTitle);
+	            int coursePriceInt = 0;
+
+				if (coursePrice != null && !coursePrice.isEmpty()) {
+				    try {
+				    	coursePriceInt = Integer.parseInt(coursePrice);
+				    } catch (NumberFormatException e) {
+				        e.printStackTrace();
+				    }
+				}
+				course.setCoursePrice(coursePriceInt);
+
+				int courseTypeIdInt = 0;
+
+				if (courseTypeId != null && !courseTypeId.isEmpty()) {
+				    try {
+				        courseTypeIdInt = Integer.parseInt(courseTypeId);
+				    } catch (NumberFormatException e) {
+				        e.printStackTrace();
+				    }
+				}
+				CourseType courseType = courseService.findByIDCourseType(courseTypeIdInt);
+				course.setCourseType(courseType);
+
+	            CourseDetail courseDetail = courseService.findByIdCourseDetail(course.getCourseDetail().getId());
+	            courseDetail.setDescription(shortDescription);
+	            courseDetail.setCourseIntroduction(courseIntroduction);
+	            courseDetail.setCourseVideo(videoLink);
+
+	            String fname = "";
+				String uploadPath = Constant.DIR;
+				File uploadDir = new File(uploadPath);
+				if (!uploadDir.exists())
+					uploadDir.mkdir();
+				
+				if (req.getPart("courseImage") != null && req.getPart("courseImage").getSize() > 0) {
+					try {
+						Part part = req.getPart("courseImage");
+						if (part.getSize() > 0) {
+							String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+							int index = filename.lastIndexOf(".");
+							System.out.println (filename);
+							String ext = filename.substring(index + 1);
+							fname = System.currentTimeMillis() + "." + ext;
+
+							part.write(uploadPath + "/" + fname);
+
+							courseDetail.setCourseImage(fname);
+						} else {
+							courseDetail.setCourseImage("avatar.png");
+						}
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+				}
+				
+				
+				boolean check = courseService.updateCourseDetail(courseDetail);
+				if (check) {
+					boolean checkUpdate = courseService.updateCourse(course);
+					if (checkUpdate) {
+						System.out.println ("Lưu thông tin thành công");
+					}
+				}
+
+	        } catch (Exception e) {
+	            // Log the error
+	            e.printStackTrace();
+	        }
+		}
+		if (url.contains("/teacher/updateTarget")) 
+		{
+			// Đọc dữ liệu JSON từ request
+	        StringBuilder buffer = new StringBuilder();
+	        BufferedReader reader = req.getReader();
+	        String line;
+	        while ((line = reader.readLine()) != null) {
+	            buffer.append(line);
+	        }
+
+	        String data = buffer.toString();
+
+	        // Parse JSON
+	        Gson gson = new Gson();
+	        JsonObject jsonObject = gson.fromJson(data, JsonObject.class);
+
+	        try {
+	            // Xử lý dữ liệu mục tiêu
+	            JsonArray objectivesArray = jsonObject.getAsJsonArray("objectives");
+	            List<String> objectives = new ArrayList<>();
+	            String target = "";
+	            for (JsonElement element : objectivesArray) {
+	                objectives.add(element.getAsString());
+	                target = target + element.getAsString() + ", ";
+	                System.out.println ("Mục tiêu: " + element.getAsString());
+	            }
+
+	            // Lấy đối tượng và lời chào
+	            String courseLearner = jsonObject.get("targetAudience").getAsString();
+
+	            Course course = (Course)session.getAttribute("courseSession1");
+				CourseDetail courseDetail = courseService.findByIdCourseDetail(course.getCourseDetail().getId());
+	            courseDetail.setCourseLearner(courseLearner);
+	            courseDetail.setLearnerAchievements(target);
+	            boolean check = courseService.updateCourseDetail(courseDetail);
+	            if (check) {
+	            	System.out.println ("Lưu thành công");
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+
+	            // Trả về lỗi
+	            resp.setContentType("application/json");
+	            resp.setCharacterEncoding("UTF-8");
+
+	            JsonObject responseObj = new JsonObject();
+	            responseObj.addProperty("success", false);
+	            responseObj.addProperty("message", "Lỗi: " + e.getMessage());
+
+	            resp.getWriter().write(gson.toJson(responseObj));
+	        }
 		}
 	}
 

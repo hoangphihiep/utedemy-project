@@ -98,6 +98,7 @@
             color: #e74c3c;
             margin-bottom: 20px;
             font-size: 14px;
+            margin-left: 280px;
         }
         
         .form-title {
@@ -399,13 +400,7 @@
 	<%@ include file="/commons/user/header.jsp"%>
 	<header class="header">
         <div class="instructor-info">
-            <div class="instructor-name">Giảng viên : Thảo Chu</div>
-            <div class="instructor-id">ID: 580184</div>
-        </div>
-        <div class="support-info">
-            <p>Hỗ trợ giảng viên</p>
-            <p>HOTLINE: 0329802918</p>
-            <p>EMAIL: teacher@unica.vn</p>
+            <div class="instructor-name">Đăng ký trở thành giảng viên</div>
         </div>
     </header>
 	<div class="container">

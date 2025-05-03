@@ -1,5 +1,6 @@
 package vn.iotstar.impl.dao;
 
+import java.util.Collections;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -14,6 +15,7 @@ import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
+import vn.iotstar.entity.User;
 import vn.iotstar.entity.Answer;
 
 public class CourseDao implements ICourseDao {
@@ -22,23 +24,23 @@ public class CourseDao implements ICourseDao {
 
 	@Override
 	public List<Object[]> findBestSellingCourseDetails(int limit) {
-	    EntityManager em = JPAConfig.getEntityManager();
-	    try {
-	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, c.id\r\n"
-	    			+ "FROM OrderItem o\r\n"
-	    			+ "JOIN o.courses c\r\n"
-	    			+ "JOIN c.teacher t\r\n"
-	    			+ "LEFT JOIN c.review r\r\n"
-	    			+ "JOIN c.courseDetail cd\r\n"
-	    			+ "GROUP BY c.id, c.courseName, t.fullname, c.coursePrice, cd.courseImage\r\n"
-	    			+ "ORDER BY COUNT(o.id) DESC";
+		EntityManager em = JPAConfig.getEntityManager();
+        try {
+            String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, c.id " +
+                    "FROM OrderItem o " +
+                    "JOIN o.course c " +
+                    "JOIN c.teacher t " +
+                    "LEFT JOIN c.review r " +
+                    "JOIN c.courseDetail cd " +
+                    "GROUP BY c.id, c.courseName, t.fullname, c.coursePrice, cd.courseImage " +
+                    "ORDER BY COUNT(o.id) DESC";
 
-	        TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
-	        query.setMaxResults(limit);
-	        return query.getResultList();
-	    } finally {
-	        em.close();
-	    }
+            TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
+            query.setMaxResults(limit);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
 	}
 
 	@Override
@@ -692,6 +694,26 @@ public class CourseDao implements ICourseDao {
 	    } finally {
 	        em.close();
 	    }
+	}
+
+	@Override
+	public List<Course> findByIdTeacher(User user) {
+		if (user == null) {
+	        return Collections.emptyList();
+	    }
+
+	    EntityManager enma = JPAConfig.getEntityManager();
+	    String jpql = "SELECT c FROM Course c WHERE c.teacher.id = :teacherId";
+	    TypedQuery<Course> query = enma.createQuery(jpql, Course.class);
+	    query.setParameter("teacherId", user.getId());
+	    return query.getResultList();
+	}
+
+	@Override
+	public List<Course> findAllCourse() {
+		EntityManager enma = JPAConfig.getEntityManager();
+		TypedQuery<Course> query = enma.createNamedQuery("Course.findAll", Course.class);
+		return query.getResultList();
 	}
 	
 }

@@ -2,9 +2,18 @@
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <!DOCTYPE html>
 <html>
+<head>
+    <style>
+        /* Thêm style cho nút bị vô hiệu hóa */
+        .save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
 <body>
     <div class="container">
-        <p class="warning">Lưu ý: Cập nhật đầy đủ thông tin hợp đồng và tích chọn "Tôi đồng ý với những điều khoản dịch vụ dưới đây của Unica." để trở thành giảng viên của UNICA.</p>
+        <p style="margin-bottom: 20px; color: #e74c3c;">Lưu ý: Cập nhật đầy đủ thông tin hợp đồng và tích chọn "Tôi đồng ý với những điều khoản dịch vụ dưới đây của Unica." để trở thành giảng viên của UNICA.</p>
         
         <h2 class="form-title">HỢP ĐỒNG ĐIỆN TỬ</h2>
         
@@ -81,7 +90,7 @@
                 <div class="upload-container">
                     <div class="upload-preview-area">
                         <div class="image-preview">
-                            <img id="previewImage" src="${imgUrl}" alt="Preview" />
+                            <img id="previewImage" height="500" width="2000" src="${imgUrl}" alt="Preview" />
                             <div id="placeholderText" class="placeholder-text" style="${not empty imgUrl ? 'display:none' : ''}">
                                 <i class="upload-icon">📷</i>
                                 <p>Chưa có ảnh</p>
@@ -112,7 +121,7 @@
                 <div class="upload-container">
                     <div class="upload-preview-area">
                         <div class="image-preview">
-                            <img id="previewBackImage" src="${backImgUrl}" alt="Preview" />
+                            <img id="previewBackImage" height="500" width="2000" src="${backImgUrl}" alt="Preview" />
                             <div id="placeholderBackText" class="placeholder-text" style="${not empty backImgUrl ? 'display:none' : ''}">
                                 <i class="upload-icon">📷</i>
                                 <p>Chưa có ảnh</p>
@@ -148,16 +157,16 @@
         </div>
 
         <!-- Thêm ô checkbox đồng ý điều khoản -->
-        <div class="form-group" style="margin-top: 20px;">
-            <div class="form-control checkbox-control">
-                <input type="checkbox" id="terms-agreement" name="termsAgreement" required>
-                <label for="terms-agreement">Tôi đồng ý với những điều khoản dịch vụ dưới đây của Unica.</label>
+        <div class="form-group" style="margin-top: 20px; margin-left: 330px;">
+            <div class="form-control checkbox-control" style="display: flex; align-items: center;">
+                <input type="checkbox" id="terms-agreement" name="termsAgreement" required style="margin-right: 10px; flex-shrink: 0;">
+                <label for="terms-agreement" style="margin: 0;">Tôi đồng ý với những điều khoản dịch vụ dưới đây của Unica.</label>
             </div>
         </div>
         
-        <p class="warning">Lưu ý: Tên người dùng (hiệp hoàng - Sửa hồ sơ) phải khớp với tên tài khoản ngân hàng và tên trong CCCD</p>
+        <p class="warning">Lưu ý: Tên người dùng phải khớp với tên tài khoản ngân hàng và tên trong CCCD</p>
         
-        <button type="submit" class="save-btn">
+        <button type="submit" id="saveButton" class="save-btn" disabled>
             <i>💾</i> Lưu
         </button>
     </form>
@@ -166,6 +175,26 @@
     
     <script> 
     document.addEventListener('DOMContentLoaded', function() {
+        // Lấy phần tử checkbox và nút Lưu
+        const termsCheckbox = document.getElementById('terms-agreement');
+        const saveButton = document.getElementById('saveButton');
+        
+        // Thêm sự kiện lắng nghe khi checkbox thay đổi trạng thái
+        termsCheckbox.addEventListener('change', function() {
+            // Nếu checkbox được tích, kích hoạt nút Lưu, ngược lại vô hiệu hóa
+            saveButton.disabled = !this.checked;
+        });
+        
+        // Đếm ký tự trong phần mô tả
+        const teacherDescription = document.getElementById('teacher-description');
+        const charCount = document.getElementById('char-count');
+        
+        if (teacherDescription && charCount) {
+            teacherDescription.addEventListener('input', function() {
+                charCount.textContent = this.value.length;
+            });
+        }
+        
         // Xử lý cho ảnh mặt trước
         const imageUpload = document.getElementById('imageUpload');
         if (imageUpload) {
@@ -206,6 +235,22 @@
           });
         }
       });
+      
+    function previewImage(event, previewId, placeholderId) {
+        const preview = document.getElementById(previewId);
+        const placeholder = document.getElementById(placeholderId);
+        const file = event.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 	</script>
 </body>
 </html>

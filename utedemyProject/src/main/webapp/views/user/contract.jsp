@@ -14,7 +14,7 @@
         
         <div >
             <h2>HỢP ĐỒNG ĐIỆN TỬ</h2>
-            <button class="update-btn">Cập nhật thông tin</button>
+            <button class="update-btn" style="margin-top: 20px;">Cập nhật thông tin</button>
         </div>
         <div class="contract-header">
             <h1>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h1>
@@ -29,7 +29,7 @@
             <p>- Căn cứ Luật Sở Hữu Trí Tuệ 2005 và các văn bản hướng dẫn thi hành</p>
             <p>- Căn cứ vào nhu cầu công việc và năng lực của các Bên</p>
             
-            <p>Hôm nay, ngày <input type="text" size="2"> tháng <input type="text" size="2"> năm <input type="text" size="4">, tại Utedemy, chúng tôi gồm:</p>
+            <p>Tại Utedemy, chúng tôi gồm:</p>
             
             <div class="party-info">
                 <p><strong>BÊN A: CÔNG TY CỔ PHẦN ĐÀO TẠO TRỰC TUYẾN Utedemy</strong></p>
@@ -43,7 +43,7 @@
             </div>
             
             <div class="party-info">
-                <p>Email: &nbsp;&nbsp;&nbsp;<input type="text" value="phihiep31012004@gmail.com" style="width: 250px;"></p>
+                <p>Email: admin@gmail.com</p>
                 <p>Xét rằng:</p>
                 <p>- Bên A là doanh nghiệp hoạt động trong lĩnh vực đào tạo trực tuyến có nhu cầu xây dựng, sản xuất Bài giảng đa phương tiện.</p>
                 <p>- Bên B là diễn giả, giảng viên có năng lực và mong muốn thực hiện công việc nêu trên.</p>

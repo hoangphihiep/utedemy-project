@@ -1,5 +1,6 @@
 package vn.iotstar.impl.service;
 
+import java.util.List;
 import java.util.Set;
 
 import vn.iotstar.dao.IUserDao;
@@ -98,8 +99,7 @@ public class UserService implements IUserService {
 	}
 	@Override
 	public Set<Role> getRolesByUserId(int userId){
-		Set<Role> roles = userDao.getRolesByUserId(userId);
-		return roles;
+		return userDao.getRolesByUserId(userId);
 	}
 	 @Override
     public User getUserById(int userId) {
@@ -111,8 +111,12 @@ public class UserService implements IUserService {
     	return userDao.updateUserInformation(user);
     }
 	@Override
-	public void registerTeacher(int idUser, Teacher teacher) {
-		userDao.registerTeacher(idUser, teacher);
+	public void registerTeacher(User user, Teacher teacher) {
+		userDao.registerTeacher(user, teacher);
+	}
+	@Override
+	public List<User> findAllUser() {
+		return userDao.findAllUser();
 	}
 
 }

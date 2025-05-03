@@ -107,7 +107,7 @@ public class verifyOTPController extends HttpServlet{
 							user_added.setPassword(encryptedPassword);
 							user_added.setPhoneNumber(phone_register);
 							user_added.addRole(userRole);
-							user_added.setActive(true);
+							user_added.setIsActive(true);
 							
 							System.out.println("username: " + user_added.getFullname());
 							userService.insert(user_added);

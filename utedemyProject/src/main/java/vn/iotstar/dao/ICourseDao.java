@@ -10,6 +10,7 @@ import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
+import vn.iotstar.entity.User;
 
 public interface ICourseDao {
 	
@@ -72,5 +73,9 @@ public interface ICourseDao {
 	public boolean deleteLesson (int id) throws Exception;
 
 	public boolean deleteQuiz (int id) throws Exception;
+	
+	List<Course> findByIdTeacher (User user);
+	
+	List<Course> findAllCourse ();
 	
 }

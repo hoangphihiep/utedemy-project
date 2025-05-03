@@ -1,5 +1,6 @@
 package vn.iotstar.dao;
 
+import java.util.List;
 import java.util.Set;
 
 import vn.iotstar.entity.Role;
@@ -27,5 +28,7 @@ public interface IUserDao {
 
     boolean updateUserInformation(User user);
 	
-    public void registerTeacher(int idUser, Teacher teacher);
+    public void registerTeacher(User user, Teacher teacher);
+    
+    public List<User> findAllUser();
 }

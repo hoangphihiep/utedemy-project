@@ -19,8 +19,8 @@
 			</div>
 
 			<div class="form-group">
-				<label class="form-label">Mô tả ngắn <span class="required">*</span></label>
-				<textarea class="form-input" rows="5"></textarea>
+			    <label class="form-label">Mô tả ngắn <span class="required">*</span></label>
+			    <textarea class="form-input" rows="5"><c:out value="${course.courseDetail.description}" /></textarea>
 			</div>
 			
 			<div class="form-row">
@@ -50,10 +50,10 @@
 			<!-- Add this inside the main-content div, after the existing form-group for course introduction -->
 			<div class="form-group">
 				<c:if test="${cate.images.substring(0,5) != 'https' }">
-					<c:url value="/image?fname=${cate.images }" var="imgUrl"></c:url>
+					<c:url value="/image?fname=${course.courseDetail.courseImage}" var="imgUrl"></c:url>
 				</c:if>
 				<c:if test="${cate.images.substring(0,5) == 'https' }">
-					<c:url value="${cate.images }" var="imgUrl"></c:url>
+					<c:url value="${course.courseDetail.courseImage}" var="imgUrl"></c:url>
 				</c:if>
 				
 				<label class="form-label">Ảnh khóa học <span class="required">*</span></label>
@@ -90,7 +90,7 @@
 			      <p>Học viên quan tâm đến khóa học của bạn có nhiều khả năng</p>
 			      <p>ghi danh hơn nếu video quảng cáo của bạn được thực hiện tốt.</p>
 			      <div class="form-input-container">
-			        <input type="text" class="form-input" placeholder="Gắn link youtube/vimeo">
+			        <input type="text" class="form-input" placeholder="Gắn link youtube/vimeo" value="${course.courseDetail.courseVideo}">
 			      </div>
 			    </div>
 			  </div>

@@ -91,7 +91,9 @@ header {
   .video-container {
     position: relative;
     width: 800px; /* Điều chỉnh chiều rộng container video */
-    margin: 50px auto; /* Căn giữa container */
+    margin-left: 550px; /* Căn giữa container */
+    margin-top: 40px; /* Căn lề trên */
+  margin-bottom: 40px;
   }
  
   video {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,13 +12,29 @@
 <body>
 	<div class="header">
 		<div class="header-left">
-			<a href="#" class="back-button">&#9664;</a>
+			<a href="/utedemyProject/teacher/course" class="back-button">&#9664;</a>
 			<div class="header-title">Quay lại danh sách khóa học
-				&nbsp;|&nbsp; Thành Thạo Excel Từ Cơ Bản Đến Nâng Cao</div>
+				&nbsp;|&nbsp; ${course.courseName}</div>
 		</div>
 		<div class="header-status">
-			<div class="status-tag new-tag">Mới</div>
-			<div class="status-tag updating-tag">Đang cập nhật</div>
+			<c:choose>
+				<c:when test="${course.status == 0}">
+					<div class="status-tag updating-tag">Đang tạm ngừng</div>
+				</c:when>
+				<c:when test="${course.status == 1}">
+					<div class="status-tag updating-tag">Đang hoạt động</div>
+				</c:when>
+				<c:when test="${course.status == 2}">
+					<div class="status-tag updating-tag">Đang kiểm duyệt</div>
+				</c:when>
+				<c:when test="${course.status == 3}">
+					<div class="status-tag updating-tag">Đang tạo</div>
+				</c:when>
+				<c:otherwise>
+					<span>Không xác định</span>
+				</c:otherwise>
+			</c:choose>
+			
 			<button class="save-button">Lưu</button>
 		</div>
 	</div>
@@ -57,35 +74,28 @@
 		    
 		    // Nếu đang ở trang mục tiêu khóa học
 		    if (currentPath.includes('/teacher/addTarget')) {
-		        // Thu thập dữ liệu từ các mục tiêu
 		        const objectives = [];
 		        document.querySelectorAll('.objective-item').forEach(item => {
 		            const objectiveText = item.querySelector('.objective-text').textContent;
 		            objectives.push(objectiveText);
 		        });
 		        
-		     // Thu thập dữ liệu từ phần đối tượng khóa học và chào mừng
-	            // Tìm các editor-content theo thứ tự xuất hiện
 	            const editorContents = document.querySelectorAll('.editor-content');
 	            
 	            let targetAudience = "";
 	            
-	            // Kiểm tra và lấy nội dung từ các editor-content
 	            if (editorContents.length >= 1) {
 	                targetAudience = editorContents[0].textContent || "";
 	            }
 
-	            // Kiểm tra và ghi log để debug
 	            console.log("Objectives:", objectives);
 	            console.log("Target Audience:", targetAudience);
 		        
-		        // Tạo object chứa dữ liệu
 		        const targetData = {
 		            objectives: objectives,
 		            targetAudience: targetAudience,
 		        };
 		        
-		        // Gửi dữ liệu đến server qua AJAX
 		        sendDataToServer('/utedemyProject/teacher/addTarget', targetData);
 		    }
 		 	// Nếu đang ở trang thông tin cơ bản khóa học
@@ -110,6 +120,31 @@
 				  
 				  // Send FormData to server (need to modify the sendDataToServer function)
 				  sendDataToServer('/utedemyProject/teacher/adBasicInformation', formData);
+			}
+			// Nếu đang ở trang thông tin cơ bản khóa học
+			if (currentPath.includes('/teacher/editBasicInformation')) {
+				// Create FormData object to handle file uploads and form data together
+				  const formData = new FormData();
+				  
+				  // Add text fields to FormData
+				  formData.append("courseTitle", document.querySelector('input[name="courseTitle"]').value);
+				  formData.append("shortDescription", document.querySelector('textarea.form-input').value);
+				  formData.append("courseTypeId", document.querySelector('select[name="courseTypeId"]').value);
+				  formData.append("coursePrice", document.querySelector('input[name="courseName"]').value);
+				  formData.append("courseIntroduction", CKEDITOR.instances.courseIntroduction.getData());
+				  formData.append("videoLink", document.querySelector('.video-upload-container .form-input').value || "");
+				  
+				  // Get the file input and append file if one was selected
+				  const fileInput = document.getElementById('imageUpload');
+				  if (fileInput.files.length > 0) {
+					  formData.append("courseImage", fileInput.files[0]);
+					}
+				  
+				  // Log data for debugging (note: can't easily log FormData contents)
+				  console.log("Form data created with all fields including possible file upload");
+				  
+				  // Send FormData to server (need to modify the sendDataToServer function)
+				  sendDataToServer('/utedemyProject/teacher/updateBasicInformation', formData);
 			}
 		}
 		

@@ -59,6 +59,7 @@ public class RegisterTeacherController extends HttpServlet{
 		if (url.contains("/user/registerTeacher")) 
 		{
 			User user = (User)session.getAttribute("account");
+			req.setAttribute("fullname", user.getFullname());
 			String taxCode = req.getParameter("taxCode");
 			String idCardNumber = req.getParameter("idCardNumber");
 			//String address = req.getParameter("address");
@@ -122,7 +123,8 @@ public class RegisterTeacherController extends HttpServlet{
 				e.printStackTrace();
 			}
 			
-			userService.registerTeacher(user.getId(), teacher);
+			userService.registerTeacher(user, teacher);
+			resp.sendRedirect(req.getContextPath() + "/teacher/homePage");
 		}
 	}
 

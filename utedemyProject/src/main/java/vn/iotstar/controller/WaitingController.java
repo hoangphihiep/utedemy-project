@@ -1,6 +1,7 @@
 package vn.iotstar.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.servlet.ServletException;
@@ -33,19 +34,23 @@ public class WaitingController extends HttpServlet {
 			User u = (User) session.getAttribute("account");
 			System.out.println("hungdebug"+u.getId());
 			Set<Role> roles = user_service.getRolesByUserId(u.getId());
-			System.out.println("User roles: " + roles);
-			 int roleId = 0;
+			
+			for (Role role : roles) {
+			    System.out.println("heheheRole ID: " + role.getId() + ", Role Name: " + role.getName());
+			}
+			 int roleId = 1;
 			 // nếu user là teacher thì lấy role teacher
 
 			 for (Role role : roles) {
-			     if (role.getId() == 2) {
-			    	 roleId = 2;
+			     if (role.getId() == 3) {
+			    	 roleId = 3;
 			         break;
-			     } else if (role.getId() == 1 && roleId == 0) {
-			    	 roleId = 1;
+			     }if (role.getId() == 2) {
+			    	 roleId = 2;
+			    	 break;
 			     }
 			 }
-			
+			 System.out.println("roleId: " + roleId);
 		 	if (roleId == RoleUtil.ADMIN) {
 		 		System.out.println("session User là admin");
 				resp.sendRedirect(req.getContextPath() + "/admin/homePage");
@@ -55,7 +60,7 @@ public class WaitingController extends HttpServlet {
 				resp.sendRedirect(req.getContextPath() + "/user/homepage");
 				return;
 			} else {
-				resp.sendRedirect(req.getContextPath() + "/teacher/homePage");
+				resp.sendRedirect(req.getContextPath() + "/teacher/course");
 				System.out.println("session User là teacher");
 				return;
 			}
