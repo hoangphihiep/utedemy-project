@@ -8,28 +8,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unica - Khoa hoc cua minh</title>
 </head>
-<link rel="stylesheet" href="/utedemyProject/views/Css/myCoursepage.css">
+<link rel="stylesheet" href="/utedemyProject/views/Css/mycourse.css">
 </head>
 <body>
-	<header class="main-header">
-		<div class="logo">
-			<img
-				src="https://play-lh.googleusercontent.com/CRA6gH69WvUTBVLlBpZr1MICRayAi69w0pvi187ny5QBVFNEeCRKFqjo87pxmigxlUk=w512"
-				alt="Logo Unica">
+	<header
+		style="display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;">
+		<!-- Logo và Danh Mục -->
+		<div style="display: flex; align-items: center; margin-right: 20px;">
+			<img src="logo.png" alt="Unica"
+				style="height: 30px; margin-right: 10px;"> <span
+				style="font-weight: bold;">DANH MỤC</span>
 		</div>
-		<div class="menu-item">Danh mục</div>
-		<div class="searchBox">
-			<input type="text" placeholder="Nhập từ khóa tìm kiếm...">
-			<button>Tìm</button>
+
+		<!-- Thanh Tìm kiếm -->
+		<div style="flex: 1; position: relative;">
+			<input type="text" placeholder="Tìm khóa học, giảng viên"
+				style="width: 100%; padding: 8px 35px 8px 15px; border: 1px solid #ccc; border-radius: 20px;">
+			<span
+				style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+				🔍 </span>
 		</div>
-		<div class="menu-item">
-			<a href="#">Doanh nghiệp</a>
+
+		<!-- Menu bên phải -->
+		<div
+			style="display: flex; align-items: center; gap: 15px; margin-left: 20px;">
+			<a href="#">Doanh nghiệp</a> <a href="#">Hội viên</a>
+
+			<form action="${pageContext.request.contextPath}/user/mycourse"
+				method="post" style="margin: 0;">
+				<button
+					style="background-color: #2d8cf0; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">
+					➔ Vào học</button>
+			</form>
+
+			<span>🤍</span>
+			<spann>🛒</span> <img src="avatar.jpg" alt="Avatar"
+				style="width: 30px; height: 30px; border-radius: 50%;">
 		</div>
-		<div class="menu-item">
-			<a href="#">Hội viên</a>
-			<div class="avatar">
-				<img src="" alt="Avatar">
-			</div>
 	</header>
 <body>
 	<div class="Pannel">

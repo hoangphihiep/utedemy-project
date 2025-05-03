@@ -25,9 +25,9 @@
 		<!-- Thanh Tìm kiếm -->
 		<div style="flex: 1; position: relative;">
 			<input type="text" placeholder="Tìm khóa học, giảng viên"
-				style="width: 100%; padding: 8px 35px 8px 15px; border: 1px solid #ccc; border-radius: 20px;">
+				style="width: 80%; padding: 8px 35px 8px 15px; border: 1px solid #ccc; border-radius: 20px;">
 			<span
-				style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+				style="position: absolute; right: 50px; top: 50%; transform: translateY(-100%);">
 				🔍 </span>
 		</div>
 

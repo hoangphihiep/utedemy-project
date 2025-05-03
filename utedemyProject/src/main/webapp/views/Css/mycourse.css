@@ -1,0 +1,160 @@
+@charset "UTF-8";
+/* 
+/*Header bar*/
+/*
+.main-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 30px;
+	background-color: #f8f9fa;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-header .logo img {
+	height: 50px;
+	width: auto;
+}
+
+.main-header .menu-item {
+	margin: 0 15px;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.main-header .menu-item a {
+	text-decoration: none;
+	color: #333;
+}
+
+.main-header .menu-item a:hover {
+	color: #007bff;
+}
+
+.main-header .searchBox {
+	display: flex;
+	align-items: center;
+}
+
+.main-header .searchBox input {
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+	border-radius: 4px 0 0 4px;
+	outline: none;
+	width: 100px;
+} */
+/* 
+.main-header .searchBox button {
+	padding: 6px 10px;
+	border: none;
+	background-color: #007bff;
+	color: white;
+	border-radius: 0 4px 4px 0;
+	cursor: pointer;
+} */
+
+/* .main-header .searchBox button:hover {
+	background-color: #0056b3;
+}
+ */
+.border-link {
+	text-decoration: none; /* Loại bỏ gạch chân mặc định */
+	color: #007BFF; /* Màu chữ ban đầu */
+	padding: 5px 10px; /* Khoảng cách giữa chữ và viền */
+	border: 2px solid #007BFF; /* Viền xung quanh liên kết */
+	border-radius: 5px; /* Bo tròn các góc của viền */
+	transition: border-color 0.3s ease;
+	/* Hiệu ứng thay đổi màu viền khi hover */
+}
+
+.border1-link {
+	text-decoration: none; /* Loại bỏ gạch chân mặc định */
+	color: #007BFF; /* Màu chữ ban đầu */
+	padding: 5px 10px; /* Khoảng cách giữa chữ và viền */
+	border: 2px solid #007BFF; /* Viền xung quanh liên kết */
+	border-radius: 5px; /* Bo tròn các góc của viền */
+	transition: border-color 0.3s ease;
+	/* Hiệu ứng thay đổi màu viền khi hover */
+}
+
+.border2-link {
+	text-decoration: none; /* Loại bỏ gạch chân mặc định */
+	color: #007BFF; /* Màu chữ ban đầu */
+	padding: 5px 10px; /* Khoảng cách giữa chữ và viền */
+	border: 2px solid #007BFF; /* Viền xung quanh liên kết */
+	border-radius: 5px; /* Bo tròn các góc của viền */
+	transition: border-color 0.3s ease;
+	/* Hiệu ứng thay đổi màu viền khi hover */
+}
+
+.border3-link {
+	text-decoration: none; /* Loại bỏ gạch chân mặc định */
+	color: #007BFF; /* Màu chữ ban đầu */
+	padding: 5px 10px; /* Khoảng cách giữa chữ và viền */
+	border: 2px solid #007BFF; /* Viền xung quanh liên kết */
+	border-radius: 5px; /* Bo tròn các góc của viền */
+	transition: border-color 0.3s ease;
+	/* Hiệu ứng thay đổi màu viền khi hover */
+}
+
+.border4-link {
+	text-decoration: none; /* Loại bỏ gạch chân mặc định */
+	color: #007BFF; /* Màu chữ ban đầu */
+	padding: 5px 10px; /* Khoảng cách giữa chữ và viền */
+	border: 2px solid #007BFF; /* Viền xung quanh liên kết */
+	border-radius: 5px; /* Bo tròn các góc của viền */
+	transition: border-color 0.3s ease;
+	/* Hiệu ứng thay đổi màu viền khi hover */
+}
+
+.border-link:hover {
+	border-color: #FF6347; /* Màu viền khi hover */
+	color: #FF6347; /* Màu chữ khi hover */
+}
+
+/* Course list */
+.myCoursList {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 20px; /* Khoảng cách giữa các ô */
+	padding: 20px;
+	margin-left: 200px; /* Khoảng cách bên trái */
+	margin-right: 1000px; /* Khoảng cách bên phải */
+}
+
+.CourseSet {
+	flex: 0 0 calc(33.333% - 20px); /* Mỗi hàng 3 cái, trừ khoảng cách */
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	padding: 15px;
+	box-sizing: border-box;
+	background: #f9f9f9;
+	text-align: center;
+	transition: transform 0.2s ease;
+}
+
+.CourseSet:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.CourseSet h2 {
+	font-size: 18px;
+	margin-bottom: 15px;
+}
+
+.CourseSet button {
+	background: #2d89ef;
+	border: none;
+	color: white;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.CourseSet span {
+	display: inline-block;
+	margin-top: 10px;
+	font-weight: bold;
+}
