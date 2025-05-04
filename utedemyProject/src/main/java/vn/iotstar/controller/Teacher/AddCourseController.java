@@ -30,8 +30,12 @@ import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
+import vn.iotstar.entity.Teacher;
+import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.CourseService;
+import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.ICourseService;
+import vn.iotstar.service.IUserService;
 import vn.iotstar.utils.Constant;
 
 @MultipartConfig(
@@ -46,6 +50,7 @@ public class AddCourseController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
 	public ICourseService courseService = new CourseService();
+	public IUserService userService = new UserService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -101,11 +106,15 @@ public class AddCourseController extends HttpServlet{
 			    }
 			}
 			CourseType courseType = courseService.findByIDCourseType(courseTypeIdInt);
-
+			
 			Course course = new Course();
 			course.setCourseName(courseName);
 			course.setCourseType(courseType);
-
+			course.setStatus(3);
+			
+			User user = (User) session.getAttribute("account");
+			Teacher teacher = (Teacher) userService.findById(user.getId());
+			course.setTeacher(teacher);
 			boolean check = courseService.saveCoure(course);
 
 			int idCourse = courseService.maxCourseId();

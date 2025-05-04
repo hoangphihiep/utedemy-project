@@ -1,5 +1,7 @@
 package vn.iotstar.dao;
 
+import java.util.List;
+
 import vn.iotstar.entity.Discount;
 
 public interface IDiscountDao {
@@ -27,5 +29,13 @@ public interface IDiscountDao {
 	boolean deleteUserDiscount(int userId, int discountId);
 
 	String getCodeAmountByDisCode(String disCode);
+	
+	public List<Discount> findByIdUser (int id);
+
+	public boolean insert (Discount discount);
+
+	public Discount findById (int id);
+
+	public boolean update (Discount discount);
 
 }

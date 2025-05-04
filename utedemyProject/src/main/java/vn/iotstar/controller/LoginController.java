@@ -104,7 +104,7 @@ public class LoginController extends HttpServlet {
         
      
         if (user != null) {
-            if (user.isActive()) {
+            if (user.getIsActive()) {
                 session.setAttribute("account", user);
 
                 if (isRememberMe) {

@@ -1,7 +1,6 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -10,11 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,11 +40,11 @@ public class Notification implements Serializable {
 	@Column(name = "sent_date")
     private String sentDate;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "sender_id", referencedColumnName = "id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "sender_id")
 	private User sender;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "receiver_id", referencedColumnName = "id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "receiver_id")
 	private User receiver;
 }

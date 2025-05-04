@@ -1,5 +1,7 @@
 package vn.iotstar.impl.dao;
 
+
+import java.util.Collections;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -15,6 +17,7 @@ import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
 import vn.iotstar.entity.Answer;
+import vn.iotstar.entity.User;
 
 public class CourseDao implements ICourseDao {
 
@@ -711,6 +714,24 @@ public class CourseDao implements ICourseDao {
 	    } finally {
 	        em.close();
 	    }
+	}
+	@Override
+	public List<Course> findByIdTeacher(User user) {
+		if (user == null) {
+	        return Collections.emptyList();
+	    }
+
+	    EntityManager enma = JPAConfig.getEntityManager();
+	    String jpql = "SELECT c FROM Course c WHERE c.teacher.id = :teacherId";
+	    TypedQuery<Course> query = enma.createQuery(jpql, Course.class);
+	    query.setParameter("teacherId", user.getId());
+	    return query.getResultList();
+	}
+	@Override
+	public List<Course> findAllCourse() {
+		EntityManager enma = JPAConfig.getEntityManager();
+		TypedQuery<Course> query = enma.createNamedQuery("Course.findAll", Course.class);
+		return query.getResultList();
 	}
 	
 }

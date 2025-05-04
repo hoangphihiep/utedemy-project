@@ -92,17 +92,17 @@ public class User implements Serializable {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private FavoriteCourse favoriteCourse;
 	
-	@OneToOne(mappedBy = "sender")
-	private Notification sender;
+	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+	private Set<Notification> sender = new HashSet<>();
 	
-	@OneToOne(mappedBy = "sender")
-	private Notification receiver;
+	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+	private Set<Notification> receiver = new HashSet<>();
 	
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 	
 	@Column(name = "is_active")
-    private boolean isActive;
+    private Boolean isActive;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Orders> order  = new HashSet<>();

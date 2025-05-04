@@ -59,7 +59,7 @@ public class WaitingController extends HttpServlet {
 				resp.sendRedirect(req.getContextPath() + "/user/homepage");
 				return;
 			} else {
-				resp.sendRedirect(req.getContextPath() + "/teacher/homePage");
+				resp.sendRedirect(req.getContextPath() + "/teacher/course");
 				System.out.println("session User là teacher");
 				return;
 			}

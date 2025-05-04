@@ -24,8 +24,7 @@
     <!-- User is logged in - show cart, favorites and avatar with dropdown -->
     <div class="user-menu-container">
       <a href="${pageContext.request.contextPath}/user/cart"><i class="fas fa-shopping-cart cart-icon"></i></a>
-      <a href="/favorites"><i class="fas fa-heart heart-icon"></i></a>
-      
+      <a href="${pageContext.request.contextPath}/user/favoriteCourse"><i class="fas fa-heart heart-icon"></i></a>
       <div class="dropdown">    
        <c:if test="${sessionScope.account.avatarUrl != ''}">
                                           <c:if test ="${sessionScope.account.avatarUrl.substring(0,5) != 'https' }">

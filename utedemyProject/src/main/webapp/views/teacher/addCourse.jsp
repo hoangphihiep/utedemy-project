@@ -29,7 +29,7 @@
 				</select>
 	        </div>
 	        
-	        <button type="submit" class="btn-create-course">Tạo khóa học</button>
+	       <button type="submit" style="background-color: #003552; color: white; padding: 10px 16px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.3s ease;">Tạo khóa học</button>
 	    </form>
 	</div>
 	

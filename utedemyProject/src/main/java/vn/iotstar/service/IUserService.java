@@ -1,9 +1,11 @@
 package vn.iotstar.service;
 
+import java.util.List;
 import java.util.Set;
 
 import vn.iotstar.entity.Role;
 import vn.iotstar.entity.User;
+import vn.iotstar.entity.Teacher;
 
 public interface IUserService {
 	
@@ -38,4 +40,8 @@ public interface IUserService {
 	User getUserById(int userId);
 
     boolean updateUserInformation(User use);
+    
+    public void registerTeacher(User user, Teacher teacher);
+
+    public List<User> findAllUser();
 }

@@ -1,10 +1,12 @@
 package vn.iotstar.impl.service;
 
 import java.util.Set;
+import java.util.List;
 
 import vn.iotstar.dao.IUserDao;
 import vn.iotstar.entity.Role;
 import vn.iotstar.entity.User;
+import vn.iotstar.entity.Teacher;
 import vn.iotstar.impl.dao.UserDao;
 import vn.iotstar.service.IUserService;
 
@@ -109,5 +111,13 @@ public class UserService implements IUserService {
     public boolean updateUserInformation(User user) {
     	return userDao.updateUserInformation(user);
     }
+	@Override
+	public void registerTeacher(User user, Teacher teacher) {
+		userDao.registerTeacher(user, teacher);
+	}
+	@Override
+	public List<User> findAllUser() {
+		return userDao.findAllUser();
+	}
 
 }

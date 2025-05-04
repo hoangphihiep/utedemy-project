@@ -1045,7 +1045,17 @@ header nav ul li:hover::after {
 .heart-icon:hover {
   color: red;
 }
+.heart-icon.favorited {
+    color: #ff4757;
+}
 
+.favorited {
+  color: red; /* hoặc màu bạn muốn */
+}
+
+.icon-btn .heart-icon.favorited {
+  color: red;
+}
 .course-actions {
     display: flex;
     align-items: center;

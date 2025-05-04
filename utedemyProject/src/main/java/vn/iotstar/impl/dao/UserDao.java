@@ -13,6 +13,7 @@ import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.IUserDao;
 import vn.iotstar.entity.Role;
 import vn.iotstar.entity.User;
+import vn.iotstar.entity.Teacher;
 
 public class UserDao implements IUserDao {
 	
@@ -208,4 +209,105 @@ public class UserDao implements IUserDao {
             return false;
         }
     }
+    @Override
+	public void registerTeacher(User user, Teacher teacher) {
+    	EntityManager enma = JPAConfig.getEntityManager();
+	    EntityTransaction trans = enma.getTransaction();
+
+	    try {
+	        trans.begin();
+	        int userId = user.getId();
+
+	        // Xác định lại user từ database để đảm bảo dữ liệu mới nhất
+	        user = enma.find(User.class, userId);
+
+	        // Kiểm tra Role "Teacher"
+	        TypedQuery<Role> roleQuery = enma.createQuery("SELECT r FROM Role r WHERE r.id = :id", Role.class);
+	        roleQuery.setParameter("id", 2); // ID của role "Teacher"
+	        Role teacherRole = roleQuery.getSingleResult();
+
+	        // Thêm role "Teacher" nếu chưa có
+	        boolean hasTeacherRole = false;
+	        for (Role role : user.getRoles()) {
+	            if (role.getId() == teacherRole.getId()) {
+	                hasTeacherRole = true;
+	                break;
+	            }
+	        }
+
+	        if (!hasTeacherRole) {
+	            // Thêm role vào user
+	            user.getRoles().add(teacherRole);
+	            teacherRole.getUsers().add(user);
+
+	            // Lưu user với role mới
+	            enma.merge(user);
+	            
+	            // THAY ĐỔI: Kiểm tra xem role đã tồn tại trong bảng user_roles chưa
+	            TypedQuery<Long> roleCheckQuery = enma.createQuery(
+	                "SELECT COUNT(u) FROM User u JOIN u.roles r WHERE u.id = :userId AND r.id = :roleId", Long.class);
+	            roleCheckQuery.setParameter("userId", user.getId());
+	            roleCheckQuery.setParameter("roleId", teacherRole.getId());
+	            long roleExists = roleCheckQuery.getSingleResult();
+	            
+	            // Chỉ thêm vào bảng user_roles nếu chưa tồn tại
+	            if (roleExists == 0) {
+	                String insertRoleSQL = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
+	                enma.createNativeQuery(insertRoleSQL)
+	                    .setParameter(1, user.getId())
+	                    .setParameter(2, teacherRole.getId())
+	                    .executeUpdate();
+	            }
+
+	            enma.flush();
+	        }
+
+	        // Kiểm tra xem User đã là Teacher hay chưa bằng JPQL
+	        TypedQuery<Long> countQuery = enma.createQuery(
+	            "SELECT COUNT(t) FROM Teacher t WHERE t.id = :userId", Long.class);
+	        countQuery.setParameter("userId", user.getId());
+	        long teacherExists = countQuery.getSingleResult();
+
+	        if (teacherExists == 0) {
+	            // Chưa là Teacher => Tạo Teacher mới
+	            System.out.println("\n🔹 Đăng ký trở thành giảng viên...\n");
+
+	            // Chú ý: Không tạo Teacher từ đầu, mà dùng query SQL để insert trực tiếp
+	            String insertTeacherSQL =
+	                "INSERT INTO Teacher (id, taxCode, identityCard, frontIdentityUrl, backIdentityUrl, " +
+	                "description, socialUrl, bankAccountNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+	            enma.createNativeQuery(insertTeacherSQL)
+.setParameter(1, user.getId())
+	                .setParameter(2, teacher.getTaxCode())
+	                .setParameter(3, teacher.getIdentityCard())
+	                .setParameter(4, teacher.getFrontIdentityUrl())
+	                .setParameter(5, teacher.getBackIdentityUrl())
+	                .setParameter(6, teacher.getDescription())
+	                .setParameter(7, teacher.getSocialUrl())
+	                .setParameter(8, teacher.getBankAccountNumber())
+	                .executeUpdate();
+	        } else {
+	            System.out.println("\n🔹 User đã là giảng viên, không cần đăng ký lại!\n");
+	        }
+
+	        trans.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (trans.isActive()) {
+	            trans.rollback();
+	        }
+	        throw e;
+	    } finally {
+	        if (enma.isOpen()) {
+	            enma.close();
+	        }
+	    }
+	}
+    @Override
+	public List<User> findAllUser() {
+		EntityManager enma = JPAConfig.getEntityManager();
+		TypedQuery<User> query = enma.createNamedQuery("User.findAll", User.class);
+		return query.getResultList();
+	}
 }

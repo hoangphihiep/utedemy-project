@@ -11,17 +11,18 @@
                 <p>Quản lý hệ thống</p>
             </div>
             
+            
             <div class="sidebar-category">Quản lý chung</div>
             
-            <a href="#" class="sidebar-item active">
-                <i class="fas fa-user"></i>
-                <span>Tài khoản</span>
-            </a>
-            
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Khóa học</span>
-            </a>
+            <a href="/utedemyProject/admin/accountManagement" class="sidebar-item" data-path="accountManagement">
+	            <i class="fas fa-user"></i>
+	            <span>Tài khoản</span>
+	        </a>
+	
+	        <a href="/utedemyProject/admin/courseManagement" class="sidebar-item" data-path="courseManagement">
+	            <i class="fas fa-graduation-cap"></i>
+	            <span>Khóa học</span>
+	        </a>
             
             <a href="#" class="sidebar-item">
                 <i class="fas fa-th-list"></i>
@@ -45,12 +46,32 @@
         </div>
         
         <div class="main-section">
-            <!-- Nội dung chính sẽ được đặt ở đây -->
-            <div style="padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                <h2 style="margin-bottom: 20px; color: #333;">Bảng điều khiển quản trị</h2>
-                <p style="color: #666;">Chọn một mục từ sidebar để xem nội dung</p>
-            </div>
+            <div class="main">
+	            <sitemesh:write property="body" />
+	         </div>
         </div>
     </div>
-
+	<script>
+	    // Đợi trang tải xong
+	    document.addEventListener('DOMContentLoaded', function() {
+	        // Lấy đường dẫn hiện tại
+	        const currentPath = window.location.pathname;
+	        
+	        // Lấy tất cả các mục menu
+	        const menuItems = document.querySelectorAll('.sidebar-item');
+	        
+	        // Xóa class 'active' từ tất cả các mục
+	        menuItems.forEach(item => {
+	            item.classList.remove('active');
+	        });
+	        
+	        // Thêm class 'active' cho mục phù hợp
+	        menuItems.forEach(item => {
+	            const path = item.getAttribute('data-path');
+	            if (path && currentPath.includes(path)) {
+	                item.classList.add('active');
+	            }
+	        });
+	    });
+	</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
