@@ -6,6 +6,7 @@ import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
+import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
@@ -72,4 +73,6 @@ public interface ICourseService {
 	public boolean deleteQuiz(int id) throws Exception;
 
 	public List<Course> getCoursesByUserId(int userId);
+
+	public List<OrderItem> getAllOrderItems();
 }

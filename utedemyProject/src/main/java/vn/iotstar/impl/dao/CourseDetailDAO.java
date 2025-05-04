@@ -65,7 +65,7 @@ public class CourseDetailDAO implements ICourseDetailDAO {
 		EntityManager em = emf.createEntityManager();
 		List<CourseProgress> c = new ArrayList<>();
 		try {
-			String sql = "SELECT c FROM Course c";
+			String sql = "SELECT c FROM CourseProgress c";
 			c = em.createQuery(sql, CourseProgress.class).getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();

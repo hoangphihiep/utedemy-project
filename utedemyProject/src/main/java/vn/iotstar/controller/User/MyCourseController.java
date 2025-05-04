@@ -1,6 +1,7 @@
 package vn.iotstar.controller.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,45 +36,26 @@ public class MyCourseController extends HttpServlet {
 //		HttpSession session = req.getSession();
 //		Integer userId = (Integer) session.getAttribute("userId");
 		int userId = 1; // Test
-		req.setAttribute("UserId", userId);
-		List<User> users = userService.getAllUsers();
-		List<Course> courses = courseService.getCoursesByUserId(userId);
-		List<User> userList = userService.getUsersByRole(1);
-		List<CourseProgress> courseProList = c.getAllCourseProgress();
+//		List<User> users = userService.getAllUsers();
+//		List<Course> courses = courseService.getCoursesByUserId(userId);
+		List<User> userList = userService.getUsersByRole(2);
+//		List<Course> myCourse = courseService.getCoursesByUserId(userId);
+		List<OrderItem> courseList = new ArrayList<>();
+		List<OrderItem> ItemList = courseService.getAllOrderItems();
+		List<CourseProgress> progress = c.getAllCourseProgress();
 
-		for(User g :  userList)
-		{
-			System.out.println("Danh sach giao vien la: " + g.getFullname());
-		}
-		for(CourseProgress v : courseProList)
-		{
-			System.out.println("Phan tram: "+ v.getProgressPercentage());
-		}
-		req.setAttribute("Users", users);
-		for (User user : users) {
-			for (User teacher : userList) {
-				for (CourseProgress j : courseProList) {
-					System.out.println("Test userName: " + user.getFullname());
-					if (user.getId() == userId) {
-						req.setAttribute("Users", user.getFullname());
-					}
-					if (teacher.getId() == userId && j.getUser().getId() == userId) {
-						req.setAttribute("teacherList", teacher.getFullname());
-						System.out.println("Danh sach giao vien la: " + teacher.getFullname());
-						req.setAttribute("Percentage", j.getProgressPercentage());
-						System.out.println("Phan tram: "+ j.getProgressPercentage());
-//					}
+		for (OrderItem o : ItemList) {
+			for (CourseProgress g : progress) {
+				if (o.getOrder().getUser().getId() == userId) {
+					courseList.add(o);
 				}
-
+				if (g.getCourse().getId() == o.getCourse().getId() && g.getUser().getId() == userId) {
+					req.setAttribute("percent", g.getProgressPercentage());
+				}
 			}
 		}
 
-		System.out.println("Danh sach kh: ");
-		for (Course c : courses) {
-			System.out.println(c.getCourseName());
-		}
-		req.setAttribute("myCourseList", courses);
+		req.setAttribute("myCourseList", courseList);
 		req.getRequestDispatcher("/views/user/mycourse.jsp").forward(req, resp);
-
 	}
 }

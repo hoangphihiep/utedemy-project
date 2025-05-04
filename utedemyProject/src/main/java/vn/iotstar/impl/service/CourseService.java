@@ -9,6 +9,7 @@ import vn.iotstar.entity.CourseType;
 import vn.iotstar.impl.dao.CourseDao;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.entity.Lesson;
+import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
@@ -154,6 +155,11 @@ public class CourseService implements ICourseService {
 	public List<Course> getCoursesByUserId(int userId)
 	{
 		return courseDao.getCoursesByUserId(userId);
+	}
+	@Override
+	public List<OrderItem> getAllOrderItems()
+	{
+		return courseDao.getAllOrderItems();
 	}
 
 }

@@ -63,37 +63,22 @@
 		<button>+ Danh mục</button>
 	</div>
 	<div class="course-container">
-		<c:forEach var="course" items="${myCourseList}">
-				<div class="course-card">
-					<img src="${course.courseDetail.courseImage}" alt="Picture"
-						style="width: 200px; height: auto;">
-					<div class="content">
-						<h3>${course.courseName}</h3>
-						<c:if test="${not empty percentage}">
-							<div class="progress-circle">${percentage}%</div>
-						</c:if>
-						<div class="footer">
-							<button>Vào học ngay</button>
-							<div class="progress-circle">${percentage}</div>
-						</div>
+		<c:forEach var="c" items="${myCourseList}">
+			<div class="course-card">
+				<img src="${c.course.courseDetail.courseImage}" alt="Picture"
+					style="width: 200px; height: auto;">
+				<div class="content">
+					<h3>Tên giáo viên (tĩnh)</h3>
+					<c:if test="${not empty percentage}">
+						<div class="progress-circle">${percent}%</div>
+					</c:if>
+					<div class="footer">
+						<button>Vào học ngay</button>
+						<div class="progress-circle">${percent}%</div>
 					</div>
 				</div>
-			</c:forEach>
-	</div>
-
-	<!-- <div class="course-card">
-			<img alt="">
-			<div class="content">
-				<h3>Tên khóa học</h3>
-				<p>Giảng viên: Tên giảng viên</p>
-				<div class="footer">
-					<button>Vào học ngay</button>
-					<div class="progress-circle">0%</div>
-				</div>
 			</div>
-		</div> -->
-
-	<!-- Thêm nhiều thẻ tương tự nếu cần -->
+		</c:forEach>
 	</div>
 
 	<div class="chatbox">Em có thể giúp gì cho anh chị ạ?</div>

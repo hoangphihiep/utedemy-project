@@ -15,6 +15,7 @@ import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseProgress;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
+import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
@@ -709,12 +710,27 @@ public class CourseDao implements ICourseDao {
 			courseResults = query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally { 
+		} finally {
 			if (em != null && em.isOpen())
 				em.close();
 		}
 		return courseResults;
 	}
-	
-	
+
+	@Override
+	public List<OrderItem> getAllOrderItems() {
+		EntityManager em = emf.createEntityManager();
+		List<OrderItem> orderItems = new ArrayList<>();
+		try {
+			String sql = "SELECT o FROM OrderItem o";
+			orderItems = em.createQuery(sql, OrderItem.class).getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close(); // Ensuring session is closed after use
+			}
+		}
+		return orderItems;
+	}
 }
