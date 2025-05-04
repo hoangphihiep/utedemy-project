@@ -64,19 +64,21 @@
 	</div>
 	<div class="course-container">
 		<c:forEach var="course" items="${myCourseList}">
-			<div class="course-card">
-				<img src="${course.courseDetail.courseImage}" alt="Picture"
-					style="width: 200px; height: auto;">
-				<div class="content">
-					<h3>${course.courseName}</h3>
-					<p>Giảng viên: ${teacherList}</p>
-					<div class="footer">
-						<button>Vào học ngay</button>
-						<div class="progress-circle">${percentage}</div>
+				<div class="course-card">
+					<img src="${course.courseDetail.courseImage}" alt="Picture"
+						style="width: 200px; height: auto;">
+					<div class="content">
+						<h3>${course.courseName}</h3>
+						<c:if test="${not empty percentage}">
+							<div class="progress-circle">${percentage}%</div>
+						</c:if>
+						<div class="footer">
+							<button>Vào học ngay</button>
+							<div class="progress-circle">${percentage}</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</c:forEach>
+			</c:forEach>
 	</div>
 
 	<!-- <div class="course-card">

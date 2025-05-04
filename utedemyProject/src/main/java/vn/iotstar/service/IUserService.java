@@ -42,5 +42,5 @@ public interface IUserService {
 
 	public List<User> getAllUsers();
 
-	public List<User> getUsersByRole(String roleName);
+	public List<User> getUsersByRole(int roleId);
 }

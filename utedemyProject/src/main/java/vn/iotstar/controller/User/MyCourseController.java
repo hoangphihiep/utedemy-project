@@ -35,10 +35,20 @@ public class MyCourseController extends HttpServlet {
 //		HttpSession session = req.getSession();
 //		Integer userId = (Integer) session.getAttribute("userId");
 		int userId = 1; // Test
+		req.setAttribute("UserId", userId);
 		List<User> users = userService.getAllUsers();
 		List<Course> courses = courseService.getCoursesByUserId(userId);
-		List<User> userList = userService.getUsersByRole("teacher");
+		List<User> userList = userService.getUsersByRole(1);
 		List<CourseProgress> courseProList = c.getAllCourseProgress();
+
+		for(User g :  userList)
+		{
+			System.out.println("Danh sach giao vien la: " + g.getFullname());
+		}
+		for(CourseProgress v : courseProList)
+		{
+			System.out.println("Phan tram: "+ v.getProgressPercentage());
+		}
 		req.setAttribute("Users", users);
 		for (User user : users) {
 			for (User teacher : userList) {
@@ -49,9 +59,10 @@ public class MyCourseController extends HttpServlet {
 					}
 					if (teacher.getId() == userId && j.getUser().getId() == userId) {
 						req.setAttribute("teacherList", teacher.getFullname());
+						System.out.println("Danh sach giao vien la: " + teacher.getFullname());
 						req.setAttribute("Percentage", j.getProgressPercentage());
-					}
-
+						System.out.println("Phan tram: "+ j.getProgressPercentage());
+//					}
 				}
 
 			}
