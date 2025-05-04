@@ -1,5 +1,7 @@
 package vn.iotstar.service;
 
+import java.util.List;
+
 import vn.iotstar.entity.Orders;
 
 public interface IOrderService {
@@ -17,5 +19,6 @@ public interface IOrderService {
 	boolean updateDiscountAndFinishedFee(int orderItemId, int discountId, double finishedFee);
 
 	boolean removeDiscountFromOrderItem(int orderItemId);
-
+	
+	List<Orders> getOrdersByUserId(int userId);
 }

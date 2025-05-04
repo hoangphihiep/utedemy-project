@@ -8,6 +8,7 @@ import java.util.Set;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -53,7 +54,7 @@ public class Teacher extends User implements Serializable {
 	@Column(name = "bankAccountNumber")
 	private String bankAccountNumber; 
 	
-	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Course> course = new HashSet<>();
 
 }

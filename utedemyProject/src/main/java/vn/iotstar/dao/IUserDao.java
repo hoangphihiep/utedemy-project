@@ -26,4 +26,5 @@ public interface IUserDao {
 
     boolean updateUserInformation(User user);
 	
+    User findTeacherById(int userId);
 }

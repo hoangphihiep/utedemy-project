@@ -66,8 +66,8 @@
     </div>
 </section>
 
-<div class="main-content-container">
-    <div class="main-content">
+		<div class="main-content-container">
+    	<div class="main-content">
         <div class="content-section">
             <h2 class="section-title">Bạn sẽ học được</h2>
             <div class="learning-points">
@@ -87,6 +87,7 @@
                 <p>${description}</p>
             </div>
         </div>
+        
 
         <div class="content-section">
     <h2 class="section-title">Nội dung khóa học</h2>
@@ -100,16 +101,7 @@
                                 <span class="dropdown-icon"></span>
                                 <span class="title">${section.title}</span>
                             </div>
-                            <div class="module-info">
-                                ${section.lessons.size() + section.quizs.size()} bài - 
-                                <c:choose>
-                                    <c:when test="${section.id == 1}">1 giờ 12 phút</c:when>
-                                    <c:when test="${section.id == 2}">5 giờ 55 phút</c:when>
-                                    <c:when test="${section.id == 3}">1 giờ 13 phút</c:when>
-                                    <c:when test="${section.id == 4}">1 giờ 28 phút</c:when>
-                                    <c:otherwise>0 giờ 0 phút</c:otherwise>
-                                </c:choose>
-                            </div>
+                            
                         </div>
                         <div class="module-content collapsed">
                             <!-- Hiển thị danh sách Lesson -->
@@ -117,19 +109,7 @@
                                 <div class="lesson">
                                     <div class="lesson-icon">▶</div>
                                     <div class="lesson-title">${lesson.title}</div>
-                                    <div class="lesson-duration">
-                                        <c:choose>
-                                            <c:when test="${lesson.numberItem == 1 && section.id == 1}">00:04:47</c:when>
-                                            <c:when test="${lesson.numberItem == 2 && section.id == 1}">00:11:48</c:when>
-                                            <c:when test="${lesson.numberItem == 3 && section.id == 1}">00:05:26</c:when>
-                                            <c:when test="${lesson.numberItem == 4 && section.id == 1}">00:16:00</c:when>
-                                            <c:when test="${lesson.numberItem == 5 && section.id == 1}">00:11:51</c:when>
-                                            <c:when test="${lesson.numberItem == 6 && section.id == 1}">00:07:07</c:when>
-                                            <c:when test="${lesson.numberItem == 7 && section.id == 1}">00:10:15</c:when>
-                                            <c:when test="${lesson.numberItem == 8 && section.id == 1}">00:04:58</c:when>
-                                            <c:otherwise>00:05:00</c:otherwise>
-                                        </c:choose>
-                                    </div>
+                                    
                                 </div>
                             </c:forEach>
                             <!-- Hiển thị danh sách Quiz -->
@@ -137,7 +117,7 @@
                                 <div class="lesson">
                                     <div class="lesson-icon">📝</div>
                                     <div class="lesson-title">${quiz.title}</div>
-                                    <div class="lesson-duration">${quiz.duration} phút</div>
+
                                 </div>
                             </c:forEach>
                         </div>
@@ -149,50 +129,50 @@
                     <div class="module-header">
                         <div class="module-title">
                             <span class="dropdown-icon"></span>
-                            <span class="title">Phần 1: Tổng quan và cài đặt các ứng dụng khai thuế</span>
+                            <span class="title"></span>
                         </div>
-                        <div class="module-info">8 bài giảng - 1 giờ 12 phút</div>
+                        <div class="module-info"></div>
                     </div>
                     <div class="module-content collapsed">
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 1: Giới thiệu khóa học</div>
-                            <div class="lesson-duration">00:04:47</div>
+                            <div class="lesson-title">c</div>
+                            <div class="lesson-duration"></div>
                         </div>
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 2: Cài đặt phần mềm hỗ trợ kê khai thuế</div>
-                            <div class="lesson-duration">00:11:48</div>
+                            <div class="lesson-title"></div>
+                            <div class="lesson-duration"></div>
                         </div>
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 3: Sửa lỗi thoát phần mềm hỗ trợ kê khai thuế</div>
-                            <div class="lesson-duration">00:05:26</div>
+                            <div class="lesson-title"></div>
+                            <div class="lesson-duration"></div>
                         </div>
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 4: Khai báo thông tin cho phần mềm HTKK</div>
-                            <div class="lesson-duration">00:16:00</div>
+                            <div class="lesson-title"></div>
+                            <div class="lesson-duration"></div>
                         </div>
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 5: Tìm hiểu về năm tài chính</div>
-                            <div class="lesson-duration">00:11:51</div>
+                            <div class="lesson-title"></div>
+                            <div class="lesson-duration"></div>
                         </div>
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 6: Cài đặt các công cụ hỗ trợ</div>
-                            <div class="lesson-duration">00:07:07</div>
+                            <div class="lesson-title"></div>
+                            <div class="lesson-duration"></div>
                         </div>
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 7: Định dạng lại ngày, tháng, năm cho máy tính</div>
-                            <div class="lesson-duration">00:10:15</div>
+                            <div class="lesson-title"></div>
+                            <div class="lesson-duration"></div>
                         </div>
                         <div class="lesson">
                             <div class="lesson-icon">▶</div>
-                            <div class="lesson-title">Bài 8: Sao lưu phục hồi dữ liệu cho phần mềm Hỗ trợ kê khai</div>
-                            <div class="lesson-duration">00:04:58</div>
+                            <div class="lesson-title"></div>
+                            <div class="lesson-duration"></div>
                         </div>
                     </div>
                 </div>
@@ -200,19 +180,9 @@
                     <div class="module-header">
                         <div class="module-title">
                             <span class="dropdown-icon"></span>
-                            <span class="title">Phần 2: Tổng quan về quản lý thuế</span>
+                            <span class="title"></span>
                         </div>
-                        <div class="module-info">36 bài giảng - 5 giờ 55 phút</div>
-                    </div>
-                    <div class="module-content collapsed"></div>
-                </div>
-                <div class="module">
-                    <div class="module-header">
-                        <div class="module-title">
-                            <span class="dropdown-icon"></span>
-                            <span class="title">Phần 3: Lệ phí môn bài</span>
-                        </div>
-                        <div class="module-info">7 bài giảng - 1 giờ 13 phút</div>
+                        <div class="module-info"></div>
                     </div>
                     <div class="module-content collapsed"></div>
                 </div>
@@ -220,9 +190,19 @@
                     <div class="module-header">
                         <div class="module-title">
                             <span class="dropdown-icon"></span>
-                            <span class="title">Phần 4: Hướng dẫn nộp tờ khai, tiền thuế qua mạng</span>
+                            <span class="title"></span>
                         </div>
-                        <div class="module-info">8 bài giảng - 1 giờ 28 phút</div>
+                        <div class="module-info"></div>
+                    </div>
+                    <div class="module-content collapsed"></div>
+                </div>
+                <div class="module">
+                    <div class="module-header">
+                        <div class="module-title">
+                            <span class="dropdown-icon"></span>
+                            <span class="title"></span>
+                        </div>
+                        <div class="module-info"></div>
                     </div>
                     <div class="module-content collapsed"></div>
                 </div>
@@ -237,23 +217,50 @@
     <div>
         <div class="instructor-header">
             <div class="instructor-avatar">
-                <img src="${teacherAvatar}" alt="${teacherName}">
+                
+                <c:if test="${teacherAvatar.substring(0,5) != 'https' }">
+					<c:url value="/image?fname=${teacherAvatar}" var="imgUrl"></c:url>
+				</c:if>
+				<c:if test="${teacherAvatar.substring(0,5) == 'https' }">
+					<c:url value="${teacherAvatar}" var="imgUrl"></c:url>
+				</c:if>
+				
+
+				<div class="image-upload-container">
+					<div class="image-preview">
+						<img id="previewImage" src="${imgUrl}" alt="${teacherName}" />
+					</div>
+				</div>
+				
+
             </div>
+           
+            
+            
+            
             <div class="instructor-info">
                 <!-- Bỏ phần instructor-meta cũ -->
             </div>
         </div>
 
         <div class="instructor-bio">
-    <p><strong class="teacher-name">${teacherName}</strong></p>
-    <p><i class="fas fa-graduation-cap"></i> Giảng viên về khoa học máy tính</p>
-    <p><i class="fas fa-map-marker-alt"></i> Địa chỉ: ${teacherAddress}</p>
-    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:${teacherEmail}">${teacherEmail}</a></p>
-    <p><i class="fas fa-phone-alt"></i> Số điện thoại: ${teacherPhoneNumber}</p>
-    <p><i class="fas fa-info-circle"></i> ${teacherDescription}</p>
-    <p><a href="${teacherSocialUrl}" target="_blank"><i class="fas fa-link"></i> Liên kết mạng xã hội</a></p>
-</div>
+    <!-- Debug để kiểm tra giá trị teacher.id -->
 
+    <c:choose>
+        <c:when test="${not empty teacher and not empty teacher.id}">
+            <p><strong class="teacher-name"><a href="${pageContext.request.contextPath}/viewTeacherProfile?id=${teacher.id}">${teacher.fullname}</a></strong></p>
+        </c:when>
+        <c:otherwise>
+            <p><strong class="teacher-name">${teacher.fullname}</strong></p>
+        </c:otherwise>
+    </c:choose>
+    <p><i class="fas fa-graduation-cap"></i> Giảng viên về khoa học máy tính</p>
+    <p><i class="fas fa-map-marker-alt"></i> Địa chỉ: ${teacher.address}</p>
+    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:${teacher.email}">${teacher.email}</a></p>
+    <p><i class="fas fa-phone-alt"></i> Số điện thoại: ${teacher.phoneNumber}</p>
+    <p><i class="fas fa-info-circle"></i> ${teacher.description}</p>
+    <p><a href="${teacher.socialUrl}" target="_blank"><i class="fas fa-link"></i> Liên kết mạng xã hội</a></p>
+</div>
     </div>
 </div>
 
@@ -349,4 +356,26 @@
             </div>
         </div>
     </div>
+    
+    
 </div>
+<script type="text/javascript">
+//Function to preview images
+function previewImage(event, previewId, placeholderId) {
+  const placeholderText = document.getElementById(placeholderId);
+  const imagePreview = document.getElementById(previewId);
+  const file = event.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result; // Gán đường dẫn ảnh cho img
+      imagePreview.style.display = 'block'; // Hiển thị ảnh xem trước
+    };
+    reader.readAsDataURL(file);
+  }
+}
+</script>
+
+
+

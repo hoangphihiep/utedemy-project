@@ -38,4 +38,6 @@ public interface IUserService {
 	User getUserById(int userId);
 
     boolean updateUserInformation(User use);
+    
+    User findTeacherById(int userId);
 }

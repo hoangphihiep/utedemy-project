@@ -1,5 +1,7 @@
 package vn.iotstar.impl.service;
 
+import java.util.List;
+
 import vn.iotstar.dao.IOrderDao;
 import vn.iotstar.entity.Orders;
 import vn.iotstar.impl.dao.OrderDao;
@@ -34,9 +36,13 @@ public class OrderService implements IOrderService {
     public boolean updateDiscountAndFinishedFee(int orderItemId, int discountId, double finishedFee) {
     	return orderDao.updateDiscountAndFinishedFee(orderItemId, discountId,finishedFee);
     }
-    @Override
+   
     public boolean removeDiscountFromOrderItem(int orderItemId) {
     	return orderDao.removeDiscountFromOrderItem(orderItemId);
     }
-
+    
+    @Override
+    public List<Orders> getOrdersByUserId(int userId) {
+        return orderDao.getOrdersByUserId(userId);
+    }
 }

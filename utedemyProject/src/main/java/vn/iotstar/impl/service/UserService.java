@@ -109,5 +109,10 @@ public class UserService implements IUserService {
     public boolean updateUserInformation(User user) {
     	return userDao.updateUserInformation(user);
     }
+    
+    @Override
+    public User findTeacherById(int userId) {
+        return userDao.findTeacherById(userId);
+    }
 
 }

@@ -1,5 +1,6 @@
-package vn.iotstar.entity;
 
+
+package vn.iotstar.entity;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

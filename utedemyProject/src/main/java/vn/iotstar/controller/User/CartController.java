@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.iotstar.entity.Cart;
 import vn.iotstar.entity.Course;
+import vn.iotstar.entity.Orders;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.CartService;
 import vn.iotstar.impl.service.CourseService;
@@ -26,6 +27,7 @@ import vn.iotstar.service.ICourseService;
 public class CartController extends HttpServlet{
 	
 	ICartService cart_service = new CartService();
+	ICourseService courseService = new CourseService(); 
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,13 +57,18 @@ public class CartController extends HttpServlet{
 		}
 		
 		
+		
+		
+
+		
+		
 		System.out.println("Testcart"+cart);
 		session.setAttribute("totalAmount",totalAmount);
 		session.setAttribute("cart", cart);
 		
 		List<Course> recommendedCourses = cart_service.getRandomCoursesNotInCartByUserId(userId, 5);
 		// Giả sử recommendedCourses là danh sách các khóa học đề xuất
-		
+		session.setAttribute("recommendedCourses", recommendedCourses);
 
 		System.out.println("Recommended Courses: ");
 		if (recommendedCourses != null && !recommendedCourses.isEmpty()) {
@@ -76,9 +83,15 @@ public class CartController extends HttpServlet{
 		session.setAttribute("recommendedCourses",recommendedCourses);
 		
 		req.getRequestDispatcher("/views/user/cartpage.jsp").forward(req, resp);
-		}
-		
+		}	
 	}
+
+	
+	
+	
+	
+
+
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -153,11 +166,8 @@ public class CartController extends HttpServlet{
 		        resp.getWriter().write("error");
 		    }
 		    return;
-
 		}
-
-		
-		
+	
 	}
 	
 
