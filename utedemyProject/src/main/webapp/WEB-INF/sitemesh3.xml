@@ -5,12 +5,16 @@
 	<mapping path="/teacher/adBasicInformation" name="teacher" decorator="addCourse.jsp" />
 	<mapping path="/teacher/editBasicInformation" name="teacher" decorator="editCourse.jsp" />
 	<mapping path="/teacher/editTarget" name="teacher" decorator="editCourse.jsp" />
+	<mapping path="/teacher/edit" name="teacher" decorator="editCourse.jsp" />
 	<mapping path="/teacher/course" name="teacher" decorator="teacher.jsp" />
 	<mapping path="/teacher/coupon" name="teacher" decorator="teacher.jsp" />
 	<mapping path="/teacher/addCoupon" name="teacher" decorator="teacher.jsp" />
 	<mapping path="/teacher/addCourse" name="teacher" decorator="teacher.jsp" />
+	
 	<mapping path="/user/registerTeacher" name="user" decorator="registerTeacher.jsp" />
 	<mapping path="/user/contract" name="user" decorator="registerTeacher.jsp" />
+	<mapping path="/user/course" name="user" decorator="registeredStudent.jsp" />
+	<mapping path="/user/favoriteCourse" name="user" decorator="registeredStudent.jsp" />
 	
 	<mapping path="/admin/homePage" name="admin" decorator="admin.jsp" />
 	<mapping path="/admin/accountManagement" name="admin" decorator="admin.jsp" />

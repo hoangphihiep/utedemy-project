@@ -5,11 +5,9 @@
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 <nav class="nav-menu">
 <ul>
-<li class="active" data-path="course"><a href="/utedemyProject/teacher/course" style="display: inline-block; text-decoration: none; color: white">Bài giảng</a></li>
-<li data-path="coupon"><a href="/utedemyProject/teacher/coupon" style="display: inline-block; text-decoration: none; color: white"">Coupon</a></li>
-<li data-path="orders"><a href="/path/to/orders" style="display: inline-block; text-decoration: none; color: white"">Đơn hàng</a></li>
-<li data-path="income"><a href="/path/to/income" style="display: inline-block; text-decoration: none; color: white"">Thu nhập</a></li>
-<li data-path="profile"><a href="/path/to/profile" style="display: inline-block; text-decoration: none; color: white"">Hồ sơ</a></li>
+<li class="active" data-path="course"><a href="/utedemyProject/user/course" style="display: inline-block; text-decoration: none; color: white">Khóa học</a></li>
+<li data-path="favoriteCourse"><a href="/utedemyProject/user/favoriteCourse" style="display: inline-block; text-decoration: none; color: white"">Yêu thích</a></li>
+<li data-path="learning"><a href="/path/to/learning" style="display: inline-block; text-decoration: none; color: white"">Lịch sử đặt hàng</a></li>
 </ul>
 </nav>
 

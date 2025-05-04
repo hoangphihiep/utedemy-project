@@ -43,12 +43,58 @@ public class HomeController extends HttpServlet {
 
 		if (url.contains("/teacher/course")) 
 		{
+			int activeCoursesCount = 0;
+			int reviewingCoursesCount = 0;
+			int suspendedCoursesCount = 0;
+			int creatingCoursesCount = 0;
+			
 			User user = (User)session.getAttribute("account");
 			req.setAttribute("fullname", user.getFullname());
 			List<Course> listCourse = courseService.findByIdTeacher(user);
+			
+			for (Course course: listCourse) {
+				if (course.getStatus() == 1) {
+					activeCoursesCount ++;
+				}
+				if (course.getStatus() == 2) {
+					reviewingCoursesCount ++;
+				}
+				if (course.getStatus() == 0) {
+					suspendedCoursesCount ++;
+				}
+				if (course.getStatus() == 3) {
+					creatingCoursesCount ++;
+				}
+			}
+			
+			int currentPage = 1;
+            if (req.getParameter("page") != null) {
+                currentPage = Integer.parseInt(req.getParameter("page"));
+            }
+            
+            int startIndex = (currentPage - 1) * 5;
+            int endIndex = Math.min(startIndex + 5, listCourse.size());
+            
+            List<Course> paginatedList = listCourse.subList(startIndex, endIndex);
+            
+            int countCourse = listCourse.size();
+        	int endPage = countCourse/5;
+        	if (countCourse % 5 != 0) {
+        		endPage ++;
+        	}
+        	
+        	listCourse = paginatedList;
+        	req.setAttribute("currentPage", currentPage);
+        	req.setAttribute("countKS", countCourse);
+        	req.setAttribute("endPage", endPage);
+        	
 			List<Notification> listNotification = notificationService.findByIdUser(user.getId());
 			int soLuongThongBao = listNotification.size();
 			req.setAttribute("listCourse", listCourse);
+			req.setAttribute("activeCoursesCount", activeCoursesCount);
+			req.setAttribute("reviewingCoursesCount", reviewingCoursesCount);
+			req.setAttribute("suspendedCoursesCount", suspendedCoursesCount);
+			req.setAttribute("creatingCoursesCount", creatingCoursesCount);
 			req.setAttribute("slthongbao", soLuongThongBao);
 			req.setAttribute("listthongbao", listNotification);
 			req.getRequestDispatcher("/views/teacher/course.jsp").forward(req, resp);

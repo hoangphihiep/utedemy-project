@@ -270,9 +270,35 @@
             favBtn.classList.add('icon-btn', 'add-to-favorite');
             favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
             favBtn.title = 'Yêu thích';
-            favBtn.addEventListener('click', () => {
+            favBtn.setAttribute('data-course-id', course.id);
+            favBtn.addEventListener('click', (e) => {
                 console.log('❤️ Yêu thích:', course.id);
-                // TODO: Thêm logic xử lý yêu thích ở đây
+                e.preventDefault();
+                const courseId = e.currentTarget.getAttribute('data-course-id');
+                console.log('❤️ Yêu thích1:', courseId);
+                // AJAX request to add favorite course
+                fetch('/utedemyProject/user/addFavoriteCourse', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'courseId=' + courseId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Change heart color to indicate it's favorited
+                        favBtn.querySelector('.heart-icon').style.color = 'red'; 	
+                        // You can add a class in your CSS like:
+                        // .favorited { color: red; }
+                    } else {
+                        // Handle error
+                        console.error('Failed to add favorite course:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding favorite course:', error);
+                });
             });
               
       	    let detailsBtn = document.createElement('button');
@@ -354,9 +380,35 @@
               favBtn.classList.add('icon-btn', 'add-to-favorite');
               favBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
               favBtn.title = 'Yêu thích';
-              favBtn.addEventListener('click', () => {
+              favBtn.setAttribute('data-course-id', course.id);
+              favBtn.addEventListener('click', (e) => {
                   console.log('❤️ Yêu thích:', course.id);
-                  // TODO: Thêm logic xử lý yêu thích ở đây
+                  e.preventDefault();
+                  const courseId = e.currentTarget.getAttribute('data-course-id');
+                  console.log('❤️ Yêu thích1:', courseId);
+                  // AJAX request to add favorite course
+                  fetch('/utedemyProject/user/addFavoriteCourse', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded',
+                      },
+                      body: 'courseId=' + courseId
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          // Change heart color to indicate it's favorited
+                          favBtn.querySelector('.heart-icon').classList.add('favorited');
+                          // You can add a class in your CSS like:
+                          // .favorited { color: red; }
+                      } else {
+                          // Handle error
+                          console.error('Failed to add favorite course:', data.message);
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Error adding favorite course:', error);
+                  });
               });
               
               let detailsBtn = document.createElement('button');

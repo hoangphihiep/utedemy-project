@@ -17,32 +17,20 @@
         <!-- Stats cards -->
         <div class="course-stats">
             <div class="stat-card">
-                <span class="stat-title">Tổng số khóa học</span>
-                <span class="stat-value">${listCourse.size()}</span>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 10% so với tháng trước
-                </span>
-            </div>
-            <div class="stat-card">
                 <span class="stat-title">Khóa học đang hoạt động</span>
                 <span class="stat-value">${activeCoursesCount}</span>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 5% so với tháng trước
-                </span>
+            </div>
+             <div class="stat-card">
+                <span class="stat-title">Khóa học đang tạo</span>
+                <span class="stat-value">${creatingCoursesCount}</span>
             </div>
             <div class="stat-card">
-                <span class="stat-title">Tổng học viên</span>
-                <span class="stat-value">${totalStudents}</span>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 15% so với tháng trước
-                </span>
+                <span class="stat-title">Khóa học đang duyệt</span>
+                <span class="stat-value">${reviewingCoursesCount}</span>
             </div>
             <div class="stat-card">
-                <span class="stat-title">Đánh giá trung bình</span>
-                <span class="stat-value">4.8 <small style="font-size: 16px; color: #6b7280;">/5</small></span>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 0.2 so với tháng trước
-                </span>
+                <span class="stat-title">Khóa học tạm ngừng</span>
+                <span class="stat-value">${suspendedCoursesCount}</span>
             </div>
         </div>
 
@@ -178,6 +166,34 @@
                             </div>
                         </div>
                     </c:forEach>
+                    <div style="margin-left: -150px">
+					    <ul style="display: flex; list-style-type: none; padding: 0; justify-content: center; align-items: center;">
+					        <!-- Nút đầu tiên và nút trước -->
+					        <li style="margin: 0 5px;">
+					            <a href="?page=1" style="display: block; padding: 8px 12px; text-decoration: none; color: ${currentPage == 1 ? '#ccc' : '#333'}; border: 1px solid #ddd; border-radius: 4px;">&laquo;</a>
+					        </li>
+					        <li style="margin: 0 5px;">
+					            <a href="?page=${currentPage > 1 ? currentPage - 1 : 1}" style="display: block; padding: 8px 12px; text-decoration: none; color: ${currentPage == 1 ? '#ccc' : '#333'}; border: 1px solid #ddd; border-radius: 4px;">&lsaquo;</a>
+					        </li>
+					
+					        <!-- Các trang giữa -->
+					        <c:forEach var="i" begin="1" end="${endPage}">
+					            <li style="margin: 0 5px;">
+					                <a href="?page=${i}" style="display: block; padding: 8px 12px; text-decoration: none; color: ${currentPage == i ? '#fff' : '#333'}; border: 1px solid ${currentPage == i ? '#007bff' : '#ddd'}; border-radius: 4px; background-color: ${currentPage == i ? '#007bff' : 'transparent'};">
+					                    ${i}
+					                </a>
+					            </li>
+					        </c:forEach>
+					
+					        <!-- Nút kế tiếp và nút cuối -->
+					        <li style="margin: 0 5px;">
+					            <a href="?page=${currentPage < endPage ? currentPage + 1 : endPage}" style="display: block; padding: 8px 12px; text-decoration: none; color: ${currentPage == endPage ? '#ccc' : '#333'}; border: 1px solid #ddd; border-radius: 4px;">&rsaquo;</a>
+					        </li>
+					        <li style="margin: 0 5px;">
+					            <a href="?page=${endPage}" style="display: block; padding: 8px 12px; text-decoration: none; color: ${currentPage == endPage ? '#ccc' : '#333'}; border: 1px solid #ddd; border-radius: 4px;">&raquo;</a>
+					        </li>
+					    </ul>
+					</div>
                 </c:when>
                 <c:otherwise>
                     <div class="no-courses">
@@ -191,19 +207,6 @@
                     </div>
                 </c:otherwise>
             </c:choose>
-        </div>
-        
-        <!-- Phân trang -->
-        <div class="pagination">
-            <a class="page-item disabled">
-                <i class="fas fa-chevron-left"></i>
-            </a>
-            <a class="page-item active">1</a>
-            <a class="page-item">2</a>
-            <a class="page-item">3</a>
-            <a class="page-item">
-                <i class="fas fa-chevron-right"></i>
-            </a>
         </div>
     </main>
     

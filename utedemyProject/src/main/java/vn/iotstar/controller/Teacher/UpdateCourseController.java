@@ -42,7 +42,8 @@ import vn.iotstar.utils.Constant;
 	    maxRequestSize = 1024 * 1024 * 15 // 15 MB
 	)
 @WebServlet(urlPatterns = {"/teacher/editSection","/teacher/editLesson","/teacher/editTarget","/teacher/updateTarget","/teacher/updateCourse","/teacher/editBasicInformation","/teacher/updateBasicInformation",
-		"/teacher/updateSection","/teacher/deleteSection","/teacher/updateLesson","/teacher/deleteLesson","/teacher/editQuiz", "/teacher/updateQuiz", "/teacher/deleteQuiz"})
+		"/teacher/updateSection","/teacher/deleteSection","/teacher/updateLesson","/teacher/deleteLesson","/teacher/editQuiz", 
+		"/teacher/updateQuiz", "/teacher/deleteQuiz","/teacher/edit"})
 public class UpdateCourseController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -163,6 +164,7 @@ public class UpdateCourseController extends HttpServlet{
 			} else {
 			    System.out.println("❌ Course not found.");
 			}
+			req.setAttribute("course", course);
 			req.getRequestDispatcher("/views/teacher/edit.jsp").forward(req, resp);
 		}
 	}
