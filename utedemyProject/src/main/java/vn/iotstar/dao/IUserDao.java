@@ -33,5 +33,9 @@ public interface IUserDao {
     public List<User> findAllUser();
     
     User findTeacherById(int userId);
+    
+    public List<User> getAllUsers();
+
+	public List<User> getUsersByRole(int roleId);
 	
 }

@@ -10,6 +10,7 @@ import vn.iotstar.entity.Discount;
 import vn.iotstar.entity.OrderItem;
 import jakarta.persistence.TypedQuery;
 import vn.iotstar.entity.Orders;
+import vn.iotstar.entity.*;
 
 public class OrderDao implements IOrderDao{
 	  @Override

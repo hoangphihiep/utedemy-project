@@ -6,7 +6,12 @@ import jakarta.persistence.Persistence;
 import vn.iotstar.dao.ICourseDetailDAO;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
+import vn.iotstar.entity.CourseProgress;
 import vn.iotstar.entity.Section;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Hibernate;
 
 public class CourseDetailDAO implements ICourseDetailDAO {
@@ -53,5 +58,23 @@ public class CourseDetailDAO implements ICourseDetailDAO {
          //   em.close();
         }
     }
+
+    @Override
+	public List<CourseProgress> getAllCourseProgress() {
+		EntityManager em = emf.createEntityManager();
+		List<CourseProgress> c = new ArrayList<>();
+		try {
+			String sql = "SELECT c FROM CourseProgress c";
+			c = em.createQuery(sql, CourseProgress.class).getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close(); // Ensuring session is closed after use
+			}
+		}
+		return c;
+	}
+
 
 }

@@ -1,5 +1,6 @@
 package vn.iotstar.impl.dao;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -335,4 +336,36 @@ public class UserDao implements IUserDao {
             em.close();
         }
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        EntityManager em = JPAConfig.getEntityManager();
+        List<User> users = new ArrayList<>();
+        try {
+            String sql = "SELECT u FROM User u";
+            users = em.createQuery(sql, User.class).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+        return users;
+    }
+
+	@Override
+	public List<User> getUsersByRole(int roleId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    List<User> teachers = null;
+	    try {
+	        TypedQuery<User> query = em.createQuery(
+	            "SELECT u FROM User u JOIN u.roles r WHERE r.id = :roleId", User.class);
+	        query.setParameter("roleId", roleId);
+	        teachers = query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+	    return teachers;
+	}
 }

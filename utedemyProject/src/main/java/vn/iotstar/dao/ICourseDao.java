@@ -7,6 +7,7 @@ import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
+import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
@@ -77,5 +78,20 @@ public interface ICourseDao {
 	List<Course> findByIdTeacher (User user);
 
 	List<Course> findAllCourse ();
+	
+	public List<Course> getAllCourses();
+
+	public List<OrderItem> getAllOrderItems();
+
+	public List<Lesson> getAllLessons();
+
+	public List<Course> filterCoursesByRatingAndCourse(List<OrderItem> orderItems, double ratingThreshold);
+
+	double calculateAverageRating(Course course);
+
+	public List<Course> filterCoursesByRating(double ratingThreshold);
+	
+	public List<Course> getCoursesByUserId(int userId);
+
 	
 }

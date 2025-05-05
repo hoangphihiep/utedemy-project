@@ -1,8 +1,11 @@
 package vn.iotstar.impl.dao;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -13,8 +16,10 @@ import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
+import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
+import vn.iotstar.entity.Review;
 import vn.iotstar.entity.Section;
 import vn.iotstar.entity.Answer;
 import vn.iotstar.entity.User;
@@ -734,5 +739,112 @@ public class CourseDao implements ICourseDao {
 		return query.getResultList();
 	}
 	
+	@Override
+	public List<Course> getAllCourses() {
+		EntityManager em = JPAConfig.getEntityManager();
+		List<Course> Courses = new ArrayList<>();
+		try {
+			String sql = "SELECT c FROM Course c";
+			Courses = em.createQuery(sql, Course.class).getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close(); // Ensuring session is closed after use
+			}
+		}
+		return Courses;
+	}
+	@Override
+	public List<OrderItem> getAllOrderItems() {
+		EntityManager em = JPAConfig.getEntityManager();
+		List<OrderItem> orderItems = new ArrayList<>();
+		try {
+			String sql = "SELECT o FROM OrderItem o";
+			orderItems = em.createQuery(sql, OrderItem.class).getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close(); // Ensuring session is closed after use
+			}
+		}
+		return orderItems;
+	}
+	@Override
+	public List<Lesson> getAllLessons() {
+		EntityManager em = JPAConfig.getEntityManager();
+		List<Lesson> lessons = new ArrayList<>();
+		try {
+			// JPQL query to fetch all lessons
+			String sql = "SELECT l FROM Lesson l";
+			lessons = em.createQuery(sql, Lesson.class).getResultList();
+		} catch (Exception e) {
+			// Handle exceptions (consider logging instead of printing stack trace in
+			// production)
+			e.printStackTrace();
+		} finally {
+			// Ensure the EntityManager is closed after use
+			if (em != null && em.isOpen()) {
+				em.close();
+			}
+		}
+		return lessons;
+	}
+	public List<Course> filterCoursesByRatingAndCourse(List<OrderItem> orderItems, double ratingThreshold) {
+		EntityManager em = JPAConfig.getEntityManager();
+		// Tạo truy vấn JPQL để lấy khóa học với rating >= ratingThreshold
+		String query = "SELECT c FROM Course c " + "JOIN c.reviews r " + // JOIN với bảng Review để truy xuất điểm đánh
+																			// giá
+				"JOIN c.orderItems oi " + // JOIN với bảng OrderItem để kiểm tra khóa học có trong order
+				"WHERE r.rating >= :ratingThreshold " + // Điều kiện lọc theo rating
+				"AND oi.course.id = c.id"; // Điều kiện kiểm tra khóa học trong OrderItem
+
+		TypedQuery<Course> typedQuery = em.createQuery(query, Course.class);
+		typedQuery.setParameter("ratingThreshold", ratingThreshold);
+
+		// Trả về danh sách các khóa học thỏa mãn điều kiện
+		return typedQuery.getResultList();
+	}
+
+	// Phương thức tính rating trung bình của khóa học
+	public double calculateAverageRating(Course course) {
+		// Truyền vào course để lấy danh sách review
+		Set<Review> reviews = course.getReview(); // Sử dụng getter của Review từ lớp Course
+		if (reviews.isEmpty()) {
+			return 0;
+		}
+		double totalRating = 0;
+		for (Review review : reviews) {
+			totalRating += review.getRate();
+		}
+		return totalRating / reviews.size();
+	}
+	// Phương thức lọc các khóa học theo rating
+		public List<Course> filterCoursesByRating(double ratingThreshold) {
+			EntityManager em = JPAConfig.getEntityManager();
+			String query = "SELECT c FROM Course c JOIN c.review r WHERE r.rating >= :ratingThreshold";
+			TypedQuery<Course> typedQuery = em.createQuery(query, Course.class);
+			typedQuery.setParameter("ratingThreshold", ratingThreshold);
+
+			return typedQuery.getResultList();
+		}
+		public List<Course> getCoursesByUserId(int userId) {
+			EntityManager em =JPAConfig.getEntityManager();
+			List<Course> courseResults = new ArrayList<>();
+			try {
+				String queryStr = "SELECT oi.course FROM OrderItem oi WHERE oi.order.user.id = :userId";
+				TypedQuery<Course> query = em.createQuery(queryStr, Course.class);
+				query.setParameter("userId", userId);
+				courseResults = query.getResultList();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (em != null && em.isOpen())
+					em.close();
+			}
+			return courseResults;
+		}
+
 }
 

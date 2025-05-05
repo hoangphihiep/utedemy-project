@@ -38,6 +38,16 @@
         
         <div class="dropdown-content" id="userDropdown">
          <a href="/utedemyProject/user/Course">Vào học</a>
+         <form action="${pageContext.request.contextPath}/user/mycourse"
+				method="post" style="margin: 0;">
+				<button
+					style="background-color: #2d8cf0; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">
+					➔ Vào học</button>
+			</form>
+
+			<span>🤍</span>
+			<spann>🛒</span> <img src="avatar.jpg" alt="Avatar"
+				style="width: 30px; height: 30px; border-radius: 50%;">
           <a href="/member">Hội viên</a>
           <a href="/activate-course">Kích hoạt khóa học</a>
           <a href="/business">Doanh nghiệp</a>

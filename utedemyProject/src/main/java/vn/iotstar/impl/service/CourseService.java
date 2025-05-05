@@ -13,6 +13,7 @@ import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
 import vn.iotstar.entity.User;
+import vn.iotstar.entity.OrderItem;
 
 public class CourseService implements ICourseService {
 
@@ -160,6 +161,41 @@ public class CourseService implements ICourseService {
 	@Override
 	public List<Course> findAllCourse() {
 		return courseDao.findAllCourse();
+	}
+	@Override
+	public List<Course> getAllCourses()
+	{
+		return courseDao.getAllCourses();
+	}
+	@Override
+	public List<OrderItem> getAllOrderItems()
+	{
+		return courseDao.getAllOrderItems();
+	}
+	@Override
+	public List<Lesson> getAllLessons() 
+	{
+		return courseDao.getAllLessons();
+	}
+	@Override
+	public List<Course> filterCoursesByRatingAndCourse(List<OrderItem> orderItems, double ratingThreshold)
+	{
+		return courseDao.filterCoursesByRatingAndCourse(orderItems, ratingThreshold);
+	}
+	@Override
+	public double calculateAverageRating(Course course)
+	{
+		return courseDao.calculateAverageRating(course);
+	}
+	@Override
+	public List<Course> filterCoursesByRating(double ratingThreshold)
+	{
+		return courseDao.filterCoursesByRating(ratingThreshold);
+	}
+	@Override
+	public List<Course> getCoursesByUserId(int userId)
+	{
+		return courseDao.getCoursesByUserId(userId);
 	}
 
 }

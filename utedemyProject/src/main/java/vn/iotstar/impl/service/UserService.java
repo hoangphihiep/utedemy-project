@@ -123,5 +123,15 @@ public class UserService implements IUserService {
     public User findTeacherById(int userId) {
         return userDao.findTeacherById(userId);
     }
+	  @Override
+	    public List<User> getAllUsers()
+	    {
+	    	return userDao.getAllUsers();
+	    }
+	    @Override
+	    public List<User> getUsersByRole(int roleId)
+	    {
+	    	return userDao.getAllUsers();
+	    }
 
 }
