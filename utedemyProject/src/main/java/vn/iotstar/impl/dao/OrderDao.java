@@ -1,11 +1,14 @@
 package vn.iotstar.impl.dao;
 
+
+import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.IOrderDao;
 import vn.iotstar.entity.Discount;
 import vn.iotstar.entity.OrderItem;
+import jakarta.persistence.TypedQuery;
 import vn.iotstar.entity.Orders;
 
 public class OrderDao implements IOrderDao{
@@ -186,6 +189,18 @@ public class OrderDao implements IOrderDao{
 	          // em.close();
 	      }
 	  }
+	  @Override
+	    public List<Orders> getOrdersByUserId(int userId) {
+	        EntityManager em = JPAConfig.getEntityManager();
+	        try {
+	            TypedQuery<Orders> query = em.createQuery("SELECT o FROM Orders o WHERE o.user.id = :userId", Orders.class);
+	            query.setParameter("userId", userId);
+	            return query.getResultList();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+	    }
 
 
 

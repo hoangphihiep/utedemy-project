@@ -604,8 +604,8 @@
 		
 		.instructor-bio {
 		    background-color: #f9f9f9;
-		    padding: 20px;
-		    border-radius: 8px;
+		    padding: 10px;
+		    border-radius: 4px;
 		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 		    font-family: Arial, sans-serif;
 		}
@@ -674,7 +674,7 @@
 		}
 		
 		.instructor-bio p {
-		    font-size: 16px;
+		    font-size: 12px;
 		    margin: 10px 0;
 		    color: #333;
 		}
@@ -686,7 +686,7 @@
 		.instructor-bio i {
 		    color: #007bff;
 		    margin-right: 8px;
-		    font-size: 18px;
+		    font-size: 14px;
 		}
 		.instructor-bio a {
 		    color: #007bff;

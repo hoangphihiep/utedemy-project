@@ -31,5 +31,7 @@ public interface IUserDao {
     public void registerTeacher(User user, Teacher teacher);
 
     public List<User> findAllUser();
+    
+    User findTeacherById(int userId);
 	
 }

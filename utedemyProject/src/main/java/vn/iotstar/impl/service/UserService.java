@@ -119,5 +119,9 @@ public class UserService implements IUserService {
 	public List<User> findAllUser() {
 		return userDao.findAllUser();
 	}
+	@Override
+    public User findTeacherById(int userId) {
+        return userDao.findTeacherById(userId);
+    }
 
 }

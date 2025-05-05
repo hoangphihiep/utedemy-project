@@ -3,6 +3,7 @@ package vn.iotstar.impl.service;
 import vn.iotstar.dao.IOrderDao;
 import vn.iotstar.entity.Orders;
 import vn.iotstar.impl.dao.OrderDao;
+import java.util.List;
 import vn.iotstar.service.IOrderService;
 
 public class OrderService implements IOrderService {
@@ -37,6 +38,10 @@ public class OrderService implements IOrderService {
     @Override
     public boolean removeDiscountFromOrderItem(int orderItemId) {
     	return orderDao.removeDiscountFromOrderItem(orderItemId);
+    }
+    @Override
+    public List<Orders> getOrdersByUserId(int userId) {
+        return orderDao.getOrdersByUserId(userId);
     }
 
 }

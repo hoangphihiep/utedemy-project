@@ -310,4 +310,29 @@ public class UserDao implements IUserDao {
 		TypedQuery<User> query = enma.createNamedQuery("User.findAll", User.class);
 		return query.getResultList();
 	}
+    @Override
+    public User findTeacherById(int userId) {
+        EntityManager em = JPAConfig.getEntityManager();
+        try {
+            // Kiểm tra xem user có vai trò TEACHER không
+            TypedQuery<User> query = em.createQuery(
+                "SELECT u FROM User u " +
+                "JOIN u.roles r " +
+                "WHERE u.id = :userId AND r.name = 'TEACHER'", User.class);
+            query.setParameter("userId", userId);
+
+            User user = query.getSingleResult();
+            if (user != null) {
+                return user; // Trả về user, có thể là instance của Teacher
+            }
+            return null;
+        } catch (NoResultException e) {
+            return null; // Không tìm thấy hoặc không phải TEACHER
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 }

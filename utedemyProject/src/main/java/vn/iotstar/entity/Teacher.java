@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.FetchType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,7 +54,7 @@ public class Teacher extends User implements Serializable {
 	@Column(name = "bankAccountNumber")
 	private String bankAccountNumber; 
 	
-	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Course> course = new HashSet<>();
 
 }
