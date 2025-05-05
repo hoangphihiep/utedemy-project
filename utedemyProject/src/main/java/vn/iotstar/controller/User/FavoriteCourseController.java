@@ -42,8 +42,9 @@ public class FavoriteCourseController extends HttpServlet {
 			if (favoriteCourse != null) {
                 Set<Course> favoriteCourses = favoriteCourse.getCourses();
                 req.setAttribute("favoriteCourses", favoriteCourses);
+                req.setAttribute("fullname", user.getFullname());
             }
-
+			
 			req.getRequestDispatcher("/views/user/listFavoriteCourse.jsp").forward(req, resp);
 		}
 	}

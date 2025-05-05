@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			console.log('editingSectionElement:', editingSectionElement);
             saveBtn.addEventListener('click', function () {
 			  const sectionTitle = document.querySelector('#lessonModal .form-input[type="text"]').value.trim();
-			
+				
 			  if (sectionTitle) {
 			    if (editingSectionElement) {
 			      // Cập nhật UI

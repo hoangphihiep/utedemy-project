@@ -12,8 +12,9 @@
 	<mapping path="/teacher/addCourse" name="teacher" decorator="teacher.jsp" />
 	<mapping path="/user/registerTeacher" name="user" decorator="registerTeacher.jsp" />
 	<mapping path="/user/contract" name="user" decorator="registerTeacher.jsp" />
-	<mapping path="/user/course" name="user" decorator="registeredStudent.jsp" />
+	<mapping path="/user/Course" name="user" decorator="registeredStudent.jsp" />
 	<mapping path="/user/favoriteCourse" name="user" decorator="registeredStudent.jsp" />
+	<mapping path="/user/courseBookingHistory" name="user" decorator="registeredStudent.jsp" />
 
 	<mapping path="/admin/homePage" name="admin" decorator="admin.jsp" />
 	<mapping path="/admin/accountManagement" name="admin" decorator="admin.jsp" />

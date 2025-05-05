@@ -46,7 +46,7 @@ public class Lesson implements Serializable {
     private int numberItem;
 	
 	@Column(name = "is_free_lesson")
-    private boolean isFreeLesson;
+    private Boolean isFreeLesson;
 	
 	@ManyToOne
     @JoinColumn(name = "section_id")

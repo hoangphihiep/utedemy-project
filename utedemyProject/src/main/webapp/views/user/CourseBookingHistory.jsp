@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lịch sử đặt hàng</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/views/Css/CourseBookingHistory.css">
+    
 
 </head>
 <body>
