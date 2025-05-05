@@ -76,6 +76,7 @@ public class CourseBookingHistoryController extends HttpServlet {
         System.out.println("Forwarding to CourseBookingHistory.jsp with " + orders.size() + " orders.");
 
         request.setAttribute("orders", orders);
+        request.setAttribute("fullname", user.getFullname());
         request.getRequestDispatcher("/views/user/CourseBookingHistory.jsp").forward(request, response);
     }
 }

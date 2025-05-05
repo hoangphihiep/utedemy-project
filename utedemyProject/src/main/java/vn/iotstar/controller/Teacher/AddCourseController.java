@@ -44,7 +44,7 @@ import vn.iotstar.utils.Constant;
 	    maxRequestSize = 1024 * 1024 * 15 // 15 MB
 	)
 @WebServlet(urlPatterns = {"/teacher/addTarget","/teacher/addCourse","/teacher/add","/teacher/adBasicInformation",
-		"/teacher/addSection","/teacher/addLesson", "/teacher/addQuiz"})
+		"/teacher/addSection","/teacher/addLesson", "/teacher/addQuiz","/teacher/submitReviewCourse"})
 public class AddCourseController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -67,10 +67,14 @@ public class AddCourseController extends HttpServlet{
 		}
 		else if (url.contains("/teacher/addTarget")) 
 		{
+			Course course = (Course)session.getAttribute("courseSession");
+			req.setAttribute("course", course);
 			req.getRequestDispatcher("/views/teacher/addTarget.jsp").forward(req, resp);
 		}
 		else if (url.contains("/teacher/add")) 
 		{
+			Course course = (Course)session.getAttribute("courseSession");
+			req.setAttribute("course", course);
 			req.getRequestDispatcher("/views/teacher/add.jsp").forward(req, resp);
 		}
 		else if (url.contains("/teacher/adBasicInformation")) 
@@ -83,6 +87,19 @@ public class AddCourseController extends HttpServlet{
 			req.setAttribute("course", course);
 			req.setAttribute("courseType", courseType);
 			req.getRequestDispatcher("/views/teacher/adBasicInformation.jsp").forward(req, resp);
+		}
+		else if (url.contains("/teacher/submitReviewCourse")) 
+		{
+			String idCourseStr = req.getParameter("id");
+			if (idCourseStr != null) {
+				int idCourse = Integer.parseInt(idCourseStr);
+				Course course = courseService.findByIdCourse(idCourse); 
+				course.setStatus(2);
+				boolean check = courseService.updateCourse(course);
+				if (check) {
+					resp.sendRedirect(req.getContextPath() + "/teacher/course");
+				}
+			}
 		}
 	}
 
@@ -270,8 +287,6 @@ public class AddCourseController extends HttpServlet{
 	    }
 		else if (url.contains("/teacher/addSection")) 
 		{
-			//int id = (Integer)session.getAttribute("courseId");
-
 			// Đặt encoding để xử lý đúng tiếng Việt
 	        req.setCharacterEncoding("UTF-8");
 	        resp.setContentType("application/json");
@@ -337,7 +352,7 @@ public class AddCourseController extends HttpServlet{
 			lesson.setNumberItem(numberItemInt);
 			lesson.setTitle(title);
 			lesson.setVideoUrl(videoUrl);
-			lesson.setFreeLesson(isFreeLesson);
+			lesson.setIsFreeLesson(isFreeLesson);
 			lesson.setSection(section);
 
 			boolean check = courseService.saveLesson(lesson);
@@ -347,7 +362,7 @@ public class AddCourseController extends HttpServlet{
                         + "\"title\": \"" + lesson.getTitle() + "\","
                         + "\"description\": \"" + lesson.getDescription() + "\","
                         + "\"video\": \"" + lesson.getVideoUrl() + "\","
-                        + "\"isFreeLesson\": \"" + lesson.isFreeLesson() + "\","
+                        + "\"isFreeLesson\": \"" + lesson.getIsFreeLesson() + "\","
                         + "\"status\": \"success\","
                         + "\"message\": \"Đã thêm bài học: " + title + "\""
                         + "}";

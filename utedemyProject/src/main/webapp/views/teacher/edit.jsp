@@ -6,7 +6,7 @@
 	<div class="content-box">
         <div class="content-header">Danh sách bài học</div>
         <div class="lesson-list-container">
-            <button class="add-lesson-button" id="openModal">+ Phần học mới</button>
+            
 
             <c:if test="${empty course.sections}">
                 <div class="empty-state">Chưa có bài học nào được thêm vào khóa học.</div>
@@ -25,43 +25,52 @@
                         </div>
                         <div class="section-actions">
                             <div class="action-icon edit-section" data-id="${section.id}">✎</div>
-                            <div class="action-icon">🗑</div>
+                            <div class="action-icon delete-section">🗑</div>
                         </div>
                     </div>
 
                     <!-- Hiển thị danh sách bài học trong section -->
                     <c:forEach var="lesson" items="${section.lessons}">
-                        <div class="lesson-item">
-                            <div class="lesson-title">${lesson.title}</div>
-                            <div class="lesson-details">
-                                <c:if test="${lesson.freeTrial}">
-                                    <div class="lesson-trial">Học thử</div>
-                                </c:if>
-                                <div class="lesson-icons">
-                                    <div class="lesson-icon edit-lesson" data-id="${lesson.id}">✎</div>
-                                    <div class="lesson-icon">🗑</div>
-                                </div>
-                            </div>
+                        <div class="section-header">
+							<div class="section-title">
+								<span>Bài ${lesson.numberItem}: ${lesson.title}</span>
+							</div>
+							<div class="section-columns">
+								<div class="column-label">
+									<input type="checkbox" class="free-lesson-checkbox"
+										${lesson.isFreeLesson ? 'checked' : ''}>
+								</div>
+								<div class="column-label">-</div>
+								<div class="column-label">12</div>
+							</div>
+							<div class="section-actions">
+								<div class="action-icon edit-lesson" data-id="${lesson.id}">✎</div>
+								<div class="action-icon delete-lesson">🗑</div>
+							</div>
                         </div>
                     </c:forEach>
 
                     <!-- Hiển thị danh sách quiz trong section -->
                     <c:forEach var="quiz" items="${section.quizs}">
-                        <div class="quiz-item">
-                            <div class="quiz-title">${quiz.title}</div>
-                            <div class="quiz-details">
-                                <div class="quiz-duration">Thời gian: ${quiz.timeLimit} phút</div>
-                                <div class="quiz-icons">
-                                    <div class="quiz-icon edit-quiz" data-id="${quiz.id}">✎</div>
-                                    <div class="quiz-icon">🗑</div>
-                                </div>
-                            </div>
-                        </div>
+						<div class="section-header">
+							<div class="section-title">
+								<span>Bài ${quiz.numberItem}: ${quiz.title}</span>
+							</div>
+							<div class="section-columns">
+								<div class="column-label">-</div>
+								<div class="column-label">-</div>
+								<div class="column-label">-</div>
+							</div>
+							<div class="section-actions">
+								<div class="action-icon edit-quiz " data-id="${quiz.id}">✎</div>
+								<div class="action-icon delete-quiz">🗑</div>
+							</div>
+						</div>
                     </c:forEach>
 
                     <div class="lesson-actions">
-                        <button class="lesson-button">Bài học mới</button>
-                        <button class="lesson-button">Bài trắc nghiệm</button>
+                        <button class="lesson-button" data-id="${section.id}">Bài học mới</button>
+                        <button class="lesson-button" data-id="${section.id}">Bài trắc nghiệm</button>
                     </div>
 
                     <div class="lesson-info">
@@ -69,6 +78,7 @@
                     </div>
                 </div>
             </c:forEach>
+            <button class="add-lesson-button" id="openModal">+ Phần học mới</button>
         </div>
     </div>
 

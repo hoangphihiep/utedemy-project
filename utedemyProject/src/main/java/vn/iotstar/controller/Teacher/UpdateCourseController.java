@@ -58,25 +58,27 @@ public class UpdateCourseController extends HttpServlet{
 		{
 			int sectionId = Integer.parseInt(req.getParameter("sectionId"));
 			Section section = courseService.findByIdSection(sectionId);
+			System.out.println ("Tiều đề: " + section.getTitle());
 			resp.setContentType("application/json");
 		    resp.getWriter().write("{\"title\": \"" + section.getTitle() + "\"}");
 		}
-		if (url.contains("/teacher/editLesson")) 
+		else if (url.contains("/teacher/editLesson")) 
 		{
 			int lessonId = Integer.parseInt(req.getParameter("lessonId"));
 			System.out.println ("id lesson: " + lessonId);
 			Lesson lesson = courseService.findByIdLesson(lessonId);
 			resp.setContentType("application/json");
+			System.out.println (lesson.getTitle() + " " + lesson.getVideoUrl());
 			String json = "{"
 				    + "\"title\": \"" + escapeJson(lesson.getTitle()) + "\","
 				    + "\"videoUrl\": \"" + escapeJson(lesson.getVideoUrl()) + "\","
 				    + "\"description\": \"" + escapeJson(lesson.getDescription()) + "\","
-				    + "\"isFreeLesson\": \"" + escapeJson(String.valueOf(lesson.isFreeLesson())) + "\""
+				    + "\"isFreeLesson\": \"" + escapeJson(String.valueOf(lesson.getIsFreeLesson())) + "\""
 				    + "}";
 
 				resp.getWriter().write(json);
 		}
-		if (url.contains("/teacher/editQuiz")) {
+		else if (url.contains("/teacher/editQuiz")) {
 		    resp.setContentType("application/json");
 		    resp.setCharacterEncoding("UTF-8");
 
@@ -115,7 +117,7 @@ public class UpdateCourseController extends HttpServlet{
 		        resp.getWriter().write("{\"error\":\"Quiz not found\"}");
 		    }
 		}
-		if (url.contains("/teacher/editBasicInformation")) 
+		else if (url.contains("/teacher/editBasicInformation")) 
 		{
 			String idCourseStr = req.getParameter("id");
 			int idCourse = Integer.parseInt(idCourseStr);
@@ -130,17 +132,18 @@ public class UpdateCourseController extends HttpServlet{
 			req.setAttribute("courseType", courseType);
 			req.getRequestDispatcher("/views/teacher/editBasicInformation.jsp").forward(req, resp);
 		}
-		if (url.contains("/teacher/editTarget")) 
+		else if (url.contains("/teacher/editTarget")) 
 		{
 			Course course = (Course)session.getAttribute("courseSession1");
 			CourseDetail courseDetail = courseService.findByIdCourseDetail(course.getCourseDetail().getId());
 			courseDetail.getCourseLearner();
 			courseDetail.getLearnerAchievements();
+			req.setAttribute("course", course);
 			req.setAttribute("learner", courseDetail.getCourseLearner());
 			req.setAttribute("target", courseDetail.getLearnerAchievements());
 			req.getRequestDispatcher("/views/teacher/editTarget.jsp").forward(req, resp);
 		}
-		if (url.contains("/teacher/edit")) 
+		else if (url.contains("/teacher/edit")) 
 		{
 			Course course = (Course)session.getAttribute("courseSession1");
 			if (course != null) {
@@ -165,6 +168,7 @@ public class UpdateCourseController extends HttpServlet{
 			    System.out.println("❌ Course not found.");
 			}
 			req.setAttribute("course", course);
+			session.setAttribute("courseSession", course);
 			req.getRequestDispatcher("/views/teacher/edit.jsp").forward(req, resp);
 		}
 	}
@@ -245,7 +249,7 @@ public class UpdateCourseController extends HttpServlet{
 				lesson.setDescription(description);
 				lesson.setTitle(title);
 				lesson.setVideoUrl(videoUrl);
-				lesson.setFreeLesson(isFreeLesson);
+				lesson.setIsFreeLesson(isFreeLesson);
 				boolean checkLesson = courseService.updateLesson(lesson);
 	        	if (checkLesson) {
 	                String json = "{"
@@ -253,7 +257,7 @@ public class UpdateCourseController extends HttpServlet{
 	                            + "\"title\": \"" + lesson.getTitle() + "\","
 	                            + "\"description\": \"" + lesson.getTitle() + "\","
 	                            + "\"video\": \"" + lesson.getTitle() + "\","
-	                            + "\"isFreeLesson\": \"" + lesson.isFreeLesson() + "\","
+	                            + "\"isFreeLesson\": \"" + lesson.getIsFreeLesson() + "\","
 	                            + "\"status\": \"success\","
 	                            + "\"message\": \"Đã thêm phần học: " + title + "\""
 	                            + "}";

@@ -56,7 +56,7 @@
                     <label for="phone">SỐ ĐIỆN THOẠI</label>
                     <div class="phone-input">
                       
-                        <input type="tel" id="phone" name="phone" placeholder="091 234 56 78" value="091 234 56 78" required>
+                        <input type="tel" id="phone" name="phone" placeholder="0912345678" value="0912345678" required>
                     </div>
                 </div>
                 

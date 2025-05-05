@@ -38,4 +38,6 @@ public interface IDiscountService {
 
 	public boolean update (Discount discount);
 
+	boolean isDiscountApplicableForCourse(int courseId, int discountId);
+
 }

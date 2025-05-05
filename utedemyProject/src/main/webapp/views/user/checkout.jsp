@@ -5,6 +5,7 @@
 
 <!DOCTYPE html>
 <html lang="vi">
+<body>
     <div class="container">
         <div class="left-section">
             <div class="product-list">
@@ -147,10 +148,24 @@
     <input type="hidden" id="finishedFee-${item.id}" name="finishedFees" value="${item.finishedFee}">
 </c:forEach>
 
-
     <button type="submit" class="btn btn-payment">TIẾN HÀNH THANH TOÁN</button>
 </form>
 
+    <!-- Nút hủy đơn hàng -->
+    <button class="btn-cancel-order" onclick="showCancelConfirmation()">HỦY ĐƠN HÀNG</button>
+
+        </div>
+    </div>
+
+    <!-- Modal xác nhận hủy đơn hàng -->
+    <div id="cancelOrderModal" class="confirm-modal">
+        <div class="modal-content">
+            <h3>Xác nhận hủy đơn hàng</h3>
+            <p>Bạn có chắc chắn muốn hủy đơn hàng này không? Hành động này không thể hoàn tác.</p>
+            <div class="modal-buttons">
+                <button class="btn-confirm" onclick="cancelOrder(${order.id})">Xác nhận hủy</button>
+                <button class="btn-cancel" onclick="hideCancelConfirmation()">Không, giữ lại</button>
+            </div>
         </div>
     </div>
 
@@ -319,6 +334,45 @@
         setTimeout(() => {
             alertDiv.style.display = 'none';
         }, 5000);
+    }
+    
+    // Hiển thị modal xác nhận hủy đơn hàng
+    function showCancelConfirmation() {
+        document.getElementById('cancelOrderModal').style.display = 'block';
+    }
+    
+    // Ẩn modal xác nhận hủy đơn hàng
+    function hideCancelConfirmation() {
+        document.getElementById('cancelOrderModal').style.display = 'none';
+    }
+    
+    // Xử lý hủy đơn hàng
+    function cancelOrder(orderId) {
+        fetch('${pageContext.request.contextPath}/cancel-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'orderId=' + orderId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', 'Đơn hàng đã được hủy thành công!');
+                // Chuyển hướng về trang chủ hoặc giỏ hàng sau 2 giây
+                setTimeout(() => {
+                    window.location.href = '${pageContext.request.contextPath}/user/viewcheckout';
+                }, 2000);
+            } else {
+                showAlert('danger', data.message || 'Có lỗi xảy ra khi hủy đơn hàng.');
+                hideCancelConfirmation();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', 'Có lỗi xảy ra khi hủy đơn hàng.');
+            hideCancelConfirmation();
+        });
     }
     </script>
 </body>

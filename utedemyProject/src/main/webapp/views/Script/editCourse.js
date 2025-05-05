@@ -1,158 +1,433 @@
 document.addEventListener('DOMContentLoaded', function() {
-        // Tìm các phần tử modal và nút điều khiển
-        const lessonModal = document.getElementById('lessonModal');
-        const lessonDetailModal = document.getElementById('lesson');
-        const quizModal = document.getElementById('quiz');
-        const openModalBtn = document.getElementById('openModal');
+    // Khai báo các biến toàn cục
+    let editingSectionId = null;
+    let editingSectionElement = null;
+    
+    const lessonModal = document.getElementById('lessonModal');
+    const lessonDetailModal = document.getElementById('lesson');
+    const quizModal = document.getElementById('quiz');
+    const openModalBtn = document.getElementById('openModal');
+    
+    const lessonButtons = document.querySelectorAll('.lesson-button');
+    
+    // Tìm các nút đóng cho modal lesson (cập nhật bài học)
+    const closeDetailModalBtn = document.querySelector('#lesson .close-button');
+    const cancelDetailModalBtn = document.querySelector('#lesson .btn-cancel');
+    const saveDetailBtn = document.querySelector('#lesson .btn-save');
+    
+    // Tìm các nút đóng cho modal lessonModal (phần học)
+    const closeModalBtn = document.querySelector('#lessonModal .close-button');
+    const cancelModalBtn = document.querySelector('#lessonModal .btn-cancel');
+    const saveBtn = document.querySelector('#lessonModal .btn-save');
+    
+    // Tìm các nút đóng cho modal quiz
+    const closeQuizModalBtn = document.querySelector('#quiz .close-button');
+    const cancelQuizModalBtn = document.querySelector('#quiz .btn-cancel');
+    const saveQuizBtn = document.querySelector('#quiz .btn-save');
+    
+    // Thêm code xử lý nút "Add new question" vào đây:
+    const addQuestionBtn = document.querySelector('.quiz-actions');
+   	const modalBody = document.querySelector('.modal-body');
+    
+    const lessonListContainer = document.querySelector('.lesson-list-container');
+    const emptyState = document.querySelector('.empty-state');
+    
+    const cancelBtn = document.querySelector('#lessonModal .btn-cancel');
+    const closeBtn = document.querySelector('#lessonModal .close-button');
+    
+    let editingLessonId = null;
+    let editingLessonElement = null;
+    
+    // Biến để lưu phần học hiện tại đang mở modal bài học
+    let currentSection = null;
+    
+    // Biến để lưu phần học hiện tại đang mở modal bài trắc nghiệm
+    let currentQuizSection = null;
+	
+	// Các hàm mở/đóng modal
+    function openLessonModal() {
+        lessonModal.classList.add('show');
+    }
+    
+    function openLessonDetailModal(section) {
+        currentSection = section;
+        editingLessonId = null;
+        editingLessonElement = null;
+        lessonDetailModal.classList.add('show');
         
-        // Tìm tất cả các nút "Bài học mới"
-        const lessonButtons = document.querySelectorAll('.lesson-button');
-        
-        // Tìm các nút đóng cho modal lesson (cập nhật bài học)
-        const closeDetailModalBtn = document.querySelector('#lesson .close-button');
-        const cancelDetailModalBtn = document.querySelector('#lesson .btn-cancel');
-        const saveDetailBtn = document.querySelector('#lesson .btn-save');
-        
-        // Tìm các nút đóng cho modal lessonModal (phần học)
-        const closeModalBtn = document.querySelector('#lessonModal .close-button');
-        const cancelModalBtn = document.querySelector('#lessonModal .btn-cancel');
-        const saveBtn = document.querySelector('#lessonModal .btn-save');
-        
-     	// Tìm các nút đóng cho modal quiz
-        const closeQuizModalBtn = document.querySelector('#quiz .close-button');
-        const cancelQuizModalBtn = document.querySelector('#quiz .btn-cancel');
-        const saveQuizBtn = document.querySelector('#quiz .btn-save');
-        
-     	// Thêm code xử lý nút "Add new question" vào đây:
-        const addQuestionBtn = document.querySelector('.quiz-actions');
-        const modalBody = document.querySelector('.modal-body');
-        
-        const lessonListContainer = document.querySelector('.lesson-list-container');
-        const emptyState = document.querySelector('.empty-state');
-        
-        let editingSectionId = null;
-		let editingSectionElement = null;
-		
-		let editingLessonId = null;
-		let editingLessonElement = null;
-        
-        // Biến để lưu phần học hiện tại đang mở modal bài học
-        let currentSection = null;
-        
-     	// Biến để lưu phần học hiện tại đang mở modal bài trắc nghiệm
-        let currentQuizSection = null;
-        
-        // Các hàm mở/đóng modal
-        function openLessonModal() {
+        document.querySelector('#lesson .form-input[placeholder="Nhập tiêu đề"]').value = '';
+        document.querySelector('#lesson textarea.form-input').value = '';
+        document.querySelector('#lesson .video-input').value = '';
+        document.getElementById('freeTrialCheckbox').checked = false;
+    }
+    
+    // Mở modal tạo section mới
+    if (openModalBtn) {
+        openModalBtn.addEventListener('click', function() {
+            // Reset trạng thái chỉnh sửa
+            editingSectionId = null;
+            editingSectionElement = null;
+            // Reset giá trị trong form
+            const titleInput = document.querySelector('#lessonModal #sectionTitle');
+            if (titleInput) {
+                titleInput.value = '';
+            }
+            // Hiển thị modal
             lessonModal.classList.add('show');
+        });
+    }
+
+    // Đóng modal section
+    function closeLessonModal() {
+        if (lessonModal) {
+            lessonModal.classList.remove('show');
         }
+    }
+    
+    function closeQuizModal() {
+            if (quizModal) quizModal.classList.remove('show');
+        }
+    
+    function closeLessonDetailModal() {
+        if (lessonDetailModal) lessonDetailModal.classList.remove('show');
+    }
+
+    // Gắn sự kiện đóng modal
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeLessonModal);
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeLessonModal);
+    }
+    if (closeDetailModalBtn) {
+        closeDetailModalBtn.addEventListener('click', closeLessonDetailModal);
+    }
+    
+    if (cancelDetailModalBtn) {
+        cancelDetailModalBtn.addEventListener('click', closeLessonDetailModal);
+    }
+    
+    if (lessonDetailModal) {
+        lessonDetailModal.addEventListener('click', function(e) {
+            if (e.target === lessonDetailModal) {
+                closeLessonDetailModal();
+            }
+        });
+    }
+
+    // Hàm mở modal chỉnh sửa section
+    function openEditSectionModal(title) {
+        const modal = document.getElementById('lessonModal');
+        const titleInput = modal.querySelector('#sectionTitle');
         
-        function openLessonDetailModal(section) {
-            currentSection = section;
-            editingLessonId = null;
-            editingLessonElement = null;
-            lessonDetailModal.classList.add('show');
+        if (titleInput) {
+            titleInput.value = title;
+        }
+        lessonModal.classList.add('show');
+    }
+    
+     
+
+    // Gắn sự kiện cho tất cả các nút edit section
+    const editButtons = document.querySelectorAll('.edit-section');
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const sectionId = this.getAttribute('data-id');
+            editingSectionElement = this.closest('.course-section');
+            editingSectionId = sectionId;
             
-            document.querySelector('#lesson .form-input[placeholder="Nhập tiêu đề"]').value = '';
-		    document.querySelector('#lesson textarea.form-input').value = '';
-		    document.querySelector('#lesson .video-input').value = '';
-		    document.getElementById('freeTrialCheckbox').checked = false;
-        }
+            // Lấy tiêu đề hiện tại từ DOM
+            const titleElement = editingSectionElement.querySelector('.section-title');
+            let currentTitle = '';
+            if (titleElement) {
+                // Trích xuất tiêu đề từ chuỗi "Phần X: Tên Section"
+                const titleText = titleElement.textContent.trim();
+                const titleParts = titleText.split(':');
+                if (titleParts.length > 1) {
+                    currentTitle = titleParts[1].trim();
+                }
+            }
+            
+            // Mở modal chỉnh sửa với tiêu đề hiện tại
+            openEditSectionModal(currentTitle);
+            
+            // Hoặc gọi API để lấy dữ liệu chi tiết nếu cần
+            fetch(`/utedemyProject/teacher/editSection?sectionId=${sectionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.title) {
+                        openEditSectionModal(data.title);
+                    } else {
+                        console.error("Không lấy được dữ liệu phần học!");
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi gọi dữ liệu:", error);
+                    // Vẫn mở modal với dữ liệu từ DOM
+                    openEditSectionModal(currentTitle);
+                });
+        });
+    });
+
+    // Gắn sự kiện cho tất cả các nút xóa section
+    const deleteButtons = document.querySelectorAll('.delete-section');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const sectionElement = this.closest('.course-section');
+            const editBtn = sectionElement.querySelector('.edit-section');
+            if (!editBtn) return;
+            
+            const sectionId = editBtn.getAttribute('data-id');
+            if (!sectionId) return;
+
+            if (confirm('Bạn có chắc chắn muốn xóa phần học này không?')) {
+                fetch(`/utedemyProject/teacher/deleteSection`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `sectionId=${sectionId}`
+                })
+                .then(response => {
+                    if (response.ok) {
+                        sectionElement.remove();
+                    } else {
+                        alert("Lỗi khi xóa phần học!");
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi gọi xóa:", error);
+                    alert("Không thể kết nối đến server.");
+                });
+            }
+        });
+    });
+	
+	// Xử lý sự kiện click cho các nút edit và delete của lesson hiện có
+    function setupExistingLessonControls() {
+        // Xử lý các nút edit lesson
+        const editLessonButtons = document.querySelectorAll('.edit-lesson');
+        editLessonButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const lessonId = this.getAttribute('data-id');
+                if (!lessonId) {
+                    console.error("Missing lessonId on edit button");
+                    return;
+                }
+                console.log("id lesson: " + lessonId)
+                
+                
+                fetch(`/utedemyProject/teacher/editLesson?lessonId=${lessonId}`)
+					.then(response => response.json())
+					.then(data => {
+							console.log("Dữ liệu trả về từ server:", data);
+							if (data && data.description && data.title && data.videoUrl) {
+								openEditLessonModal(data.description, data.title, data.videoUrl, data.isFreeLesson);  // Gán lại giá trị lên input
+								editingLessonElement = this.closest('.section-header');
+				                editingLessonId = lessonId;
+				                currentSection = this.closest('.course-section');
+							} else {
+									alert("Không lấy được dữ liệu phần học!");
+							}
+						})
+					.catch(error => {
+						console.error("Lỗi khi gọi dữ liệu:", error);
+						alert("Không thể kết nối đến server.");
+					});
+            });
+        });
         
-     	// Hàm mở/đóng modal quiz
-        function openQuizModal(section) {
+        // Xử lý các nút delete lesson
+        const deleteLessonButtons = document.querySelectorAll('.delete-lesson');
+        deleteLessonButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (confirm('Bạn có chắc chắn muốn xóa bài học này?')) {
+                    const lessonElement = this.closest('.section-header');
+                    const editIcon = lessonElement.querySelector('.action-icon:first-child');
+                    const lessonId = editIcon ? editIcon.getAttribute('data-id') : null;
+                    
+                    if (!lessonId) {
+                        console.error("Không tìm thấy lessonId");
+                        return;
+                    }
+                    
+                    fetch(`/utedemyProject/teacher/deleteLesson`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `lessonId=${lessonId}`
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            lessonElement.remove();
+                        } else {
+                            alert("Lỗi khi xóa bài học!");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi gọi xóa:", error);
+                        alert("Không thể kết nối đến server.");
+                    });
+                }
+            });
+        });
+    }
+    
+// Initialize edit buttons for existing quizzes
+    const editQuizButtons = document.querySelectorAll('.edit-quiz');
+    editQuizButtons.forEach(button => {
+        const quizId = button.getAttribute('data-id');
+        if (quizId) {
+            button.addEventListener('click', function() {
+                const section = this.closest('.course-section');
+                fetch(`/utedemyProject/teacher/editQuiz?quizId=${quizId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        // Call function to populate quiz modal
+                        populateQuizModal(data);
+                        openQuizModal(section);
+                    })
+                    .catch(err => console.error('Error fetching quiz data:', err));
+            });
+        }
+    });
+
+    // Initialize delete buttons for quizzes
+    const deleteQuizButtons = document.querySelectorAll('.delete-quiz');
+    deleteQuizButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (confirm('Bạn có chắc chắn muốn xóa bài trắc nghiệm này?')) {
+                const quizElement = this.closest('.section-header').parentElement;
+                // Find the quiz ID from the parent or from a nearby edit button
+                const quizId = quizElement.getAttribute('data-quiz-id') || 
+                              this.closest('.section-header').querySelector('.edit-quiz')?.getAttribute('data-id');
+                
+                if (quizId) {
+                    fetch(`/utedemyProject/teacher/deleteQuiz`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `quizId=${quizId}`
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            quizElement.remove();
+                            alert('Xóa bài trắc nghiệm thành công!');
+                        } else {
+                            alert('Lỗi khi xóa bài trắc nghiệm!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting quiz:', error);
+                        alert('Không thể kết nối đến server.');
+                    });
+                } else {
+                    console.error('Quiz ID not found');
+                    alert('Không thể xác định ID của bài trắc nghiệm.');
+                }
+            }
+        });
+    });
+    
+    function openQuizModal(section) {
             currentQuizSection = section;
             quizModal.classList.add('show');
         }
-        
-        function closeLessonModal() {
-            if (lessonModal) lessonModal.classList.remove('show');
-        }
-        
-        function closeLessonDetailModal() {
-            if (lessonDetailModal) lessonDetailModal.classList.remove('show');
-        }
-        
-        function closeQuizModal() {
-            if (quizModal) quizModal.classList.remove('show');
-        }
-        
-        // Thêm event listener cho modal phần học (lessonModal)
-        if (openModalBtn) {
-            openModalBtn.addEventListener('click', openLessonModal);
-        }
-        
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeLessonModal);
-        }
-        
-        if (cancelModalBtn) {
-            cancelModalBtn.addEventListener('click', closeLessonModal);
-        }
-        
-        if (lessonModal) {
-            lessonModal.addEventListener('click', function(e) {
-                if (e.target === lessonModal) {
-                    closeLessonModal();
+    
+    function populateQuizModal(data) {
+			    // Điền tiêu đề, mô tả
+			    const titleInput = document.querySelector('#quiz .form-input[placeholder="Nhập tiêu đề"]');
+			    const descInput = document.querySelector('#quiz .form-input[placeholder="Nhập mô tả"]');
+			    const durationInput = document.querySelector('#quiz .quiz-duration');
+			    if (titleInput) titleInput.value = data.title;
+			    if (descInput) descInput.value = data.description;
+			    if (durationInput) durationInput.value = data.duration || 0;
+			    
+			    quizModal.setAttribute('data-quiz-id', data.id);
+				console.log("QuizData gửi lên server:", data.id);
+			    // Xoá toàn bộ câu hỏi cũ
+			    document.querySelectorAll('.question-container').forEach(q => q.remove());
+			
+			    // Lặp qua các câu hỏi để tạo lại
+			    data.questions.forEach(q => {
+			        addQuestionBtn.click(); // Nhấn nút để tạo câu hỏi mới
+			        const lastQuestion = document.querySelectorAll('.question-container');
+			        const newQ = lastQuestion[lastQuestion.length - 1];
+			
+			        newQ.querySelector('.question-input').value = q.description;
+			        newQ.querySelector('.question-score').value = q.score;
+			
+			        const answersContainer = newQ.querySelector('.answers-container');
+			        answersContainer.innerHTML = ''; // Xoá sẵn 4 answer trống
+			
+			        q.answers.forEach(a => {
+			            const answerEl = document.createElement('div');
+			            answerEl.className = 'answer-option';
+			            answerEl.innerHTML = `
+			                <input type="checkbox" class="answer-checkbox" ${a.isCorrect ? 'checked' : ''}>
+			                <input type="text" class="answer-input" value="${a.content}" placeholder="Nhập câu trả lời">
+			                <button class="delete-answer">🗑️</button>
+			            `;
+			            answersContainer.appendChild(answerEl);
+			
+			            // Gắn sự kiện xóa
+			            answerEl.querySelector('.delete-answer').addEventListener('click', function () {
+			                answerEl.remove();
+			            });
+			        });
+			    });
+			}
+    
+    function openEditLessonModal(description, title, videoUrl, isFreeLesson ) {
+		  const modal = document.getElementById('lesson');
+		  const descriptionInput = modal.querySelector('textarea[name="description"]');
+  		  const titleInput = modal.querySelector('input[name="sectionTitle"]');
+ 		  const videoInput = modal.querySelector('input[name="videoUrl"]');
+ 		  const freeLessonCheckbox = document.getElementById('freeTrialCheckbox');
+		  
+		  if (titleInput && descriptionInput && videoInput && freeLessonCheckbox) {
+		    descriptionInput.value = description;
+		    titleInput.value = title;
+		    videoInput.value = videoUrl;
+		    freeLessonCheckbox.checked = isFreeLesson === true || isFreeLesson === "true";
+		  }
+		  lessonDetailModal.classList.add('show');
+		}
+    
+    setupExistingLessonControls();
+    
+    // Gắn sự kiện cho tất cả các nút "Bài học mới"
+    const newLessonButtons = document.querySelectorAll('.lesson-button');
+    newLessonButtons.forEach(button => {
+        if (button.textContent === 'Bài học mới') {
+            button.addEventListener('click', function() {
+                const sectionElement = this.closest('.course-section');
+                openLessonDetailModal(sectionElement);
+            });
+        } else if (button.textContent === 'Bài trắc nghiệm') {
+            button.addEventListener('click', function() {
+                if (quizModal) {
+					const titleInput = document.querySelector('#quiz .form-input[placeholder="Nhập tiêu đề"]');
+				    const descInput = document.querySelector('#quiz .form-input[placeholder="Nhập mô tả"]');
+				    const durationInput = document.querySelector('#quiz .quiz-duration');
+				    
+				    if (titleInput) titleInput.value = '';
+				    if (descInput) descInput.value = '';
+				    if (durationInput) durationInput.value = 0;
+				
+				    quizModal.removeAttribute('data-quiz-id');
+				
+				    // Xoá toàn bộ câu hỏi cũ
+				    document.querySelectorAll('.question-container').forEach(q => q.remove());
+                    quizModal.classList.add('show');
                 }
             });
         }
-        
-        // Thêm event listener cho modal bài học (lesson)
-        lessonButtons.forEach(button => {
-            if (button.textContent === 'Bài học mới') {
-                button.addEventListener('click', function() {
-                    // Tìm phần học (course-section) chứa nút này
-                    const section = this.closest('.course-section');
-                    openLessonDetailModal(section);
-                });
-            }
-        });
-        
-     	// Thêm event listener cho các nút "Bài trắc nghiệm"
-        const quizButtons = document.querySelectorAll('.lesson-button');
-        quizButtons.forEach(button => {
-            if (button.textContent === 'Bài trắc nghiệm') {
-                button.addEventListener('click', function() {
-                    const section = this.closest('.course-section');
-                    openQuizModal(section);
-                });
-            }
-        });
-        
-     	// Thêm event listeners cho đóng modal quiz
-        if (closeQuizModalBtn) {
-            closeQuizModalBtn.addEventListener('click', closeQuizModal);
-        }
-        
-        if (cancelQuizModalBtn) {
-            cancelQuizModalBtn.addEventListener('click', closeQuizModal);
-        }
-        
-        if (quizModal) {
-            quizModal.addEventListener('click', function(e) {
-                if (e.target === quizModal) {
-                    closeQuizModal();
-                }
-            });
-        }
-        
-        if (closeDetailModalBtn) {
-            closeDetailModalBtn.addEventListener('click', closeLessonDetailModal);
-        }
-        
-        if (cancelDetailModalBtn) {
-            cancelDetailModalBtn.addEventListener('click', closeLessonDetailModal);
-        }
-        
-        if (lessonDetailModal) {
-            lessonDetailModal.addEventListener('click', function(e) {
-                if (e.target === lessonDetailModal) {
-                    closeLessonDetailModal();
-                }
-            });
-        }
-        if (addQuestionBtn && modalBody) {
+    });
+	
+	if (addQuestionBtn && modalBody) {
             addQuestionBtn.addEventListener('click', function() {
                 // Tạo phần tử câu hỏi mới
                 const newQuestion = document.createElement('div');
@@ -230,14 +505,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
-        
-        
-        // Xử lý nút lưu cho modal phần học
+    // Xử lý nút lưu cho modal phần học
         if (saveBtn && lessonModal) {
 			console.log('editingSectionElement:', editingSectionElement);
             saveBtn.addEventListener('click', function () {
 			  const sectionTitle = document.querySelector('#lessonModal .form-input[type="text"]').value.trim();
-			
+				
 			  if (sectionTitle) {
 			    if (editingSectionElement) {
 			      // Cập nhật UI
@@ -306,16 +579,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			  }
 			});
         }
-        function openEditSectionModal(title) {
-		  const modal = document.getElementById('lessonModal');
-		  const titleInput = modal.querySelector('#sectionTitle');
-		  
-		  if (titleInput) {
-		    titleInput.value = title;
-		  }
-		  lessonModal.classList.add('show');
-		}
-        function addSectionToUI(sectionTitle, sectionId) {
+	function addSectionToUI(sectionTitle, sectionId) {
 		    const sectionNumber = document.querySelectorAll('.course-section').length + 1;
 		    const newSection = document.createElement('div');
 		    newSection.className = 'course-section';
@@ -409,10 +673,11 @@ document.addEventListener('DOMContentLoaded', function() {
 						});
 				});
 			}
-		}
-
-        // Xử lý nút lưu cho modal bài học
-        if (saveDetailBtn && lessonDetailModal) {
+		}	
+    
+	
+	// Xử lý nút lưu cho modal bài học
+    if (saveDetailBtn && lessonDetailModal) {
 		    saveDetailBtn.addEventListener('click', function () {
 		        const title = document.querySelector('#lesson .form-input[placeholder="Nhập tiêu đề"]').value.trim();
 		        const description = document.querySelector('#lesson textarea.form-input').value.trim();
@@ -421,6 +686,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				
 				const existingItems = currentSection.querySelectorAll('.lesson-item').length - 1;
 		        const itemNumber = existingItems + 1;
+		        
+		        const editLessonButtons = document.querySelectorAll('.lesson-button');
+		        editLessonButtons.forEach(button => {
+		            button.addEventListener('click', function() {
+		                const lessonId = this.getAttribute('data-id');
+		                if (!lessonId) {
+		                    console.error("Missing lessonId on edit button");
+		                    return;
+		                }
+		                console.log("id lesson: " + lessonId)
+		            });
+		        });
 		        
 		        console.log("editingLessonElement = ", editingLessonElement);
 		        if (title && currentSection) {
@@ -586,24 +863,25 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 		    });
 		}
-		function openEditLessonModal(description, title, videoUrl, isFreeLesson ) {
-		  const modal = document.getElementById('lesson');
-		  const descriptionInput = modal.querySelector('textarea[name="description"]');
-  		  const titleInput = modal.querySelector('input[name="sectionTitle"]');
- 		  const videoInput = modal.querySelector('input[name="videoUrl"]');
- 		  const freeLessonCheckbox = document.getElementById('freeTrialCheckbox');
-		  
-		  if (titleInput && descriptionInput && videoInput && freeLessonCheckbox) {
-		    descriptionInput.value = description;
-		    titleInput.value = title;
-		    videoInput.value = videoUrl;
-		    freeLessonCheckbox.checked = isFreeLesson === true || isFreeLesson === "true";
-		  }
-		  lessonDetailModal.classList.add('show');
-		}
-
+		
+		// Hàm mở modal chỉnh sửa lesson
+    function openEditLessonModal(description, title, videoUrl, isFreeLesson) {
+        const modal = document.getElementById('lesson');
+        const descriptionInput = modal.querySelector('textarea[name="description"]');
+        const titleInput = modal.querySelector('input[name="sectionTitle"]');
+        const videoInput = modal.querySelector('input[name="videoUrl"]');
+        const freeLessonCheckbox = document.getElementById('freeTrialCheckbox');
         
-        // Bắt sự kiện cho các nút được thêm vào DOM sau này
+        if (titleInput && descriptionInput && videoInput && freeLessonCheckbox) {
+            descriptionInput.value = description || '';
+            titleInput.value = title || '';
+            videoInput.value = videoUrl || '';
+            freeLessonCheckbox.checked = isFreeLesson === true || isFreeLesson === "true";
+        }
+        lessonDetailModal.classList.add('show');
+    }
+    
+    // Bắt sự kiện cho các nút được thêm vào DOM sau này
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('lesson-button') && e.target.textContent === 'Bài học mới') {
                 const section = e.target.closest('.course-section');
@@ -612,8 +890,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-        
-     	// Xử lý nút lưu cho modal quiz
+    
+    // Xử lý nút lưu cho modal quiz
+       // Xử lý nút lưu cho modal quiz
         if (saveQuizBtn && quizModal) {
             saveQuizBtn.addEventListener('click', function() {
 				const quizId = quizModal.getAttribute('data-quiz-id');
@@ -856,7 +1135,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			        });
 			    });
 			}
-     	// Bắt sự kiện cho các nút "Bài trắc nghiệm" được thêm vào DOM sau này
+			
+	// Bắt sự kiện cho các nút "Bài trắc nghiệm" được thêm vào DOM sau này
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('lesson-button') && e.target.textContent === 'Bài trắc nghiệm') {
                 const section = e.target.closest('.course-section');
@@ -887,5 +1167,50 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             };
-        }
+        }		
+    // Đóng các modal khác
+    const allCloseButtons = document.querySelectorAll('.close-button');
+    const allCancelButtons = document.querySelectorAll('.btn-cancel');
+
+    allCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        });
     });
+
+    allCancelButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        });
+    });
+
+    // Xử lý checkbox học thử
+    const freeTrialCheckboxes = document.querySelectorAll('.free-lesson-checkbox');
+    freeTrialCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const lessonElement = this.closest('.section-header');
+            const lessonId = lessonElement.querySelector('.action-icon').getAttribute('data-id');
+            
+            if (lessonId) {
+                fetch('/utedemyProject/teacher/updateLessonFreeTrial', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `lessonId=${lessonId}&isFreeLesson=${this.checked}`
+                })
+                .catch(error => {
+                    console.error("Lỗi khi cập nhật trạng thái học thử:", error);
+                    // Khôi phục trạng thái checkbox nếu có lỗi
+                    this.checked = !this.checked;
+                });
+            }
+        });
+    });
+});

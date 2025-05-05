@@ -63,8 +63,8 @@ public class PayPalCallbackController extends HttpServlet{
 						System.out.println("that bai");
 					}
 					
-
-				    resp.sendRedirect("/utedemyProject/user/homepage");
+					session.setAttribute("order_state", "success");
+				    resp.sendRedirect("/utedemyProject/user/viewcheckout");
 				    
 
 	            } else {

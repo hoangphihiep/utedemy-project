@@ -76,5 +76,9 @@ public class DiscountService implements IDiscountService{
 	public boolean update(Discount discount) {
 		return discountDao.update(discount);
 	}
+	@Override
+	public boolean isDiscountApplicableForCourse(int courseId, int discountId) {
+		return discountDao.isDiscountApplicableForCourse(courseId, discountId);
+	}
 
 }

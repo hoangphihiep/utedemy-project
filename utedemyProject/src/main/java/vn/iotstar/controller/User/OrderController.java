@@ -1,12 +1,18 @@
 package vn.iotstar.controller.User;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.google.gson.Gson;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,7 +35,7 @@ import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IDiscountService;
 import vn.iotstar.service.IOrderService;
 
-@WebServlet(urlPatterns = {"/user/viewcheckout","/process-payment"})
+@WebServlet(urlPatterns = {"/user/viewcheckout","/process-payment","/cancel-order"})
 public class OrderController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -169,6 +175,35 @@ public class OrderController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
+		String url = req.getRequestURI();
+		if (url.contains("cancel-order")) {
+		    String orderIdParam = req.getParameter("orderId");
+		    resp.setContentType("application/json");
+		    resp.setCharacterEncoding("UTF-8");
+
+		    Map<String, Object> jsonResponse = new HashMap<>();
+
+		    try {
+		        boolean checkStatus = order_service.updateOrderStatus(Integer.parseInt(orderIdParam), "CANCELED");
+
+		        if (checkStatus) {
+		            jsonResponse.put("success", true);
+		        } else {
+		            jsonResponse.put("success", false);
+		            jsonResponse.put("message", "Không thể hủy đơn hàng, có thể đơn đã được xử lý.");
+		        }
+
+		    } catch (NumberFormatException e) {
+		        jsonResponse.put("success", false);
+		        jsonResponse.put("message", "Order ID không hợp lệ.");
+		    }
+
+		    PrintWriter out = resp.getWriter();
+		    out.print(new Gson().toJson(jsonResponse));
+		    out.flush();
+		    return;
+		}
+
 		HttpSession session = req.getSession();
 		String[] orderItemIds = req.getParameterValues("orderItemIds");
 		String[] finishedFees = req.getParameterValues("finishedFees");

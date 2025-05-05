@@ -12,9 +12,9 @@
 <body>
 	<div class="header">
 		<div class="header-left">
-			<a href="#" class="back-button">&#9664;</a>
+			<a href="/utedemyProject/teacher/course" class="back-button">&#9664;</a>
 			<div class="header-title">Quay lại danh sách khóa học
-				&nbsp;|&nbsp; Thành Thạo Excel Từ Cơ Bản Đến Nâng Cao</div>
+				&nbsp;|&nbsp; ${course.courseName}</div>
 		</div>
 		<div class="header-status">
 			<c:choose>
@@ -53,7 +53,9 @@
 						sách bài học</span>
 				</a>
 			</div>
-			<button class="submit-button">Gửi duyệt</button>
+			<a href="<c:url value='/teacher/submitReviewCourse?id=${course.id}'/>"
+				class="submit-button" style="display: inline-block; text-decoration: none;">
+				Gửi duyệt </a>
 		</div>
 		<div class="main-content">
 			<sitemesh:write property="body" />
@@ -120,6 +122,14 @@
 		        
 		        sendDataToServer('/utedemyProject/teacher/updateTarget', targetData);
 		    }
+			if (currentPath.includes('/teacher/edit')) {
+				  
+				  // Log data for debugging (note: can't easily log FormData contents)
+				  console.log("Form data created with all fields including possible file upload");
+				  
+				  // Send FormData to server (need to modify the sendDataToServer function)
+				  sendDataToServer('/utedemyProject/teacher/add');
+			}
 		}
 		
 	

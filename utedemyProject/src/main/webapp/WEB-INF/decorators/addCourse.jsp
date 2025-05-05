@@ -34,7 +34,6 @@
 					<span>Không xác định</span>
 				</c:otherwise>
 			</c:choose>
-			
 			<button class="save-button">Lưu</button>
 		</div>
 	</div>
@@ -54,7 +53,9 @@
 						sách bài học</span>
 				</a>
 			</div>
-			<button class="submit-button">Gửi duyệt</button>
+			<a href="<c:url value='/teacher/submitReviewCourse?id=${course.id}'/>"
+				class="submit-button" style="display: inline-block; text-decoration: none;">
+				Gửi duyệt </a>
 		</div>
 		<div class="main-content">
 			<sitemesh:write property="body" />
@@ -121,34 +122,18 @@
 				  // Send FormData to server (need to modify the sendDataToServer function)
 				  sendDataToServer('/utedemyProject/teacher/adBasicInformation', formData);
 			}
-			// Nếu đang ở trang thông tin cơ bản khóa học
-			if (currentPath.includes('/teacher/editBasicInformation')) {
-				// Create FormData object to handle file uploads and form data together
-				  const formData = new FormData();
-				  
-				  // Add text fields to FormData
-				  formData.append("courseTitle", document.querySelector('input[name="courseTitle"]').value);
-				  formData.append("shortDescription", document.querySelector('textarea.form-input').value);
-				  formData.append("courseTypeId", document.querySelector('select[name="courseTypeId"]').value);
-				  formData.append("coursePrice", document.querySelector('input[name="courseName"]').value);
-				  formData.append("courseIntroduction", CKEDITOR.instances.courseIntroduction.getData());
-				  formData.append("videoLink", document.querySelector('.video-upload-container .form-input').value || "");
-				  
-				  // Get the file input and append file if one was selected
-				  const fileInput = document.getElementById('imageUpload');
-				  if (fileInput.files.length > 0) {
-					  formData.append("courseImage", fileInput.files[0]);
-					}
+		 	
+			if (currentPath.includes('/teacher/add')) {
 				  
 				  // Log data for debugging (note: can't easily log FormData contents)
 				  console.log("Form data created with all fields including possible file upload");
 				  
 				  // Send FormData to server (need to modify the sendDataToServer function)
-				  sendDataToServer('/utedemyProject/teacher/updateBasicInformation', formData);
+				  sendDataToServer('/utedemyProject/teacher/add');
 			}
+			
 		}
 		
-	
 		function sendDataToServer(url, data) {
 			  // Tạo request
 			  const xhr = new XMLHttpRequest();
@@ -174,7 +159,7 @@
 				                // Ở lại trang
 				            } else {
 				                // Chuyển về trang chủ
-				                window.location.href = "/utedemyProject/teacher/homePage";
+				                window.location.href = "/utedemyProject/teacher/course";
 				            }
 				        });
 				    } else {
@@ -200,6 +185,7 @@
 				Swal.showLoading();
 			    xhr.send(data);
 			  } else {
+				Swal.showLoading();
 			    xhr.send(JSON.stringify(data));
 			  }
 			}

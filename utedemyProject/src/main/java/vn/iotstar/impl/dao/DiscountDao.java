@@ -350,5 +350,23 @@ public class DiscountDao implements IDiscountDao{
 		        em.close();
 		    }
 		}
+	    @Override
+	    public boolean isDiscountApplicableForCourse(int courseId, int discountId) {
+	        EntityManager em = JPAConfig.getEntityManager();
+	        try {
+	            String sql = "SELECT COUNT(*) FROM discount_course WHERE course_id = :courseId AND discount_id = :discountId";
+	            Number count = (Number) em.createNativeQuery(sql)
+	                    .setParameter("courseId", courseId)
+	                    .setParameter("discountId", discountId)
+	                    .getSingleResult();
+	            return count.intValue() > 0;
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return false;
+	        } finally {
+	            //em.close();
+	        }
+	    }
+
 
 }

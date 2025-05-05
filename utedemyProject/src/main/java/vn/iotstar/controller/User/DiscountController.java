@@ -116,6 +116,14 @@ public class DiscountController  extends HttpServlet {
                 out.print(jsonResponse.toString());
                 return;
             }
+            //kiểm tra coi mã đó áp dụng đúng cho course không
+            if (!discount_service.isDiscountApplicableForCourse(targetItem.getCourse().getId(), discount.getId())) {
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Mã giảm giá không áp dụng cho khóa học này.");
+                out.print(jsonResponse.toString());
+                return;
+            }
+
             
             // Áp dụng mã giảm giá
             double originalPrice = targetItem.getCourse().getCoursePrice();
