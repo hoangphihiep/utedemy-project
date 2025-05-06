@@ -81,8 +81,6 @@ public interface ICourseDao {
 	
 	public List<Course> getAllCourses();
 
-	public List<OrderItem> getAllOrderItems();
-
 	public List<Lesson> getAllLessons();
 
 	public List<Course> filterCoursesByRatingAndCourse(List<OrderItem> orderItems, double ratingThreshold);

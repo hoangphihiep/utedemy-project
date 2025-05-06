@@ -1,5 +1,6 @@
 package vn.iotstar.dao;
 
+import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Orders;
 import java.util.List;
 
@@ -18,7 +19,9 @@ public interface IOrderDao {
 	boolean updateDiscountAndFinishedFee(int orderItemId, int discountId, double finishedFee);
 
 	boolean removeDiscountFromOrderItem(int orderItemId);
-	
+
 	List<Orders> getOrdersByUserId(int userId);
+
+	public List<OrderItem> getAllOrderItems();
 
 }

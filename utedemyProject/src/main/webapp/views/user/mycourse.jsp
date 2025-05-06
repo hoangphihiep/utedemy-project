@@ -68,7 +68,7 @@
 				<img src="${c.course.courseDetail.courseImage}" alt="Picture"
 					style="width: 200px; height: auto;">
 				<div class="content">
-					<h3>Tên giáo viên (tĩnh)</h3>
+					<h3>c.course.teacher.fullName</h3>
 					<c:if test="${not empty percentage}">
 						<div class="progress-circle">${percent}%</div>
 					</c:if>

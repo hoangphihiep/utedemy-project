@@ -1,6 +1,7 @@
 package vn.iotstar.impl.service;
 
 import vn.iotstar.dao.IOrderDao;
+import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Orders;
 import vn.iotstar.impl.dao.OrderDao;
 import java.util.List;
@@ -43,5 +44,9 @@ public class OrderService implements IOrderService {
     public List<Orders> getOrdersByUserId(int userId) {
         return orderDao.getOrdersByUserId(userId);
     }
-
+    @Override
+    public List<OrderItem> getAllOrderItems()
+    {
+    	return orderDao.getAllOrderItems();
+    }
 }

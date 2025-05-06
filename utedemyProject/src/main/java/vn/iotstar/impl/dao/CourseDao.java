@@ -756,22 +756,6 @@ public class CourseDao implements ICourseDao {
 		return Courses;
 	}
 	@Override
-	public List<OrderItem> getAllOrderItems() {
-		EntityManager em = JPAConfig.getEntityManager();
-		List<OrderItem> orderItems = new ArrayList<>();
-		try {
-			String sql = "SELECT o FROM OrderItem o";
-			orderItems = em.createQuery(sql, OrderItem.class).getResultList();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (em != null && em.isOpen()) {
-				em.close(); // Ensuring session is closed after use
-			}
-		}
-		return orderItems;
-	}
-	@Override
 	public List<Lesson> getAllLessons() {
 		EntityManager em = JPAConfig.getEntityManager();
 		List<Lesson> lessons = new ArrayList<>();

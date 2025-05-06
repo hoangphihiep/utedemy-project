@@ -107,31 +107,24 @@
 				</div>
 		</form>
 		<div class="course-list">
-			<c:forEach items="${CourseName}" var="i">
+			<c:forEach items="${CourseList}" var="i">
 				<div class="course-card">
-					<%-- 
-						<img src="/api/placeholder/240/150" alt="${i.course.courseName}"
-							class="course-image"> --%>
-
 					<div class="course-details">
 						<div>
-							<h3 class="course-title">${i.course.courseName}</h3>
-							<!-- Display instructor username -->
-							<p class="instructor">${i.order.user.fullname}</p>
+							<h3 class="course-title">${i.courseName}</h3>
+							<p class="instructor">${i.teacher.fullname}</p>
 							<c:set var="reviewCount" value="0" scope="page" />
 							<div class="rating">
-								<!-- Reset biến -->
 								<c:set var="sum" value="0" />
 								<c:set var="reviewCount" value="0" />
 
 								<!-- Lặp qua Review để tính tổng điểm và đếm số lượng -->
 								<c:forEach items="${Review}" var="r">
-									<c:if test="${r.course.id == i.course.id}">
+									<c:if test="${r.course.id == i.id}">
 										<c:set var="sum" value="${sum + r.rate}" />
 										<c:set var="reviewCount" value="${reviewCount + 1}" />
 									</c:if>
 								</c:forEach>
-
 								<!-- Kiểm tra nếu có review -->
 								<c:choose>
 									<c:when test="${reviewCount > 0}">
@@ -158,42 +151,15 @@
 								<!-- Hiển thị tổng số đánh giá -->
 								<span class="rating-count">(${reviewCount})</span>
 							</div>
-							<img
-								src="${pageContext.request.contextPath}/image/${i.course.courseDetail.courseImage}" />
-							<c:set var="v" value="0" />
-							<c:set var="prevSectionId" value="" />
-							<c:forEach var="lesson" items="${Lesson}">
-								<!-- Nếu đây là section mới (khác với trước đó) -->
-								<c:if
-									test="${not empty prevSectionId and lesson.section.id != prevSectionId}">
-									<!-- Nếu course.id khớp thì in ra -->
-									<c:if test="${lesson.section.course.id == c.course.id}">
-										<p>Số bài giảng: ${v}</p>
-									</c:if>
-									<!-- Reset lại v = 1 cho section mới -->
-									<c:set var="v" value="1" />
-								</c:if>
-
-								<!-- Nếu section id trùng (vẫn là section cũ) thì tăng v -->
-								<c:if test="${lesson.section.id == prevSectionId}">
-									<c:set var="v" value="${v + 1}" />
-								</c:if>
-
-								<!-- Nếu đây là lần đầu tiên (prevSectionId rỗng), khởi tạo v = 1 -->
-								<c:if test="${empty prevSectionId}">
-									<c:set var="v" value="1" />
-								</c:if>
-
+							<img src="${i.courseDetail.courseImage}" alt="Picture"
+								style="width: 200px; height: auto;">
 								<!-- Cập nhật prevSectionId -->
-								<c:set var="prevSectionId" value="${lesson.section.id}" />
-							</c:forEach>
 						</div>
 					</div>
 
 					<div class="price-container">
 						<!-- Display course price and original price -->
-						<span class="price">${i.course.coursePrice}</span> <span
-							class="original-price">${i.finishedFee}</span>
+						<span class="price">${i.coursePrice}</span> 
 					</div>
 				</div>
 			</c:forEach>

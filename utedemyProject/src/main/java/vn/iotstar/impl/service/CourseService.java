@@ -168,11 +168,6 @@ public class CourseService implements ICourseService {
 		return courseDao.getAllCourses();
 	}
 	@Override
-	public List<OrderItem> getAllOrderItems()
-	{
-		return courseDao.getAllOrderItems();
-	}
-	@Override
 	public List<Lesson> getAllLessons() 
 	{
 		return courseDao.getAllLessons();
