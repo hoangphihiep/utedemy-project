@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import vn.iotstar.entity.*;
 import vn.iotstar.service.ICourseDetailService;
 import vn.iotstar.impl.service.CourseDetailService;
+import vn.iotstar.impl.service.FavoriteCourseService;
+import vn.iotstar.service.IFavoriteCourseService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,9 +24,11 @@ public class CourseDetailController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private ICourseDetailService courseDetailService;
+    private IFavoriteCourseService favoriteCourseService;
 
     public CourseDetailController() {
         this.courseDetailService = new CourseDetailService();
+        this.favoriteCourseService = new FavoriteCourseService();
     }
 
     @Override
@@ -45,8 +49,9 @@ public class CourseDetailController extends HttpServlet {
 
         // Lấy thông tin chi tiết khóa học từ Service
         CourseDetail courseDetail = courseDetailService.getCourseDetailById(courseId);
+        Course course = courseDetail != null ? courseDetail.getCourse() : null;
 
-        if (courseDetail != null) {
+        if (courseDetail != null && course != null) {
             // Đặt dữ liệu vào request để JSP sử dụng
             req.setAttribute("courseDetail", courseDetail);
 
@@ -87,29 +92,25 @@ public class CourseDetailController extends HttpServlet {
             req.setAttribute("learnerAchievements", learnerAchievements);
 
             // Lấy thông tin từ Course
-            Course course = courseDetail.getCourse();
             if (course != null) {
                 // Lấy danh sách Section
-            	Set<Section> sectionsSet = course.getSections();
+                Set<Section> sectionsSet = course.getSections();
                 List<Section> sections = new ArrayList<>(sectionsSet);
-                sections.sort(Comparator.comparingInt(Section::getId)); // Sắp xếp theo id tăng dần
-                
-                
-             // Sắp xếp Lessons và Quizs trong mỗi Section
+                sections.sort(Comparator.comparingInt(Section::getId));
+
+                // Sắp xếp Lessons và Quizs trong mỗi Section
                 for (Section section : sections) {
-                    // Sắp xếp Lessons theo numberItem
                     List<Lesson> lessons = new ArrayList<>(section.getLessons());
                     lessons.sort(Comparator.comparingInt(Lesson::getNumberItem));
-                    section.setLessons(new LinkedHashSet<>(lessons)); // Cập nhật lại lessons đã sắp xếp
+                    section.setLessons(new LinkedHashSet<>(lessons));
 
-                    // Sắp xếp Quizs theo id
                     List<Quiz> quizs = new ArrayList<>(section.getQuizs());
                     quizs.sort(Comparator.comparingInt(Quiz::getId));
-                    section.setQuizs(new LinkedHashSet<>(quizs)); // Cập nhật lại quizs đã sắp xếp
+                    section.setQuizs(new LinkedHashSet<>(quizs));
                 }
                 req.setAttribute("sections", sections);
-                
-             // Lấy thông tin Teacher
+
+                // Lấy thông tin Teacher
                 Teacher teacher = course.getTeacher();
                 if (teacher != null) {
                     req.setAttribute("teacher", teacher);
@@ -125,7 +126,6 @@ public class CourseDetailController extends HttpServlet {
                     req.setAttribute("teacherSocialUrl", teacher.getSocialUrl() != null 
                         ? teacher.getSocialUrl() 
                         : "#");
-                    // Thêm các trường address, email, phoneNumber
                     req.setAttribute("teacherAddress", teacher.getAddress() != null 
                         ? teacher.getAddress() 
                         : "Không có thông tin");
@@ -141,13 +141,9 @@ public class CourseDetailController extends HttpServlet {
 
                 // Lấy thông tin CourseType
                 CourseType courseType = course.getCourseType();
-                if (courseType != null) {
-                    req.setAttribute("courseTypeName", courseType.getCourseTypeName() != null 
-                        ? courseType.getCourseTypeName() 
-                        : "Tài Chính Kế Toán");
-                } else {
-                    req.setAttribute("courseTypeName", "Tài Chính Kế Toán");
-                }
+                req.setAttribute("courseTypeName", courseType != null && courseType.getCourseTypeName() != null 
+                    ? courseType.getCourseTypeName() 
+                    : "Tài Chính Kế Toán");
 
                 // Lấy thông tin Course (tên khóa học, giá)
                 req.setAttribute("courseName", course.getCourseName() != null 
@@ -156,9 +152,9 @@ public class CourseDetailController extends HttpServlet {
 
                 // Tính giá hiện tại và giá gốc
                 double coursePrice = course.getCoursePrice();
-                double originalPrice = coursePrice * 1.5; // Giá gốc hiển thị (nhân 1.5)
-                double currentPrice = coursePrice; // Giá hiện tại
-                double discountPercentage = 33; // Giảm 33%
+                double originalPrice = coursePrice * 1.5;
+                double currentPrice = coursePrice;
+                double discountPercentage = 33;
 
                 req.setAttribute("currentPrice", currentPrice);
                 req.setAttribute("originalPrice", originalPrice);
@@ -166,10 +162,14 @@ public class CourseDetailController extends HttpServlet {
 
                 // Lấy danh sách Review
                 Set<Review> reviews = course.getReview();
-                if (reviews != null && !reviews.isEmpty()) {
-                    req.setAttribute("reviews", reviews);
-                } else {
-                    req.setAttribute("reviews", null);
+                req.setAttribute("reviews", reviews != null && !reviews.isEmpty() ? reviews : null);
+
+                // Kiểm tra trạng thái yêu thích
+                User user = (User) req.getSession().getAttribute("account");
+                System.out.println("Session user: " + (user != null ? user.getId() : "null")); // Thêm log
+                if (user != null && course != null) {
+                    boolean isFavorite = favoriteCourseService.isCourseInFavorite(user, course);
+                    req.setAttribute("isFavorite", isFavorite);
                 }
             } else {
                 setDefaultCourseAttributes(req);
@@ -186,7 +186,6 @@ public class CourseDetailController extends HttpServlet {
         req.setAttribute("teacherAvatar", "/api/placeholder/100/100");
         req.setAttribute("teacherDescription", "Nơi huấn luyện kế toán thực tế chất lượng, uy tín, tận tâm, trách nhiệm và chuyên nghiệp");
         req.setAttribute("teacherSocialUrl", "#");
-        // Đặt giá trị mặc định cho address, email, phoneNumber
         req.setAttribute("teacherAddress", "Không có thông tin");
         req.setAttribute("teacherEmail", "Không có thông tin");
         req.setAttribute("teacherPhoneNumber", "Không có thông tin");
@@ -217,4 +216,5 @@ public class CourseDetailController extends HttpServlet {
         req.setAttribute("reviews", null);
         req.setAttribute("sections", null);
     }
+    
 }

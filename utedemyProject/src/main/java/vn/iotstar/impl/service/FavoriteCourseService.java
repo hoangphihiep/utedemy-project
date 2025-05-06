@@ -9,26 +9,29 @@ import vn.iotstar.service.IFavoriteCourseService;
 
 public class FavoriteCourseService implements IFavoriteCourseService {
 
-	public IFavoriteCourseDao favoriteCourseDao = new FavoriteCourseDao();
-	@Override
-	public FavoriteCourse findByIdUser(int idUser) {
-		return favoriteCourseDao.findByIdUser(idUser);
-	}
+    public IFavoriteCourseDao favoriteCourseDao = new FavoriteCourseDao();
 
-	@Override
-	public boolean addCourseToFavorite(User user, Course course) {
-		return favoriteCourseDao.addCourseToFavorite(user, course);
-	}
+    @Override
+    public FavoriteCourse findByIdUser(int idUser) {
+        return favoriteCourseDao.findByIdUser(idUser);
+    }
 
-	@Override
-	public boolean removeCourseFromFavorite(User user, Course course) {
-		return favoriteCourseDao.removeCourseFromFavorite(user, course);
-	}
+    @Override
+    public boolean addCourseToFavorite(User user, Course course) {
+        return favoriteCourseDao.addCourseToFavorite(user, course);
+    }
 
-	@Override
-	public boolean isCourseInFavorite(User user, Course course) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean removeCourseFromFavorite(User user, Course course) {
+        return favoriteCourseDao.removeCourseFromFavorite(user, course);
+    }
 
+    @Override
+    public boolean isCourseInFavorite(User user, Course course) {
+        if (user == null || course == null) {
+            return false;
+        }
+        FavoriteCourse favoriteCourse = findByIdUser(user.getId());
+        return favoriteCourse != null && favoriteCourse.getCourses().contains(course);
+    }
 }
