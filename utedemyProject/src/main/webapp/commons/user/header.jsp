@@ -37,10 +37,7 @@
         <img src="${imgUrl_avt}" alt="User Avatar" class="avatar-img" id="avatarDropdown">
         
         <div class="dropdown-content" id="userDropdown">
-         <a href="/utedemyProject/user/Course">Vào học</a>
-			<span>🤍</span>
-			<spann>🛒</span> <img src="avatar.jpg" alt="Avatar"
-				style="width: 30px; height: 30px; border-radius: 50%;">
+         <a href="/utedemyProject/user/mycourse">Vào học</a>
           <a href="/member">Hội viên</a>
           <a href="/activate-course">Kích hoạt khóa học</a>
           <a href="/business">Doanh nghiệp</a>

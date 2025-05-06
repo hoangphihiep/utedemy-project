@@ -23,32 +23,27 @@ public class MyCourseController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/user/homepage.jsp").forward(req, resp);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-//		HttpSession session = req.getSession();
-//		Integer userId = (Integer) session.getAttribute("userId");
-		int userId = 1; // Test
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute("account");
 		List<OrderItem> courseList = new ArrayList<>();
 		List<OrderItem> ItemList = orderService.getAllOrderItems();
 		List<CourseProgress> progress = c.getAllCourseProgress();
 
 		for (OrderItem o : ItemList) {
 			for (CourseProgress g : progress) {
-				if (o.getOrder().getUser().getId() == userId) {
+				if (o.getOrder().getUser().getId() == user.getId()) {
 					courseList.add(o);
 				}
-				if (g.getCourse().getId() == o.getCourse().getId() && g.getUser().getId() == userId) {
+				if (g.getCourse().getId() == o.getCourse().getId() && g.getUser().getId() == user.getId()) {
 					req.setAttribute("percent", g.getProgressPercentage());
 				}
 			}
 		}
 
 		req.setAttribute("myCourseList", courseList);
+		req.setAttribute("fullname", user.getFullname());
 		req.getRequestDispatcher("/views/user/mycourse.jsp").forward(req, resp);
 	}
 }

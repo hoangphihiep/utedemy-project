@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 <nav class="nav-menu">
 <ul>
-<li data-path="Course"><a href="/utedemyProject/user/Course" style="display: inline-block; text-decoration: none; color: white">Khóa học</a></li>
+<li data-path="mycourse"><a href="/utedemyProject/user/mycourse" style="display: inline-block; text-decoration: none; color: white">Khóa học</a></li>
 <li data-path="favoriteCourse"><a href="/utedemyProject/user/favoriteCourse" style="display: inline-block; text-decoration: none; color: white"">Yêu thích</a></li>
 <li data-path="courseBookingHistory"><a href="/utedemyProject/user/courseBookingHistory" style="display: inline-block; text-decoration: none; color: white"">Lịch sử đặt hàng</a></li>
 </ul>
