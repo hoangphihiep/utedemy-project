@@ -2,6 +2,7 @@ package vn.iotstar.dao;
 
 import vn.iotstar.entity.Orders;
 import java.util.List;
+import vn.iotstar.entity.OrderItem;
 
 public interface IOrderDao {
 
@@ -20,5 +21,7 @@ public interface IOrderDao {
 	boolean removeDiscountFromOrderItem(int orderItemId);
 	
 	List<Orders> getOrdersByUserId(int userId);
+	
+	public List<OrderItem> getAllOrderItems();
 
 }

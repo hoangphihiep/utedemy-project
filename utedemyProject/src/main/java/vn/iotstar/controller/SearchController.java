@@ -21,9 +21,8 @@ import vn.iotstar.entity.*;
 public class SearchController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private ICourseService courseService = new CourseService(); // Tạo đối tượng service để gọi
-	private IReviewService reviewService = new ReviewService(); // Tạo đối tượng service để gọi
-	private IUserService userService = new UserService(); // Tạo đối tượng service để gọi
+	private ICourseService courseService = new CourseService();
+	private IReviewService reviewService = new ReviewService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,47 +34,25 @@ public class SearchController extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 
-		String keyWord = req.getParameter("keyword"); 
+		String keyWord = req.getParameter("keyword");
 		HttpSession session = req.getSession();
 		session.setAttribute("keyWord", keyWord);
-//		req.getRequestDispatcher("/views/user/filtercourse.jsp").forward(req, resp);
-		List<OrderItem> orderItems = courseService.getAllOrderItems();
-		List<User> users = userService.getAllUsers();
 		List<Review> reviews = reviewService.getAllReviews();
-		List<Lesson> lessons = courseService.getAllLessons();
-		List<OrderItem> courseList = new ArrayList<>();
-
+		List<Course> courseList = new ArrayList<>();
+		List<Course> courses = courseService.getAllCourses();
 		int i = 0;
-//		for (Course course : courses) {
-//			if (course.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
-//				matchedCourses.add(course);
-//				i++;
-//				a = course.getId();
-		for (OrderItem o : orderItems) {
-			for (User u : users) {
-				if (o.getCourse().getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
-					if (o.getOrder().getUser().getId() == u.getId()) {
-						System.out.println("Vo day");
-						courseList.add(o); // Add the course to the list
-						req.setAttribute("CourseName", courseList);
-						System.out.println("Ten khoa hoc: " + o.getCourse().getCourseName());
-						System.out.println("Ten giang vien khoa hoc: " + o.getOrder().getUser().getFullname());
-						i++;
-					}
-				}
+
+		for (Course c : courses) {
+			if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
+				courseList.add(c);
+				req.setAttribute("CourseList", courseList);
+				i++;
 			}
 		}
-		req.setAttribute("Lesson", lessons);
 		req.setAttribute("Review", reviews);
-		System.out.println("Toi day!");
-		for (Review r : reviews) {
-			System.out.println("So sao la: " + r.getRate());
-		}
-		req.setAttribute("User", users);
 		req.setAttribute("searchAmount", i);
 		req.setAttribute("keyWord", keyWord);
 
 		req.getRequestDispatcher("/views/user/searchcourse.jsp").forward(req, resp);
 	}
-
 }

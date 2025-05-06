@@ -30,8 +30,7 @@ public class LogoutController extends HttpServlet{
 	    	//khi logout xoa session
 	    	HttpSession session = req.getSession();
 			session.removeAttribute("account");
-			session.removeAttribute("activeAdmin");
-			session.removeAttribute("activeUser");
+			session.removeAttribute("id");
 
 	        // Xóa JWT , fb trong cookie
 	        Cookie[] cookies = req.getCookies();

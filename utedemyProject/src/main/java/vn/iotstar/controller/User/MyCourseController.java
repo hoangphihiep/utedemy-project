@@ -10,18 +10,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.iotstar.impl.service.CourseDetailService;
-import vn.iotstar.impl.service.CourseService;
-import vn.iotstar.impl.service.UserService;
-import vn.iotstar.service.ICourseService;
-import vn.iotstar.service.IUserService;
-import vn.iotstar.service.ICourseDetailService;
+import vn.iotstar.impl.service.*;
+import vn.iotstar.service.*;
 import vn.iotstar.entity.*;
 
 @WebServlet(urlPatterns = { "/user/mycourse" })
 public class MyCourseController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ICourseService courseService = new CourseService();
-	private IUserService userService = new UserService();
+	private IOrderService orderService = new OrderService();
+//	private IUserService userService = new UserService();
 	private ICourseDetailService c = new CourseDetailService();
 
 	@Override
@@ -36,12 +33,8 @@ public class MyCourseController extends HttpServlet {
 //		HttpSession session = req.getSession();
 //		Integer userId = (Integer) session.getAttribute("userId");
 		int userId = 1; // Test
-//		List<User> users = userService.getAllUsers();
-//		List<Course> courses = courseService.getCoursesByUserId(userId);
-		List<User> userList = userService.getUsersByRole(2);
-//		List<Course> myCourse = courseService.getCoursesByUserId(userId);
 		List<OrderItem> courseList = new ArrayList<>();
-		List<OrderItem> ItemList = courseService.getAllOrderItems();
+		List<OrderItem> ItemList = orderService.getAllOrderItems();
 		List<CourseProgress> progress = c.getAllCourseProgress();
 
 		for (OrderItem o : ItemList) {

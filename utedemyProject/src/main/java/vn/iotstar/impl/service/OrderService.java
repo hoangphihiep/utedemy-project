@@ -5,6 +5,7 @@ import vn.iotstar.entity.Orders;
 import vn.iotstar.impl.dao.OrderDao;
 import java.util.List;
 import vn.iotstar.service.IOrderService;
+import vn.iotstar.entity.OrderItem;
 
 public class OrderService implements IOrderService {
     IOrderDao orderDao = new OrderDao();
@@ -42,6 +43,11 @@ public class OrderService implements IOrderService {
     @Override
     public List<Orders> getOrdersByUserId(int userId) {
         return orderDao.getOrdersByUserId(userId);
+    }
+    @Override
+    public List<OrderItem> getAllOrderItems()
+    {
+    	return orderDao.getAllOrderItems();
     }
 
 }

@@ -13,6 +13,12 @@
    
 
     <main>
+    <form action="${pageContext.request.contextPath}/user/mycourse"
+			method="post" style="margin: 0;">
+			<button
+				style="background-color: #2d8cf0; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">
+				➔ Vào học</button>
+		</form>
     
         <section class="hero-banner-slider" aria-label="Course Promotions">
             <div class="slider-container">

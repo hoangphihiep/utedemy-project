@@ -28,11 +28,9 @@ public class FilterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ICourseService courseService = new CourseService(); // Sử dụng service (DAO thông qua service)
 	private IReviewService reviewService = new ReviewService(); // Tạo đối tượng service để gọi
-	private IUserService userService = new UserService(); // Tạo đối tượng service để gọi
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// Chuyển tiếp đến trang homepage hoặc trang lọc khóa học ban đầu
 		req.getRequestDispatcher("/views/user/searchcourse.jsp").forward(req, resp);
 	}
 
@@ -52,46 +50,43 @@ public class FilterController extends HttpServlet {
 				System.out.println("Rating không hợp lệ: " + ratingParam);
 			}
 		}
-		List<OrderItem> orderItems = courseService.getAllOrderItems();
-		List<User> users = userService.getAllUsers();
+//		List<OrderItem> orderItems = courseService.getAllOrderItems();
+		List<Course> courses = courseService.getAllCourses();
 		List<Review> reviews = reviewService.getAllReviews();
 		List<Lesson> lessons = courseService.getAllLessons();
-		List<OrderItem> courseList = new ArrayList<>();
+//		List<OrderItem> courseList = new ArrayList<>();
+		List<Course> courseList = new ArrayList<>();
+
 		int i = 0;
-		for (OrderItem o : orderItems) {
-			for (User u : users) {
-				if (o.getCourse().getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
-					if (o.getOrder().getUser().getId() == u.getId()) {
-						double sum = 0;
-						int reviewCount = 0;
-						for (Review r : reviews) {
-							if (r.getCourse().getId() == o.getCourse().getId()) {
-								sum += r.getRate();
-								reviewCount++;
-							}
-						}
-						double roundedRating = 0;
-						if (reviewCount > 0) {
-							double average = sum / reviewCount;
-							roundedRating = Math.round(average);
-						} else {
-							req.setAttribute("average" + o.getCourse().getCourseName(), 0);
-							req.setAttribute("reviewCount" + o.getCourse().getCourseName(), 0);
-						}
-						if (roundedRating >= ratingStr) {
-							courseList.add(o); 
-							i++;
-							System.out.println("Ten khoa hoc: " + o.getCourse().getCourseName());
-							System.out.println("Ten giang vien khoa hoc: " + o.getOrder().getUser().getFullname());
-						}
+		for (Course c : courses) {
+			if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
+				double sum = 0;
+				int reviewCount = 0;
+				for (Review r : reviews) {
+					if (r.getCourse().getId() == c.getId()) {
+						sum += r.getRate();
+						reviewCount++;
 					}
+				}
+				double roundedRating = 0;
+				if (reviewCount > 0) {
+					double average = sum / reviewCount;
+					roundedRating = Math.round(average);
+				} else {
+					req.setAttribute("average" + c.getCourseName(), 0);
+					req.setAttribute("reviewCount" + c.getCourseName(), 0);
+				}
+				if (roundedRating >= ratingStr) {
+					courseList.add(c);
+					i++;
+					System.out.println("Ten khoa hoc: " + c.getCourseName());
+					System.out.println("Ten giang vien khoa hoc: " + c.getTeacher().getFullname());
 				}
 			}
 		}
 		req.setAttribute("CourseList", courseList);
 		req.setAttribute("Lesson", lessons);
 		req.setAttribute("Review", reviews);
-		req.setAttribute("User", users);
 		req.setAttribute("searchAmount", i);
 		req.setAttribute("keyWord", keyWord);
 		req.getRequestDispatcher("/views/user/filtercourse.jsp").forward(req, resp);

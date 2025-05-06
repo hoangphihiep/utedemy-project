@@ -11,6 +11,7 @@ import vn.iotstar.entity.OrderItem;
 import jakarta.persistence.TypedQuery;
 import vn.iotstar.entity.Orders;
 import vn.iotstar.entity.*;
+import java.util.ArrayList;
 
 public class OrderDao implements IOrderDao{
 	  @Override
@@ -202,6 +203,22 @@ public class OrderDao implements IOrderDao{
 	            return null;
 	        }
 	    }
+	  @Override
+		public List<OrderItem> getAllOrderItems() {
+			EntityManager em = JPAConfig.getEntityManager();
+			List<OrderItem> orderItems = new ArrayList<>();
+			try {
+				String sql = "SELECT o FROM OrderItem o";
+				orderItems = em.createQuery(sql, OrderItem.class).getResultList();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (em != null && em.isOpen()) {
+					em.close(); // Ensuring session is closed after use
+				}
+			}
+			return orderItems;
+		}
 
 
 
