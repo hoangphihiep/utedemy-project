@@ -116,9 +116,9 @@ public class UserService implements IUserService {
     	return userDao.getAllUsers();
     }
     @Override
-    public List<User> getUsersByRole(int roleId)
+    public List<User> getUsersByRole(Role role)
     {
-    	return userDao.getAllUsers();
+    	return userDao.getUsersByRole(role);
     }
 
 }

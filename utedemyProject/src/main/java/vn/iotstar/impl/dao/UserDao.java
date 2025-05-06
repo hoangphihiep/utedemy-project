@@ -221,13 +221,13 @@ public class UserDao implements IUserDao {
 		return users;
 	}
 	@Override
-	public List<User> getUsersByRole(int roleId) {
+	public List<User> getUsersByRole(Role role) {
 	    EntityManager em = emf.createEntityManager();
 	    List<User> teachers = null;
 	    try {
 	        TypedQuery<User> query = em.createQuery(
-	            "SELECT u FROM User u JOIN u.roles r WHERE r.id = :roleId", User.class);
-	        query.setParameter("roleId", roleId);
+	            "SELECT u FROM User u JOIN u.roles r WHERE r = :role", User.class);
+	        query.setParameter("role", role);
 	        teachers = query.getResultList();
 	    } finally {
 	        em.close();

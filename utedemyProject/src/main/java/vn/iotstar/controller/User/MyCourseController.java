@@ -38,7 +38,8 @@ public class MyCourseController extends HttpServlet {
 		int userId = 1; // Test
 //		List<User> users = userService.getAllUsers();
 //		List<Course> courses = courseService.getCoursesByUserId(userId);
-		List<User> userList = userService.getUsersByRole(2);
+//		Role role = roleRepository.findById(1L).orElse(null);
+//		List<User> users = userService.findUsersByRole(role);
 //		List<Course> myCourse = courseService.getCoursesByUserId(userId);
 		List<OrderItem> courseList = new ArrayList<>();
 		List<OrderItem> ItemList = courseService.getAllOrderItems();
