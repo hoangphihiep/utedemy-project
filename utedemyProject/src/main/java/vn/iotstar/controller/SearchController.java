@@ -42,13 +42,21 @@ public class SearchController extends HttpServlet {
 		List<Course> courses = courseService.getAllCourses();
 		int i = 0;
 
-		for (Course c : courses) {
-			if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
-				courseList.add(c);
-				req.setAttribute("CourseList", courseList);
-				i++;
+		// Check if keyword is empty or null
+		if (keyWord == null || keyWord.trim().isEmpty()) {
+			// If keyword is empty, add all courses
+			courseList.addAll(courses);
+		} else {
+			// If keyword is not empty, filter by name
+			for (Course c : courses) {
+				if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
+					courseList.add(c);
+					i++;
+				}
 			}
 		}
+
+		req.setAttribute("CourseList", courseList);
 		req.setAttribute("Review", reviews);
 		req.setAttribute("searchAmount", i);
 		req.setAttribute("keyWord", keyWord);
