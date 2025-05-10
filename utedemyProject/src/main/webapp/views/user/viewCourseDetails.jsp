@@ -406,7 +406,7 @@ function previewImage(event, previewId, placeholderId) {
 //Hàm xử lý nút "VÀO HỌC NGAY"
 function goToLearn(courseId) {
     // Chuyển hướng đến trang học (có thể tùy chỉnh URL)
-    window.location.href = '/utedemyProject/user/learn?courseId=' + courseId;
+    window.location.href = '/utedemyProject/views/user/Course.jsp';
 }
 
 // Hàm hiển thị popup

@@ -148,7 +148,6 @@ public class CourseDetailController extends HttpServlet {
                 req.setAttribute("courseTypeName", courseType != null && courseType.getCourseTypeName() != null 
                     ? courseType.getCourseTypeName() 
                     : "Tài Chính Kế Toán");
-
                 // Lấy thông tin Course (tên khóa học, giá)
                 req.setAttribute("courseName", course.getCourseName() != null 
                     ? course.getCourseName() 
