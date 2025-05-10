@@ -341,15 +341,22 @@
             
 
             <div class="action-buttons">
-                <button class="primary-button">MUA NGAY</button>
-                <button class="secondary-button">VÀO HỌC NGAY</button>
+            	<c:if test="${orderStatus!='Complete' }">
+                	<button class="primary-button" onclick="addToCart(${courseDetail.course.id})">THÊM VÀO GIỎ HÀNG</button>
+                </c:if>
+                <c:choose>
+                <c:when test="${orderStatus == 'Complete'}">
+                    <button class="secondary-button" onclick="goToLearn(${courseDetail.course.id})">VÀO HỌC NGAY</button>
+                </c:when>
+                <c:otherwise>
+                    <button class="secondary-button">MUA NGAY</button>
+                </c:otherwise>
+            </c:choose>
             </div>
 
-            <!-- Nút "Thích" với trạng thái động -->
-            
 
 			<div class="wishlist-button" id="wishlistButton" data-course-id="${courseDetail.course.id}" data-user-id="${sessionScope.account.id}">
-			    <span class="heart-icon" style="color: ${isFavorite ? 'red' : 'gray'}">❤️</span>
+			    <span class="fa p-3" style="color: ${isFavorite ? 'red' : 'gray'}">❤️</span>
 			</div>
 			
             <div class="course-features">
@@ -394,6 +401,12 @@ function previewImage(event, previewId, placeholderId) {
         };
         reader.readAsDataURL(file);
     }
+}
+
+//Hàm xử lý nút "VÀO HỌC NGAY"
+function goToLearn(courseId) {
+    // Chuyển hướng đến trang học (có thể tùy chỉnh URL)
+    window.location.href = '/utedemyProject/user/learn?courseId=' + courseId;
 }
 
 // Hàm hiển thị popup
@@ -480,4 +493,31 @@ document.getElementById('wishlistButton').addEventListener('click', function() {
     console.log('Sending data:', data);
     xhr.send(data);
 });
+
+function addToCart(courseId) {
+    const userId = ${sessionScope.account.id}; // Lấy userId từ session (giả sử đã có)
+    if (!userId) {
+        alert("Vui lòng đăng nhập để thêm vào giỏ hàng!");
+        return;
+    }
+
+    fetch('/utedemyProject/user/addcart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + encodeURIComponent(courseId)
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data === 'success') {
+            alert("Thêm vào giỏ hàng thành công!");
+            // Có thể cập nhật giao diện (ví dụ: tăng số lượng trong giỏ hàng)
+        } else {
+            alert("Thêm vào giỏ hàng thất bại!");
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 </script>

@@ -9,7 +9,9 @@ import vn.iotstar.entity.*;
 import vn.iotstar.service.ICourseDetailService;
 import vn.iotstar.impl.service.CourseDetailService;
 import vn.iotstar.impl.service.FavoriteCourseService;
+import vn.iotstar.impl.service.OrderService;
 import vn.iotstar.service.IFavoriteCourseService;
+import vn.iotstar.service.IOrderService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,10 +27,12 @@ public class CourseDetailController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ICourseDetailService courseDetailService;
     private IFavoriteCourseService favoriteCourseService;
+    private IOrderService orderService;
 
     public CourseDetailController() {
         this.courseDetailService = new CourseDetailService();
         this.favoriteCourseService = new FavoriteCourseService();
+        this.orderService = new OrderService();
     }
 
     @Override
@@ -166,10 +170,28 @@ public class CourseDetailController extends HttpServlet {
 
                 // Kiểm tra trạng thái yêu thích
                 User user = (User) req.getSession().getAttribute("account");
-                System.out.println("Session user: " + (user != null ? user.getId() : "null")); // Thêm log
+                System.out.println("Session user: " + (user != null ? user.getId() : "null"));
                 if (user != null && course != null) {
                     boolean isFavorite = favoriteCourseService.isCourseInFavorite(user, course);
                     req.setAttribute("isFavorite", isFavorite);
+                }
+
+                // Kiểm tra trạng thái đơn hàng
+                if (user != null) {
+                    int userId = user.getId();
+                    List<Orders> userOrders = orderService.getOrdersByUserId(userId);
+                    // Tạo một biến final để sử dụng trong lambda
+                    final int finalCourseId = courseId; // Biến này không thay đổi, thỏa mãn "effectively final"
+                    Orders completedOrder = userOrders.stream()
+                            .filter(o -> "Complete".equals(o.getOrderStatus()) && o.getOrderItems().stream()
+                                    .anyMatch(oi -> oi.getCourse().getId() == finalCourseId))
+                            .findFirst()
+                            .orElse(null);
+                    String orderStatus = (completedOrder != null) ? "Complete" : "PROCESSING";
+                    req.setAttribute("orderStatus", orderStatus);
+                    System.out.println("Order status for course " + courseId + ": " + orderStatus);
+                } else {
+                    req.setAttribute("orderStatus", "PROCESSING");
                 }
             } else {
                 setDefaultCourseAttributes(req);
@@ -215,6 +237,6 @@ public class CourseDetailController extends HttpServlet {
         req.setAttribute("discountPercentage", 33);
         req.setAttribute("reviews", null);
         req.setAttribute("sections", null);
+        req.setAttribute("orderStatus", "PROCESSING");
     }
-    
 }

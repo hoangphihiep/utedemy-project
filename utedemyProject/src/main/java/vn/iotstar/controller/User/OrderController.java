@@ -46,130 +46,145 @@ public class OrderController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		User user = (User) session.getAttribute("account");
+	    HttpSession session = req.getSession();
+	    User user = (User) session.getAttribute("account");
 
-		String url = req.getRequestURI();
-		if (url.contains("viewcheckout")) {
-		    String[] selectedCourseIds = req.getParameterValues("selectedCourses");
-		    if (selectedCourseIds == null || selectedCourseIds.length == 0) {
-		    	// Kiểm tra xem user đã có order PROCESSING chưa
-				   Orders order = order_service.findProcessingOrderByUserId(user.getId());
-				   System.out.println("Đã ở đây huhu");
+	    String url = req.getRequestURI();
+	    if (url.contains("viewcheckout")) {
+	        String[] selectedCourseIds = req.getParameterValues("selectedCourses");
+	        if (selectedCourseIds == null || selectedCourseIds.length == 0) {
+	            // Kiểm tra xem user đã có order PROCESSING chưa
+	            Orders order = order_service.findProcessingOrderByUserId(user.getId());
+	            System.out.println("Đã ở đây huhu");
 
-				   if (order == null) {
-				        // Chưa có, tạo mới
-				        order = new Orders();
-				        order.setOrderDate(new Date(System.currentTimeMillis()));
-				        order.setOrderStatus("PROCESSING");
-				        order.setUser(user);
-				        order.setOrderItems(new HashSet<>());
-				        System.out.println("nó bị null");
-				    }
-				   
-				   System.out.println("đã ở đây hrhr");
-				   
-				   Set<OrderItem> orderItems = order.getOrderItems();
-				   double subtotalAmount = 0.0;
+	            if (order == null) {
+	                // Chưa có, tạo mới
+	                order = new Orders();
+	                order.setOrderDate(new Date(System.currentTimeMillis()));
+	                order.setOrderStatus("PROCESSING");
+	                order.setUser(user);
+	                order.setOrderItems(new HashSet<>());
+	                System.out.println("nó bị null");
+	            }
+	            
+	            System.out.println("đã ở đây hrhr");
+	            
+	            Set<OrderItem> orderItems = order.getOrderItems();
+	            double subtotalAmount = 0.0;
 
-				   for (OrderItem item : orderItems) {
-				       double coursePrice = item.getCourse().getCoursePrice();
-				       double discountAmount = 0.0;
+	            for (OrderItem item : orderItems) {
+	                double coursePrice = item.getCourse().getCoursePrice();
+	                double discountAmount = 0.0;
 
-				       Discount discount = item.getDiscount();
-				       if (discount != null) {
-				           String type = discount.getType();
-				           double decreasedFee = Double.parseDouble(discount.getDecreasedFee());
+	                Discount discount = item.getDiscount();
+	                if (discount != null) {
+	                    String type = discount.getType();
+	                    double decreasedFee = Double.parseDouble(discount.getDecreasedFee());
 
-				           if ("PERCENTAGE".equalsIgnoreCase(type)) {
-				               discountAmount = coursePrice * (decreasedFee / 100);
-				           } else if ("AMOUNTMONEY".equalsIgnoreCase(type)) {
-				               discountAmount = decreasedFee;
-				           }
-				           
-				           // Đảm bảo giảm không vượt quá giá course
-				           discountAmount = Math.min(discountAmount, coursePrice);
-				       }
+	                    if ("PERCENTAGE".equalsIgnoreCase(type)) {
+	                        discountAmount = coursePrice * (decreasedFee / 100);
+	                    } else if ("AMOUNTMONEY".equalsIgnoreCase(type)) {
+	                        discountAmount = decreasedFee;
+	                    }
+	                    
+	                    // Đảm bảo giảm không vượt quá giá course
+	                    discountAmount = Math.min(discountAmount, coursePrice);
+	                }
 
-				       subtotalAmount += (coursePrice - discountAmount);
-				   }
+	                subtotalAmount += (coursePrice - discountAmount);
+	            }
 
-				   System.out.println("Tổng tiền sau giảm: " + subtotalAmount);
+	            System.out.println("Tổng tiền sau giảm: " + subtotalAmount);
 
-				    
-				    order.setOrderItems(orderItems);
-				    order_service.insertOrUpdateOrder(order);
-				    session.setAttribute("order", order);
-				    req.setAttribute("subtotalAmount", subtotalAmount);
-				    req.getRequestDispatcher("/views/user/checkout.jsp").forward(req, resp);
-		        return;
-		    }
-		   System.out.println("Đã ở đây hehe");
-		 // Kiểm tra xem user đã có order PROCESSING chưa
-		   Orders order = order_service.findProcessingOrderByUserId(user.getId());
-		   System.out.println("Đã ở đây huhu");
+	            order.setOrderItems(orderItems);
+	            order_service.insertOrUpdateOrder(order);
+	            session.setAttribute("order", order);
+	            req.setAttribute("subtotalAmount", subtotalAmount);
+	            req.getRequestDispatcher("/views/user/checkout.jsp").forward(req, resp);
+	            return;
+	        }
+	        System.out.println("Đã ở đây hehe");
+	        // Kiểm tra xem user đã có order PROCESSING chưa
+	        Orders order = order_service.findProcessingOrderByUserId(user.getId());
+	        System.out.println("Đã ở đây huhu");
 
-		   if (order == null) {
-		        // Chưa có, tạo mới
-		        order = new Orders();
-		        order.setOrderDate(new Date(System.currentTimeMillis()));
-		        order.setOrderStatus("PROCESSING");
-		        order.setUser(user);
-		        order.setOrderItems(new HashSet<>());
-		        System.out.println("nó bị null");
-		    }
-		   
-		   System.out.println("đã ở đây hrhr");
-		   Set<OrderItem> orderItems = order.getOrderItems();
-		    double subtotalAmount = 0.0;
+	        if (order == null) {
+	            // Chưa có, tạo mới
+	            order = new Orders();
+	            order.setOrderDate(new Date(System.currentTimeMillis()));
+	            order.setOrderStatus("PROCESSING");
+	            order.setUser(user);
+	            order.setOrderItems(new HashSet<>());
+	            System.out.println("nó bị null");
+	        }
+	        
+	        System.out.println("đã ở đây hrhr");
+	        Set<OrderItem> orderItems = order.getOrderItems();
+	        double subtotalAmount = 0.0;
 
-		    for (String courseIdStr : selectedCourseIds) {
-		        int courseId = Integer.parseInt(courseIdStr);
-		        System.out.println("mmm"+courseId);
-		        Course course = course_service.findByIdCourse(courseId);
-		        System.out.println("mmm11 "+course.getId());
+	        for (String courseIdStr : selectedCourseIds) {
+	            int courseId = Integer.parseInt(courseIdStr);
+	            System.out.println("mmm" + courseId);
+	            Course course = course_service.findByIdCourse(courseId);
+	            System.out.println("mmm11 " + course.getId());
 
-		        if (course != null) {
-		            System.out.println("courseisnull");
-		            // Kiểm tra xem order đã có course này chưa
-		            boolean exists = orderItems.stream()
-		                    .anyMatch(oi -> oi.getCourse().getId() == courseId);
+	            if (course != null) {
+	                System.out.println("courseisnull");
+	                // Kiểm tra xem order đã có course này chưa
+	                boolean exists = orderItems.stream()
+	                        .anyMatch(oi -> oi.getCourse().getId() == courseId);
 
-		            if (!exists) {
-		                // Nếu chưa có, thêm vào order
-		            	 System.out.println("courseisnulluhuhuhu");
-		                OrderItem orderItem = new OrderItem();
-		                orderItem.setCourse(course);
-		                orderItem.setFinishedFee(course.getCoursePrice());
-		                orderItem.setOrder(order);
-		                orderItems.add(orderItem);
-		                subtotalAmount += course.getCoursePrice();
-		            }
-		        }
-		        System.out.println("hhhhhh");
-		    }
-		    System.out.println("đã ở đây hrhr1");
-		    order.setOrderItems(orderItems);
-		    boolean insertSuccess = order_service.insertOrUpdateOrder(order);
-		    System.out.println("đã ở đây hrhr2");
+	                if (!exists) {
+	                    // Nếu chưa có, thêm vào order
+	                    System.out.println("courseisnulluhuhuhu");
+	                    OrderItem orderItem = new OrderItem();
+	                    orderItem.setCourse(course);
+	                    orderItem.setFinishedFee(course.getCoursePrice());
+	                    orderItem.setOrder(order);
+	                    orderItems.add(orderItem);
+	                    subtotalAmount += course.getCoursePrice();
+	                }
+	            }
+	            System.out.println("hhhhhh");
+	        }
+	        System.out.println("đã ở đây hrhr1");
+	        order.setOrderItems(orderItems);
+	        boolean insertSuccess = order_service.insertOrUpdateOrder(order);
+	        System.out.println("đã ở đây hrhr2");
 
-		    if (insertSuccess) {
-		        Cart cart = cart_service.findByUserId(user.getId());
-		        System.out.println("đã ở đây hrhr3");
-		        if (cart != null) {
-		        	System.out.println("đã ở đây hrhr4");
-		            List<Integer> selectedCourseIdsList = Arrays.stream(selectedCourseIds)
-		                                                        .map(Integer::parseInt)
-		                                                        .collect(Collectors.toList());
-		            cart_service.deleteSelectedCourses(cart, selectedCourseIdsList);
-		            System.out.println("đã ở đây hrhr5");
-		        }
-		    }
-		    System.out.println("đã ở đây hrhr6");
-		    session.setAttribute("order", order);
-		    req.setAttribute("subtotalAmount", subtotalAmount);
-		    req.getRequestDispatcher("/views/user/checkout.jsp").forward(req, resp);
-		}
+	        if (insertSuccess) {
+	            Cart cart = cart_service.findByUserId(user.getId());
+	            System.out.println("đã ở đây hrhr3");
+	            if (cart != null) {
+	                System.out.println("đã ở đây hrhr4");
+	                List<Integer> selectedCourseIdsList = Arrays.stream(selectedCourseIds)
+	                        .map(Integer::parseInt)
+	                        .collect(Collectors.toList());
+	                cart_service.deleteSelectedCourses(cart, selectedCourseIdsList);
+	                System.out.println("đã ở đây hrhr5");
+	            }
+	        }
+	        System.out.println("đã ở đây hrhr6");
+	        session.setAttribute("order", order);
+	        req.setAttribute("subtotalAmount", subtotalAmount);
+
+	        // Thêm kiểm tra trạng thái đơn hàng cho khóa học cụ thể
+	        if (selectedCourseIds != null && selectedCourseIds.length > 0) {
+	            int courseId = Integer.parseInt(selectedCourseIds[0]); // Lấy courseId đầu tiên
+	            List<Orders> userOrders = order_service.getOrdersByUserId(user.getId());
+	            Orders completedOrder = userOrders.stream()
+	                    .filter(o -> "Complete".equals(o.getOrderStatus()) && o.getOrderItems().stream()
+	                            .anyMatch(oi -> oi.getCourse().getId() == courseId))
+	                    .findFirst()
+	                    .orElse(null);
+	            String orderStatus = (completedOrder != null) ? "Complete" : "PROCESSING";
+	            req.setAttribute("orderStatus", orderStatus);
+	        } else {
+	            req.setAttribute("orderStatus", "PROCESSING"); // Mặc định nếu không có selectedCourseIds
+	        }
+
+	        req.getRequestDispatcher("/views/user/checkout.jsp").forward(req, resp);
+	    }
 	}
 
 	@Override
