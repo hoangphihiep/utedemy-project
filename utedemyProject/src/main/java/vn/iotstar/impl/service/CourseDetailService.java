@@ -4,6 +4,7 @@ import java.util.List;
 
 import vn.iotstar.dao.ICourseDetailDAO;
 import vn.iotstar.entity.CourseProgress;
+import vn.iotstar.entity.CourseType;
 import vn.iotstar.impl.dao.CourseDetailDAO;
 import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.service.ICourseDetailService;
@@ -24,5 +25,17 @@ public class CourseDetailService implements ICourseDetailService {
     public List<CourseProgress> getAllCourseProgress()
     {
     	return courseDetailDAO.getAllCourseProgress();
+    	
+    }
+    @Override
+    public CourseType getCourseTypeById(int id)
+    {
+    	return courseDetailDAO.getCourseTypeById(id);
+    }
+    
+    @Override
+    public List<CourseType> getAllCourseTypes()
+    {
+    	return courseDetailDAO.getAllCourseTypes();
     }
 }

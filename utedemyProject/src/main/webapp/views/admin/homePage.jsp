@@ -10,7 +10,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
-	
+	<form action="${pageContext.request.contextPath}/admin/category" method="post">
+	<button>Click here to move to Category Page!</button>
+	</form>
 </body>
 </html>

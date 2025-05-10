@@ -4,11 +4,16 @@ import vn.iotstar.entity.CourseDetail;
 import java.util.List;
 
 import vn.iotstar.entity.CourseProgress;
+import vn.iotstar.entity.CourseType;
 
 public interface ICourseDetailDAO {
-    CourseDetail findById(int id);
+	CourseDetail findById(int id);
 
-	CourseDetail findByCourseId(int courseId); 
-	
+	CourseDetail findByCourseId(int courseId);
+
 	public List<CourseProgress> getAllCourseProgress();
+
+	public List<CourseType> getAllCourseTypes();
+
+	public CourseType getCourseTypeById(int id);
 }

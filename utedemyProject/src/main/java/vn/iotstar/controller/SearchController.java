@@ -37,17 +37,20 @@ public class SearchController extends HttpServlet {
 		String keyWord = req.getParameter("keyword");
 		HttpSession session = req.getSession();
 		session.setAttribute("keyWord", keyWord);
+		System.out.println("Keyword: ");
+		System.out.println("Keyword: " + keyWord);
 		List<Review> reviews = reviewService.getAllReviews();
 		List<Course> courseList = new ArrayList<>();
 		List<Course> courses = courseService.getAllCourses();
 		int i = 0;
-
-		// Check if keyword is empty or null
+		System.out.println("Ten khoa hoc: ");
+		for(Course c : courseList)
+		{
+			System.out.print(c.getCourseName());
+		}
 		if (keyWord == null || keyWord.trim().isEmpty()) {
-			// If keyword is empty, add all courses
 			courseList.addAll(courses);
 		} else {
-			// If keyword is not empty, filter by name
 			for (Course c : courses) {
 				if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
 					courseList.add(c);

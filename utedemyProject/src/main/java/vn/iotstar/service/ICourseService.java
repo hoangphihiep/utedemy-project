@@ -18,76 +18,72 @@ public interface ICourseService {
 	List<Object[]> getTodaySaleCourses(int limit);
 
 	public List<CourseType> listCourseType();
-	
-	public boolean saveCoure (Course course);
-	
-	public CourseType findByIDCourseType (int id);
-	
-	public Course findByIdCourse(int id);
-	
-	public int maxCourseId();
-	
-	public boolean saveCourseDetail (CourseDetail courseDetail);
-	
-	public boolean updateCourse (Course course);
-	
-	public int maxCourseDetailId();
-	
-	public CourseDetail findByIdCourseDetail (int id);
-	
-	public boolean updateCourseDetail (CourseDetail courseDetail);
 
-	public boolean saveSection (Section section);
+	public boolean saveCoure(Course course);
+
+	public CourseType findByIDCourseType(int id);
+
+	public Course findByIdCourse(int id);
+
+	public int maxCourseId();
+
+	public boolean saveCourseDetail(CourseDetail courseDetail);
+
+	public boolean updateCourse(Course course);
+
+	public int maxCourseDetailId();
+
+	public CourseDetail findByIdCourseDetail(int id);
+
+	public boolean updateCourseDetail(CourseDetail courseDetail);
+
+	public boolean saveSection(Section section);
 
 	public int maxSectionId();
 
 	public Section findByIdSection(int id);
 
-	public boolean saveLesson (Lesson lesson);
+	public boolean saveLesson(Lesson lesson);
 
-	public boolean saveQuiz (Quiz quiz);
+	public boolean saveQuiz(Quiz quiz);
 
 	public int maxQuizId();
 
 	public Quiz findByIdQuiz(int id);
 
-	public boolean saveQuestion (Question question);
+	public boolean saveQuestion(Question question);
 
 	public int maxQuestionId();
 
 	public Question findByIdQuestion(int id);
 
-	public boolean saveAnswer (Answer answer);
+	public boolean saveAnswer(Answer answer);
 
-	public boolean updateSection (Section section);
+	public boolean updateSection(Section section);
 
-	public Lesson findByIdLesson (int id);
+	public Lesson findByIdLesson(int id);
 
-	public boolean updateLesson (Lesson lesson);
+	public boolean updateLesson(Lesson lesson);
 
-	public boolean updateQuiz (Quiz quiz);
+	public boolean updateQuiz(Quiz quiz);
 
-	public boolean deleteSection (int id) throws Exception;
+	public boolean deleteSection(int id) throws Exception;
 
-	public boolean deleteLesson (int id) throws Exception;
+	public boolean deleteLesson(int id) throws Exception;
 
-	public boolean deleteQuiz (int id) throws Exception;
-	
-	List<Course> findByIdTeacher (User user);
+	public boolean deleteQuiz(int id) throws Exception;
 
-	List<Course> findAllCourse ();
-	
+	List<Course> findByIdTeacher(User user);
+
+	List<Course> findAllCourse();
+
 	List<Course> getAllCourses();
 
-	public List<Lesson> getAllLessons();
+//	public boolean updateCourseName(Course course);
 
-	public List<Course> filterCoursesByRatingAndCourse(List<OrderItem> orderItems, double ratingThreshold);
+	public boolean addCourse(String courseName, int courseTypeId);
 
-	public double calculateAverageRating(Course course);
-
-	public List<Course> filterCoursesByRating(double ratingThreshold);
+	public Course getCourseById(int Id);
 	
-	public List<Course> getCoursesByUserId(int userId);
-
+	public int getNextCourseId();
 }
-
