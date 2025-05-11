@@ -830,6 +830,82 @@ public class CourseDao implements ICourseDao {
 			}
 			return courseResults;
 		}
+		@Override
+		public Course getCourseById(int Id) {
+			EntityManager em = JPAConfig.getEntityManager();
+			Course course = null;
+			try {
+				course = em.find(Course.class, Id); // Lấy 1 đối tượng theo khóa chính
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (em != null && em.isOpen()) {
+					em.close();
+				}
+			}
+			return course;
+		}
+		@Override
+		public int getMaxCourseId() {
+			EntityManager em = JPAConfig.getEntityManager();
+			try {
+				// Truy vấn lấy ID lớn nhất từ bảng Course
+				String jpql = "SELECT MAX(c.id) FROM Course c";
+				Integer maxId = (Integer) em.createQuery(jpql).getSingleResult();
+
+				// Trả về maxId nếu có, nếu không trả về 0 (hoặc giá trị mặc định khác)
+				return maxId != null ? maxId : 0;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0; // Trả về 0 nếu có lỗi xảy ra
+			} finally {
+				// Đảm bảo EntityManager được đóng
+				if (em != null && em.isOpen()) {
+					em.close();
+				}
+			}
+		}
+		@Override
+		public void addCourse(Course course) {
+			EntityManager em = JPAConfig.getEntityManager();
+			EntityTransaction trans = em.getTransaction();
+
+			try {
+				if (course == null) {
+					throw new IllegalArgumentException("Course cannot be null");
+				}
+
+				trans.begin();
+
+				// Lấy CourseType từ DB thay vì chỉ set ID
+				int courseTypeId = course.getCourseType().getId();
+				CourseType courseType = em.find(CourseType.class, courseTypeId);
+				if (courseType == null) {
+					throw new IllegalArgumentException("CourseType not found with id: " + courseTypeId);
+				}
+
+				// Gắn courseType đã lấy vào course
+				course.setCourseType(courseType);
+
+				// Lưu course vào DB
+				em.persist(course);
+
+				// Commit transaction
+				trans.commit();
+			} catch (Exception e) {
+				// Nếu transaction vẫn còn active, rollback
+				if (trans.isActive()) {
+					trans.rollback();
+				}
+				e.printStackTrace();
+			} finally {
+				if (em != null && em.isOpen()) {
+					em.close(); // Đảm bảo đóng EntityManager
+				}
+			}
+		}
+
+
 
 }
 

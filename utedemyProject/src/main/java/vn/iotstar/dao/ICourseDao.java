@@ -90,6 +90,12 @@ public interface ICourseDao {
 	public List<Course> filterCoursesByRating(double ratingThreshold);
 	
 	public List<Course> getCoursesByUserId(int userId);
+	
+	public int getMaxCourseId();
+	
+	public void addCourse(Course course);
+	
+	public Course getCourseById(int Id);
 
 	
 }

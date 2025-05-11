@@ -37,18 +37,30 @@ public class SearchController extends HttpServlet {
 		String keyWord = req.getParameter("keyword");
 		HttpSession session = req.getSession();
 		session.setAttribute("keyWord", keyWord);
+		System.out.println("Keyword: " + keyWord);
 		List<Review> reviews = reviewService.getAllReviews();
 		List<Course> courseList = new ArrayList<>();
-		List<Course> courses = courseService.getAllCourses();
+		List<Course> courses =  courseService.getAllCourses();
 		int i = 0;
-
-		for (Course c : courses) {
-			if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
-				courseList.add(c);
-				req.setAttribute("CourseList", courseList);
-				i++;
+		System.out.println("Ten khoa hoc: ");
+		for(Course c : courseList)
+		{
+			System.out.print(c.getCourseName());
+		}
+		if (keyWord == null || keyWord.trim().isEmpty()) {
+			System.out.println("Vo day");
+			courseList.addAll(courses);
+		} else {
+			for (Course c : courses) {
+				System.out.println("Vo day");
+				if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
+					courseList.add(c);
+					i++;
+				}
 			}
 		}
+
+		req.setAttribute("CourseList", courseList);
 		req.setAttribute("Review", reviews);
 		req.setAttribute("searchAmount", i);
 		req.setAttribute("keyWord", keyWord);

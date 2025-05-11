@@ -193,6 +193,21 @@ public class CourseService implements ICourseService {
 	{
 		return courseDao.getCoursesByUserId(userId);
 	}
+	@Override
+	public Course getCourseById(int Id)
+	{
+		return courseDao.getCourseById(Id);
+	}
+	@Override
+	public int getMaxCourseId()
+	{
+		return courseDao.getMaxCourseId();
+	}
+	@Override
+	public void addCourse(Course course)
+	{
+		courseDao.addCourse(course);	
+	}
 
 }
 

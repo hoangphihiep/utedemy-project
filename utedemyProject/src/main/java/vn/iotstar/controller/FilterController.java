@@ -53,7 +53,6 @@ public class FilterController extends HttpServlet {
 //		List<OrderItem> orderItems = courseService.getAllOrderItems();
 		List<Course> courses = courseService.getAllCourses();
 		List<Review> reviews = reviewService.getAllReviews();
-		List<Lesson> lessons = courseService.getAllLessons();
 //		List<OrderItem> courseList = new ArrayList<>();
 		List<Course> courseList = new ArrayList<>();
 
@@ -85,7 +84,6 @@ public class FilterController extends HttpServlet {
 			}
 		}
 		req.setAttribute("CourseList", courseList);
-		req.setAttribute("Lesson", lessons);
 		req.setAttribute("Review", reviews);
 		req.setAttribute("searchAmount", i);
 		req.setAttribute("keyWord", keyWord);

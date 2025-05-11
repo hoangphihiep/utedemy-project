@@ -4,17 +4,6 @@ body {
 	margin: 0;
 	padding: 0;
 }
-
-/* Header với logo và thanh tìm kiếm */
-.header {
-	background: #fff;
-	padding: 20px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 /* Thanh tìm kiếm */
 .search-box {
 	display: flex;

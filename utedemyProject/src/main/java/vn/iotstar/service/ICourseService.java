@@ -88,6 +88,12 @@ public interface ICourseService {
 	public List<Course> filterCoursesByRating(double ratingThreshold);
 	
 	public List<Course> getCoursesByUserId(int userId);
+	
+	public Course getCourseById(int Id);
+
+	public int getMaxCourseId();
+
+	void addCourse(Course course);
 
 }
 

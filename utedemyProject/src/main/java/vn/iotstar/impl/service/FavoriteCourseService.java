@@ -27,8 +27,12 @@ public class FavoriteCourseService implements IFavoriteCourseService {
 
 	@Override
 	public boolean isCourseInFavorite(User user, Course course) {
-		// TODO Auto-generated method stub
-		return false;
+        if (user == null || course == null) {
+            return false;
+        }
+        FavoriteCourse favoriteCourse = findByIdUser(user.getId());
+        return favoriteCourse != null && favoriteCourse.getCourses().contains(course);
 	}
+	
 
 }

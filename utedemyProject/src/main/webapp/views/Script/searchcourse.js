@@ -1,9 +1,6 @@
 // Hàm tạo và hiển thị dropdown sắp xếp
 function createSortDropdown() {
     const sortOptions = [
-        { text: "Học nhiều nhất", value: "most-popular" },
-        { text: "Đánh giá cao", value: "highest-rated" },
-        { text: "Mới nhất", value: "newest" },
         { text: "Giá thấp đến cao", value: "price-low-to-high" },
         { text: "Giá cao đến thấp", value: "price-high-to-low" }
     ];

@@ -7,6 +7,7 @@ import vn.iotstar.dao.ICourseDetailDAO;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseProgress;
+import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Section;
 
 import java.util.ArrayList;
@@ -74,6 +75,38 @@ public class CourseDetailDAO implements ICourseDetailDAO {
 			}
 		}
 		return c;
+	}
+    @Override
+	public List<CourseType> getAllCourseTypes() {
+		EntityManager em = emf.createEntityManager();
+		List<CourseType> courseTypes = new ArrayList<>();
+		try {
+			// Truy vấn tất cả CourseTypes từ cơ sở dữ liệu
+			courseTypes = em.createQuery("SELECT c FROM CourseType c", CourseType.class).getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close();
+			}
+		}
+		return courseTypes;
+	}
+
+	@Override
+	public CourseType getCourseTypeById(int id) {
+		EntityManager em = emf.createEntityManager();
+		CourseType courseType = null;
+		try {
+			courseType = em.find(CourseType.class, id); // Lấy 1 đối tượng CourseType theo khóa chính
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (em != null && em.isOpen()) {
+				em.close();
+			}
+		}
+		return courseType;
 	}
 
 

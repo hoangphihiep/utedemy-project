@@ -3,6 +3,8 @@
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
 
+
+
 <!-- Di chuyển CSS và script vào decorator hoặc để lại nếu cần -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/views/Css/viewCourseDetails.css">
 <script src="${pageContext.request.contextPath}/views/Script/viewCourseDetails.js"></script>
@@ -17,6 +19,19 @@
         ${warning}
     </div>
 </c:if>
+
+	
+	
+	
+<!-- Thêm thông báo động -->
+<div id="notification" style="display: none; color: green; text-align: center; margin: 10px 0;"></div>
+
+<!-- Popup tùy chỉnh -->
+<div id="customPopup" class="popup">
+    <div id="popupMessage" class="popup-message"></div>
+    <button id="popupClose" class="popup-close">Đóng</button>
+</div>
+<div id="overlay" class="overlay"></div>
 
 
 <section class="course-banner">
@@ -326,12 +341,24 @@
             
 
             <div class="action-buttons">
-                <button class="primary-button">MUA NGAY</button>
-                <button class="secondary-button">VÀO HỌC NGAY</button>
+            	<c:if test="${orderStatus!='Complete' }">
+                	<button class="primary-button" onclick="addToCart(${courseDetail.course.id})">THÊM VÀO GIỎ HÀNG</button>
+                </c:if>
+                <c:choose>
+                <c:when test="${orderStatus == 'Complete'}">
+                    <button class="secondary-button" onclick="goToLearn(${courseDetail.course.id})">VÀO HỌC NGAY</button>
+                </c:when>
+                <c:otherwise>
+                    <button class="secondary-button">MUA NGAY</button>
+                </c:otherwise>
+            </c:choose>
             </div>
 
-            <div class="wishlist-button">❤️</div>
 
+			<div class="wishlist-button" id="wishlistButton" data-course-id="${courseDetail.course.id}" data-user-id="${sessionScope.account.id}">
+			    <span class="fa p-3" style="color: ${isFavorite ? 'red' : 'gray'}">❤️</span>
+			</div>
+			
             <div class="course-features">
                 <div class="feature-item">
                     <span class="feature-icon">⌚</span>
@@ -360,19 +387,137 @@
     
 </div>
 <script type="text/javascript">
-//Function to preview images
+// Function to preview images
 function previewImage(event, previewId, placeholderId) {
-  const placeholderText = document.getElementById(placeholderId);
-  const imagePreview = document.getElementById(previewId);
-  const file = event.target.files[0];
+    const placeholderText = document.getElementById(placeholderId);
+    const imagePreview = document.getElementById(previewId);
+    const file = event.target.files[0];
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      imagePreview.src = e.target.result; // Gán đường dẫn ảnh cho img
-      imagePreview.style.display = 'block'; // Hiển thị ảnh xem trước
-    };
-    reader.readAsDataURL(file);
-  }
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
 }
+
+//Hàm xử lý nút "VÀO HỌC NGAY"
+function goToLearn(courseId) {
+    // Chuyển hướng đến trang học (có thể tùy chỉnh URL)
+    window.location.href = '/utedemyProject/views/user/Course.jsp';
+}
+
+// Hàm hiển thị popup
+function showPopup(message, isSuccess) {
+    const popup = document.getElementById('customPopup');
+    const popupMessage = document.getElementById('popupMessage');
+    const overlay = document.getElementById('overlay');
+
+    popupMessage.textContent = message;
+    popup.classList.remove('success', 'error'); // Xóa các lớp cũ
+    popup.classList.add(isSuccess ? 'success' : 'error'); // Thêm lớp tương ứng
+    popup.style.display = 'block';
+    overlay.style.display = 'block';
+}
+
+// Hàm ẩn popup
+function hidePopup() {
+    const popup = document.getElementById('customPopup');
+    const overlay = document.getElementById('overlay');
+    popup.style.display = 'none';
+    overlay.style.display = 'none';
+}
+
+// Gắn sự kiện cho nút đóng
+document.getElementById('popupClose').addEventListener('click', hidePopup);
+
+// Handle wishlist button click
+document.getElementById('wishlistButton').addEventListener('click', function() {
+    const button = this;
+    const courseId = button.getAttribute('data-course-id');
+    const userId = button.getAttribute('data-user-id');
+    const heartIcon = button.querySelector('.heart-icon');
+
+    console.log('Button clicked');
+    console.log('courseId:', courseId);
+    console.log('userId:', userId);
+
+    // Kiểm tra nếu đã có user trong session
+    if (!userId) {
+        showPopup('Vui lòng đăng nhập để thêm vào danh sách yêu thích!', false);
+        console.log('User not logged in');
+        return;
+    }
+
+    // Gửi yêu cầu AJAX
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '${pageContext.request.contextPath}/user/addFavoriteCourse', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    xhr.onreadystatechange = function() {
+        console.log('Ready state changed:', xhr.readyState);
+        if (xhr.readyState === 4) {
+            console.log('Status:', xhr.status);
+            console.log('Response:', xhr.responseText);
+
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                console.log('Parsed response:', response);
+
+                if (response.success) {
+                    // Thay đổi trái tim từ trắng sang đỏ
+                    heartIcon.style.color = 'red';
+                    // Hiển thị thông báo
+                    const notification = document.getElementById('notification');
+                    notification.textContent = 'Đã thích khóa học';
+                    notification.style.display = 'block';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 3000);
+                    console.log('Favorite added successfully');
+                } else {
+                    showPopup(response.message || 'Đã xảy ra lỗi khi thêm vào danh sách yêu thích!', false);
+                    console.log('Error message:', response.message);
+                }
+            } else {
+                showPopup('Yêu cầu thất bại với mã trạng thái: ' + xhr.status, false);
+                console.log('Request failed with status:', xhr.status);
+            }
+        }
+    };
+
+    // Gửi dữ liệu (courseId và userId)
+    const data = 'courseId=' + encodeURIComponent(courseId) + '&userId=' + encodeURIComponent(userId);
+    console.log('Sending data:', data);
+    xhr.send(data);
+});
+
+function addToCart(courseId) {
+    const userId = ${sessionScope.account.id}; // Lấy userId từ session (giả sử đã có)
+    if (!userId) {
+        alert("Vui lòng đăng nhập để thêm vào giỏ hàng!");
+        return;
+    }
+
+    fetch('/utedemyProject/user/addcart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'id=' + encodeURIComponent(courseId)
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data === 'success') {
+            alert("Thêm vào giỏ hàng thành công!");
+            // Có thể cập nhật giao diện (ví dụ: tăng số lượng trong giỏ hàng)
+        } else {
+            alert("Thêm vào giỏ hàng thất bại!");
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 </script>
