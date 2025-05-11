@@ -29,16 +29,14 @@ public class FavoriteCourseDao implements IFavoriteCourseDao {
 		EntityManager em = JPAConfig.getEntityManager();
 	    try {
 	        em.getTransaction().begin();
-	        
-	        // Get managed instances of the entities
+
 	        User managedUser = em.find(User.class, user.getId());
 	        Course managedCourse = em.find(Course.class, course.getId());
 	        
 	        if (managedUser == null || managedCourse == null) {
-	            return false; // User or course doesn't exist
+	            return false;
 	        }
 	        
-	        // Find existing favorite course for user or create new one
 	        FavoriteCourse favoriteCourse = findByIdUser(managedUser.getId());
 	        if (favoriteCourse == null) {
 	            favoriteCourse = new FavoriteCourse();
@@ -46,16 +44,13 @@ public class FavoriteCourseDao implements IFavoriteCourseDao {
 	            favoriteCourse.setCourses(new HashSet<>());
 	            managedUser.setFavoriteCourse(favoriteCourse);
 	        } else {
-	            // Make sure the favoriteCourse is managed
 	            favoriteCourse = em.merge(favoriteCourse);
 	        }
 	        
-	        // Add course to favorite courses if not already there
 	        if (!favoriteCourse.getCourses().contains(managedCourse)) {
 	            favoriteCourse.getCourses().add(managedCourse);
 	        }
 	        
-	        // Save or update the favorite course
 	        if (favoriteCourse.getId() == 0) {
 	            em.persist(favoriteCourse);
 	        } else {
@@ -79,27 +74,37 @@ public class FavoriteCourseDao implements IFavoriteCourseDao {
 	@Override
 	public boolean removeCourseFromFavorite(User user, Course course) {
 		EntityManager em = JPAConfig.getEntityManager();
-		try {
-            // Start transaction
-            em.getTransaction().begin();
-            
-            // Find existing favorite course for user
-            FavoriteCourse favoriteCourse = findByIdUser(user.getId());
-            if (favoriteCourse != null && favoriteCourse.getCourses().contains(course)) {
-                favoriteCourse.getCourses().remove(course);
-                em.merge(favoriteCourse);
-            }
-            
-            // Commit transaction
-            em.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            e.printStackTrace();
-            return false;
-        }
+	    try {
+	        em.getTransaction().begin();
+
+	        User managedUser = em.find(User.class, user.getId());
+	        Course managedCourse = em.find(Course.class, course.getId());
+
+	        FavoriteCourse favoriteCourse = findByIdUser(managedUser.getId());
+	        
+	        if (favoriteCourse != null) {
+	            favoriteCourse = em.merge(favoriteCourse);
+	            
+	            if (favoriteCourse.getCourses().contains(managedCourse)) {
+	                favoriteCourse.getCourses().remove(managedCourse);
+	                em.merge(favoriteCourse);
+	                em.flush();
+	            }
+	        }
+
+	        em.getTransaction().commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (em.getTransaction().isActive()) {
+	            em.getTransaction().rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        if (em != null && em.isOpen()) {
+	            em.close();
+	        }
+	    }
 	}
 
 	@Override

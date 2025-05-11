@@ -49,10 +49,10 @@
 			</div>
 			<!-- Add this inside the main-content div, after the existing form-group for course introduction -->
 			<div class="form-group">
-				<c:if test="${cate.images.substring(0,5) != 'https' }">
+				<c:if test="${course.courseDetail.courseImage.substring(0,5) != 'https' }">
 					<c:url value="/image?fname=${course.courseDetail.courseImage}" var="imgUrl"></c:url>
 				</c:if>
-				<c:if test="${cate.images.substring(0,5) == 'https' }">
+				<c:if test="${course.courseDetail.courseImage.substring(0,5) == 'https' }">
 					<c:url value="${course.courseDetail.courseImage}" var="imgUrl"></c:url>
 				</c:if>
 

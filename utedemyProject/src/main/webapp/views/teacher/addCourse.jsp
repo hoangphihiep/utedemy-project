@@ -16,7 +16,7 @@
 	        <div class="form-group">
 	            <label class="form-label">Tên khóa học *</label>
 	            <p class="form-hint">Đừng lo nếu bạn không nghĩ ra một tên ngay bây giờ. Bạn có thể thay đổi sau</p>
-	            <input type="text" name="courseName" class="form-input" value="Thành Thạo Excel Từ Cơ Bản Đến Nâng Cao">
+	            <input type="text" name="courseName" class="form-input" value="Thành Thạo Excel Từ Cơ Bản Đến Nâng Cao" required>
 	        </div>
 	        
 	        <div class="form-group">

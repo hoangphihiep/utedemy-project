@@ -14,19 +14,19 @@
 
 			<div class="form-group">
 			    <label class="form-label">Tiêu đề khóa học <span class="required">*</span></label>
-			    <input type="text" class="form-input" name="courseTitle" value="${course.courseName}">
+			    <input type="text" class="form-input" name="courseTitle" value="${course.courseName}" required>
 			    <div class="form-hint">Tiêu đề của bạn không những phải thu hút sự chú ý, chứa nhiều thông tin mà còn được tối ưu hóa để dễ tìm kiếm</div>
 			</div>
 
 			<div class="form-group">
 			    <label class="form-label">Mô tả ngắn <span class="required">*</span></label>
-			    <textarea class="form-input" rows="5"><c:out value="${course.courseDetail.description}" /></textarea>
+			    <textarea class="form-input" rows="5" required><c:out value="${course.courseDetail.description}" /></textarea>
 			</div>
 			
 			<div class="form-row">
 			    <div class="form-column">
 			        <label class="form-label">Thể loại <span class="required">*</span></label>
-			        <select class="dropdown" name="courseTypeId">
+			        <select class="dropdown" name="courseTypeId" required>
 			            <c:forEach items="${listCourseType}" var="type">
 			                <option value="${type.id}" ${courseType.id == type.id ? 'selected' : ''}>${type.courseTypeName}</option>
 			            </c:forEach>
@@ -34,7 +34,7 @@
 			    </div>
 			    <div class="form-column">
 				  <label class="form-label">Giá <span class="required">*</span></label>
-				  <input class="dropdown" type="text" name="courseName" value="${course.coursePrice}" />
+				  <input class="dropdown" type="text" name="courseName" value="${course.coursePrice}" required />
 				</div>
 			</div>
 			
@@ -70,7 +70,7 @@
 						<p>và không
 							có chữ trên hình ảnh.</p>
 						<div class="upload-controls">
-							<input type="file" id="imageUpload" name="image" value="${imgUrl}" style="display: none;" accept="image/*" onchange="previewImage(event, 'previewImage', 'placeholderText')">
+							<input type="file" id="imageUpload" name="image" value="${imgUrl}" style="display: none;" accept="image/*" onchange="previewImage(event, 'previewImage', 'placeholderText')" required>
 							<input type="hidden" name="image1Url" value="${imgUrl}">
 							<button class="upload-button" onclick="document.getElementById('imageUpload').click()">Chọn tệp</button>
 							<span class="file-status">Không có tệp nào được chọn</span>
@@ -90,7 +90,7 @@
 			      <p>Học viên quan tâm đến khóa học của bạn có nhiều khả năng</p>
 			      <p>ghi danh hơn nếu video quảng cáo của bạn được thực hiện tốt.</p>
 			      <div class="form-input-container">
-			        <input type="text" class="form-input" placeholder="Gắn link youtube/vimeo" value="${course.courseDetail.courseVideo}">
+			        <input type="text" class="form-input" placeholder="Gắn link youtube/vimeo" value="${course.courseDetail.courseVideo} required">
 			      </div>
 			    </div>
 			  </div>

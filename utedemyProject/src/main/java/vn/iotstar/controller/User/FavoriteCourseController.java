@@ -18,7 +18,7 @@ import vn.iotstar.impl.service.FavoriteCourseService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IFavoriteCourseService;
 
-@WebServlet(urlPatterns = {"/user/favoriteCourse","/user/addFavoriteCourse"})
+@WebServlet(urlPatterns = {"/user/favoriteCourse","/user/addFavoriteCourse", "/user/removeFavoriteCourse"})
 public class FavoriteCourseController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -61,17 +61,31 @@ public class FavoriteCourseController extends HttpServlet {
 		if (url.contains("/user/addFavoriteCourse")) 
 		{
 			User user = (User)session.getAttribute("account");
-
-			if (user == null) {
-	            // Return JSON response indicating user needs to login
-	            out.print("{\"success\": false, \"message\": \"Please login to add favorite courses\"}");
-	            return;
-	        }
-
 			try {
 	            int courseId = Integer.parseInt(req.getParameter("courseId"));
 	            Course course = courseService.findByIdCourse(courseId);
 	            boolean success = favoriteCourseService.addCourseToFavorite(user, course);
+
+	            if (success) {
+	                out.print("{\"success\": true, \"message\": \"Course added to favorites\"}");
+	            } else {
+	                out.print("{\"success\": false, \"message\": \"Failed to add course to favorites\"}");
+	            }
+
+	        } catch (NumberFormatException e) {
+	            out.print("{\"success\": false, \"message\": \"Invalid course ID\"}");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            out.print("{\"success\": false, \"message\": \"Server error\"}");
+	        }
+		}
+		else if (url.contains("/user/removeFavoriteCourse")) 
+		{
+			User user = (User)session.getAttribute("account");
+			try {
+	            int courseId = Integer.parseInt(req.getParameter("courseId"));
+	            Course course = courseService.findByIdCourse(courseId);
+	            boolean success = favoriteCourseService.removeCourseFromFavorite(user, course);
 
 	            if (success) {
 	                out.print("{\"success\": true, \"message\": \"Course added to favorites\"}");

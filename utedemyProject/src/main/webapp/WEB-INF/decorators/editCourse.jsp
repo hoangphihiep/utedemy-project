@@ -75,24 +75,39 @@
 		    
 			if (currentPath.includes('/teacher/editBasicInformation')) {
 				// Create FormData object to handle file uploads and form data together
-				  const formData = new FormData();
-				  
-				  // Add text fields to FormData
-				  formData.append("courseTitle", document.querySelector('input[name="courseTitle"]').value);
-				  formData.append("shortDescription", document.querySelector('textarea.form-input').value);
-				  formData.append("courseTypeId", document.querySelector('select[name="courseTypeId"]').value);
-				  formData.append("coursePrice", document.querySelector('input[name="courseName"]').value);
-				  formData.append("courseIntroduction", CKEDITOR.instances.courseIntroduction.getData());
-				  formData.append("videoLink", document.querySelector('.video-upload-container .form-input').value || "");
+				const courseTitle = document.querySelector('input[name="courseTitle"]').value.trim();
+				const shortDescription = document.querySelector('textarea.form-input').value.trim();
+				const courseTypeId = document.querySelector('select[name="courseTypeId"]').value;
+				const coursePrice = document.querySelector('input[name="courseName"]').value.trim();
+				const courseIntro = CKEDITOR.instances.courseIntroduction.getData().trim();
+				const videoLink = document.querySelector('.video-upload-container .form-input').value.trim();
+				const imageFile = document.getElementById('imageUpload').files[0];
+
+				// Kiểm tra các trường bắt buộc
+				if (!courseTitle || !shortDescription || !courseTypeId || !coursePrice || !courseIntro || !imageFile) {
+				    Swal.fire({
+				        title: 'Thiếu thông tin!',
+				        text: 'Vui lòng điền đầy đủ các trường bắt buộc (bao gồm cả ảnh).',
+				        icon: 'warning'
+				    });
+				    return; // Không gửi dữ liệu
+				}
+
+				// Tạo và gửi FormData
+				const formData = new FormData();
+				formData.append("courseTitle", courseTitle);
+				formData.append("shortDescription", shortDescription);
+				formData.append("courseTypeId", courseTypeId);
+				formData.append("coursePrice", coursePrice);
+				formData.append("courseIntroduction", courseIntro);
+				formData.append("videoLink", videoLink || "");
+				formData.append("courseImage", imageFile);
 				  
 				  // Get the file input and append file if one was selected
 				  const fileInput = document.getElementById('imageUpload');
 				  if (fileInput.files.length > 0) {
 					  formData.append("courseImage", fileInput.files[0]);
 					}
-				  
-				  // Log data for debugging (note: can't easily log FormData contents)
-				  console.log("Form data created with all fields including possible file upload");
 				  
 				  // Send FormData to server (need to modify the sendDataToServer function)
 				  sendDataToServer('/utedemyProject/teacher/updateBasicInformation', formData);
@@ -146,21 +161,27 @@
 			  // Xử lý phản hồi
 			  xhr.onload = function() {
 				    if (xhr.status >= 200 && xhr.status < 300) {
-				        Swal.fire({
-				            title: 'Đã lưu thành công!',
-				            text: 'Bạn có muốn tiếp tục chỉnh sửa hay quay lại trang chính?',
-				            icon: 'success',
-				            showCancelButton: true,
-				            confirmButtonText: 'Tiếp tục',
-				            cancelButtonText: 'Về trang chủ'
-				        }).then((result) => {
-				            if (result.isConfirmed) {
-				                // Ở lại trang
-				            } else {
-				                // Chuyển về trang chủ
-				                window.location.href = "/utedemyProject/teacher/homePage";
-				            }
-				        });
+				    	const response = JSON.parse(xhr.responseText);
+				    	if (response.success) {
+				            Swal.fire({
+				                title: 'Đã lưu thành công!',
+				                text: 'Bạn có muốn tiếp tục chỉnh sửa hay quay lại trang chính?',
+				                icon: 'success',
+				                showCancelButton: true,
+				                confirmButtonText: 'Tiếp tục',
+				                cancelButtonText: 'Về trang chủ'
+				            }).then((result) => {
+				                if (!result.isConfirmed) {
+				                    window.location.href = "/utedemyProject/teacher/course";
+				                }
+				            });
+				        } else {
+				            Swal.fire({
+				                title: 'Thất bại!',
+				                text: response.message || 'Không thể lưu dữ liệu.',
+				                icon: 'error'
+				            });
+				        }
 				    } else {
 				        Swal.fire({
 				            title: 'Lỗi khi lưu!',
@@ -184,6 +205,7 @@
 				Swal.showLoading();
 			    xhr.send(data);
 			  } else {
+				Swal.showLoading();
 			    xhr.send(JSON.stringify(data));
 			  }
 			}

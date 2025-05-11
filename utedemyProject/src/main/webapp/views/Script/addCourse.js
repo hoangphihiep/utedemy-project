@@ -396,6 +396,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						.then(data => {
 							if (data && data.title) {
 								openEditSectionModal(data.title); // Gán lại giá trị lên input
+								console.log("currentSectionElement: ", currentSectionElement);
+								console.log("editingSectionElement: ", editingSectionElement);
 								editingSectionElement = currentSectionElement; // đúng phần tử đang được chỉnh
 								console.log('editingSectionElement4:', editingSectionElement);
 								editingSectionId = sectionId;
@@ -868,7 +870,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Cập nhật hàm saveBtn để thêm event listener cho nút "Bài trắc nghiệm" mới
         if (saveBtn && lessonModal) {
-            // Giữ nguyên code hiện tại và thêm đoạn sau vào cuối hàm xử lý sự kiện click
             const originalClickHandler = saveBtn.onclick;
             saveBtn.onclick = function(e) {
                 if (originalClickHandler) {

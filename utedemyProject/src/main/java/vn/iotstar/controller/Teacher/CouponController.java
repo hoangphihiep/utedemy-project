@@ -73,20 +73,6 @@ public class CouponController extends HttpServlet {
 	            return;
 	        }
 
-		 // Kiểm tra xem discount có thuộc về các khóa học của giáo viên này không
-	        boolean belongsToTeacher = false;
-	        for (Course course : discount.getAppliedCourses()) {
-	            if (course.getTeacher().getId() == user.getId()) {
-	                belongsToTeacher = true;
-	                break;
-	            }
-	        }
-
-	        if (!belongsToTeacher) {
-	            resp.sendRedirect(req.getContextPath() + "/teacher/coupon");
-	            return;
-	        }
-
 	        // Lấy danh sách khóa học của giáo viên hiện tại
 	        List<Course> teacherCourses = courseService.findByIdTeacher(user);
 
@@ -160,20 +146,7 @@ public class CouponController extends HttpServlet {
 
 	        Discount discount = discountService.findById(discountId);
 
-	        boolean belongsToTeacher = false;
-	        for (Course course : discount.getAppliedCourses()) {
-	            if (course.getTeacher().getId() == user.getId()) {
-	                belongsToTeacher = true;
-	                break;
-	            }
-	        }
-
-	        if (!belongsToTeacher) {
-	            resp.sendRedirect(req.getContextPath() + "/teacher/coupon");
-	            return;
-	        }
-
-	     // Cập nhật thông tin discount
+	        // Cập nhật thông tin discount
 	        discount.setDisCode(disCode);
 	        discount.setDecreasedFee(decreasedFee);
 	        discount.setType(type);

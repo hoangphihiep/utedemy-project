@@ -278,15 +278,6 @@ public class UpdateCourseController extends HttpServlet{
 		    ObjectMapper mapper = new ObjectMapper();
 		    Quiz quiz = mapper.readValue(json, Quiz.class);
 
-		    // Add validation
-		    if (quiz.getId() <= 0) {
-		        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		        resp.setContentType("application/json");
-		        resp.getWriter().write("{\"error\": \"Invalid quiz ID\"}");
-		        return;
-		    }
-		    System.out.println ("thoi gian làm bài: " + quiz.getDuration());
-
 		    boolean test = courseService.updateQuiz(quiz);
 		    if (test) {
 		        resp.setContentType("application/json");
@@ -349,8 +340,6 @@ public class UpdateCourseController extends HttpServlet{
 	        resp.setContentType("application/json");
 
 	        try {
-
-	            // Extract values from JSON
 	        	String courseTitle = req.getParameter("courseTitle");
 	            String shortDescription = req.getParameter("shortDescription");
 	            String courseTypeId = req.getParameter("courseTypeId");
@@ -422,8 +411,40 @@ public class UpdateCourseController extends HttpServlet{
 				if (check) {
 					boolean checkUpdate = courseService.updateCourse(course);
 					if (checkUpdate) {
-						System.out.println ("Lưu thông tin thành công");
+						resp.setContentType("application/json");
+					    resp.setCharacterEncoding("UTF-8");
+
+					    JsonObject responseObj = new JsonObject();
+					    responseObj.addProperty("success", true);
+
+					    PrintWriter out = resp.getWriter();
+					    out.print(responseObj.toString());
+					    out.flush();
 					}
+					else {
+						resp.setContentType("application/json");
+					    resp.setCharacterEncoding("UTF-8");
+
+					    JsonObject responseObj = new JsonObject();
+					    responseObj.addProperty("success", false);
+					    responseObj.addProperty("message", "Lỗi khi cập nhật khóa học");
+
+					    PrintWriter out = resp.getWriter();
+					    out.print(responseObj.toString());
+					    out.flush();
+					}
+				}
+				else {
+					resp.setContentType("application/json");
+				    resp.setCharacterEncoding("UTF-8");
+
+				    JsonObject responseObj = new JsonObject();
+				    responseObj.addProperty("success", false);
+				    responseObj.addProperty("message", "Lỗi khi lưu thông tin căn bản");
+
+				    PrintWriter out = resp.getWriter();
+				    out.print(responseObj.toString());
+				    out.flush();
 				}
 
 	        } catch (Exception e) {
@@ -467,7 +488,25 @@ public class UpdateCourseController extends HttpServlet{
 	            courseDetail.setLearnerAchievements(target);
 	            boolean check = courseService.updateCourseDetail(courseDetail);
 	            if (check) {
-	            	System.out.println ("Lưu thành công");
+	            	resp.setContentType("application/json");
+				    resp.setCharacterEncoding("UTF-8");
+
+				    JsonObject responseObj = new JsonObject();
+				    responseObj.addProperty("success", true);
+
+				    PrintWriter out = resp.getWriter();
+				    out.print(responseObj.toString());
+	            }else {
+	            	resp.setContentType("application/json");
+				    resp.setCharacterEncoding("UTF-8");
+
+				    JsonObject responseObj = new JsonObject();
+				    responseObj.addProperty("success", false);
+				    responseObj.addProperty("message", "Lỗi khi lưu dữ liệu");
+
+				    PrintWriter out = resp.getWriter();
+				    out.print(responseObj.toString());
+				    out.flush();
 	            }
 
 	        } catch (Exception e) {
