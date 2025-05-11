@@ -725,58 +725,102 @@ public class CourseDao implements ICourseDao {
 			e.printStackTrace();
 		} finally {
 			if (em != null && em.isOpen()) {
-				em.close(); 
+				em.close();
 			}
 		}
 		return courses;
 	}
 
+//	@Override
+//	public boolean addCourse(Course course) {
+//		EntityManager em = JPAConfig.getEntityManager();
+//		EntityTransaction trans = em.getTransaction();
+//
+//		try {
+//			trans.begin();
+//
+//			// Lấy CourseType từ DB thay vì chỉ set ID
+//			int courseTypeId = course.getCourseType().getId();
+//			CourseType courseType = em.find(CourseType.class, courseTypeId);
+//			if (courseType == null) {
+//				throw new IllegalArgumentException("CourseType not found with id: " + courseTypeId);
+//			}
+//
+//			// Gắn courseType đã lấy vào course
+//			course.setCourseType(courseType);
+//
+//			// Lưu course vào DB
+//			em.persist(course);
+//
+//			trans.commit();
+//			return true;
+//		} catch (Exception e) {
+//			if (trans.isActive()) {
+//				trans.rollback();
+//			}
+//			e.printStackTrace();
+//			return false;
+//		} finally {
+//			if (em != null && em.isOpen()) {
+//				em.close();
+//			}
+//		}
+//	}
+
 	@Override
-	public boolean addCourse(String courseName, int courseTypeId) {
+	public void addCourse(Course course) {
 		EntityManager em = JPAConfig.getEntityManager();
 		EntityTransaction trans = em.getTransaction();
 
 		try {
+			if (course == null) {
+				throw new IllegalArgumentException("Course cannot be null");
+			}
+
 			trans.begin();
 
-			// Tạo đối tượng Course và gán tên khóa học
-			Course course = new Course();
-			course.setCourseName(courseName); // Gán tên khóa học
+			// Lấy CourseType từ DB thay vì chỉ set ID
+			int courseTypeId = course.getCourseType().getId();
+			CourseType courseType = em.find(CourseType.class, courseTypeId);
+			if (courseType == null) {
+				throw new IllegalArgumentException("CourseType not found with id: " + courseTypeId);
+			}
 
-			// Tạo một đối tượng CourseType và gán ID (không cần tìm kiếm trong DB)
-			CourseType courseType = new CourseType();
-			courseType.setId(courseTypeId); // Gán ID cho CourseType
-
-			// Gán CourseType vào Course
+			// Gắn courseType đã lấy vào course
 			course.setCourseType(courseType);
 
-			// Lưu vào DB
+			// Lưu course vào DB
 			em.persist(course);
+
+			// Commit transaction
 			trans.commit();
-			return true;
 		} catch (Exception e) {
+			// Nếu transaction vẫn còn active, rollback
 			if (trans.isActive()) {
 				trans.rollback();
 			}
 			e.printStackTrace();
-			return false;
 		} finally {
-			em.close();
+			if (em != null && em.isOpen()) {
+				em.close(); // Đảm bảo đóng EntityManager
+			}
 		}
 	}
 
-	@Override
-	public int getNextCourseId() {
+	public int getMaxCourseId() {
 		EntityManager em = JPAConfig.getEntityManager();
 		try {
-			// Lấy courseId lớn nhất
-			String jpql = "SELECT MAX(c.courseId) FROM Course c";
-			Integer maxId = em.createQuery(jpql, Integer.class).getSingleResult();
-			return (maxId != null ? maxId + 1 : 1); // Nếu chưa có thì bắt đầu từ 1
+			// Truy vấn lấy ID lớn nhất từ bảng Course
+			String jpql = "SELECT MAX(c.id) FROM Course c";
+			Integer maxId = (Integer) em.createQuery(jpql).getSingleResult();
+
+			// Trả về maxId nếu có, nếu không trả về 0 (hoặc giá trị mặc định khác)
+			return maxId != null ? maxId : 0;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 1; // fallback nếu có lỗi
+			return 0; // Trả về 0 nếu có lỗi xảy ra
 		} finally {
+			// Đảm bảo EntityManager được đóng
 			if (em != null && em.isOpen()) {
 				em.close();
 			}

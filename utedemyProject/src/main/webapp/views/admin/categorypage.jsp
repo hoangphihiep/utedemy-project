@@ -37,6 +37,7 @@ body {
 	color: white;
 	padding: 10px 20px;
 	text-decoration: none;
+	margin-left: 50px;
 }
 
 .sidebar a:hover {
@@ -117,17 +118,38 @@ table th, table td {
 .pagination button:hover {
 	background-color: #eee;
 }
+
+/* Styling for Add Course button */
+.add-course-button {
+	display: block;
+	width: 200px;
+	margin: 20px auto;
+	padding: 12px 20px;
+	text-align: center;
+	background-color: #3498db;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.add-course-button:hover {
+	background-color: #2980b9;
+}
 </style>
 </head>
 <body>
 	<div class="sidebar">
 		<h2>Admin</h2>
-		<a href="#">Trang chủ</a> <a href="#">Tài khoản</a> <a href="#">Khóa
-			học</a>
+		<a href="#">Trang chủ</a> 
+		<a href="#">Tài khoản</a> 
+		<a href="#">Khóa học</a>
 	</div>
 
 	<div class="main">
-		<h2>Tài khoản</h2>
+		<h2>Danh mục</h2>
 		<div class="table-container">
 			<table>
 				<thead>
@@ -148,8 +170,12 @@ table th, table td {
 				</c:forEach>
 			</table>
 		</div>
-		<form action="${pageContext.request.contextPath}/admin/add" method="add">
-			<button type="submit">Thêm khóa học</button>
+
+		<!-- Styled button to add course -->
+		<form action="${pageContext.request.contextPath}/admin/add"
+			method="get">
+			<button type="submit" class="add-course-button">Thêm khóa
+				học</button>
 		</form>
 	</div>
 </body>

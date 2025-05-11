@@ -44,7 +44,7 @@ label {
 	font-weight: bold;
 }
 
-input[type="text"], select {
+input[type="text"], input[type="number"], select {
 	width: 100%;
 	padding: 10px;
 	margin-bottom: 16px;
@@ -76,25 +76,28 @@ button:hover {
 			method="post" class="form-box">
 			<div>
 				<label for="courseName">Tên khóa học:</label> <input type="text"
-					id="courseName" name="courseName" required />
+					id="courseName" name="courseName" placeholder="Nhập tên khóa học"
+					required />
 			</div>
 			<div>
-				<label for="courseType">Loại khóa học:</label> 
-				<select
-					id="courseType" name="courseType" required>
+				<label for="courseTypeId">Loại khóa học:</label> <select
+					id="courseTypeId" name="courseTypeId" required>
 					<c:forEach var="courseType" items="${courseTypes}">
 						<option value="${courseType.id}">${courseType.courseTypeName}</option>
 					</c:forEach>
 				</select>
 			</div>
+			<div>
+				<label for="coursePrice">Giá khóa học:</label> <input type="number"
+					id="coursePrice" name="coursePrice" min="0" step="50000"
+					placeholder="Nhập giá khóa học" required />
+			</div>
 			<button type="submit">Thêm khóa học</button>
 		</form>
-
 		<form action="${pageContext.request.contextPath}/admin/category"
 			method="post" class="form-box">
-			<button type="submit">Quay về trang hiển thị danh sách</button>
+			<button type="submit">Quay về danh sách</button>
 		</form>
 	</div>
-
 </body>
 </html>

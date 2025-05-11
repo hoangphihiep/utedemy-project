@@ -188,23 +188,22 @@ public class CourseService implements ICourseService {
 	public List<Course> getAllCourses() {
 		return courseDao.getAllCourses();
 	}
-
-//	@Override
-//	public boolean updateCourseName(Course course) {
+	
+//	public boolean addCourse(Course course) 
+//	{
 //		return true;
 //	}
-	
-	public boolean addCourse(String courseName, int courseTypeId)
+	public void addCourse(Course course)
 	{
-		return true;
+		courseDao.addCourse(course);	
 	}
 	
 	public Course getCourseById(int Id)
 	{
 		return courseDao.getCourseById(Id);
 	}
-	public int getNextCourseId()
+	public int getMaxCourseId()
 	{
-		return courseDao.getNextCourseId();
+		return courseDao.getMaxCourseId();
 	}
 }

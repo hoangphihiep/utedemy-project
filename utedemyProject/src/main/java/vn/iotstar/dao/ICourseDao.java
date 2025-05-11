@@ -80,11 +80,11 @@ public interface ICourseDao {
 
 	public List<Course> getAllCourses();
 
-//	public boolean updateCourseName(Course course);
-
 	public Course getCourseById(int Id);
 
-	public int getNextCourseId();
+	public int getMaxCourseId();
 
-	public boolean addCourse(String courseName, int courseTypeId);
+//	public boolean addCourse(Course course);
+	
+	public void addCourse(Course course);
 }

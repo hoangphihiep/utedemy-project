@@ -79,11 +79,11 @@ public interface ICourseService {
 
 	List<Course> getAllCourses();
 
-//	public boolean updateCourseName(Course course);
-
-	public boolean addCourse(String courseName, int courseTypeId);
-
 	public Course getCourseById(int Id);
+
+	public int getMaxCourseId();
+
+//	public boolean addCourse(Course course);
 	
-	public int getNextCourseId();
+	public void addCourse(Course course);
 }

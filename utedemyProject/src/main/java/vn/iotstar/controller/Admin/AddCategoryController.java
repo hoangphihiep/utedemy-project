@@ -35,33 +35,56 @@ public class AddCategoryController extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 
-		String courseName = req.getParameter("courseName");
-		String courseTypeParam = req.getParameter("courseType");
-		System.out.println("CourseName: " + courseName);
-		System.out.println("courseType: " + courseTypeParam);
+		// Lấy dữ liệu từ form
+		String newCourseName = req.getParameter("courseName");
+		String courseTypeIdStr = req.getParameter("courseTypeId");
+		String coursePriceStr = req.getParameter("coursePrice");
 
-		if (courseTypeParam == null || courseTypeParam.trim().isEmpty()) {
-			resp.sendRedirect("error.jsp");
+		// Kiểm tra dữ liệu đầu vào
+		if (newCourseName == null || newCourseName.trim().isEmpty()) {
+			req.setAttribute("message", "Tên khóa học không được để trống");
+			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
 			return;
 		}
 
+		int courseTypeId = 0;
 		try {
-			int courseTypeId = Integer.parseInt(courseTypeParam);
-
-			int n = courseTypeId;
-			System.out.println("n: " + n);
-
-			boolean success = courseService.addCourse(courseName, courseTypeId);
-
-			if (success) {
-				resp.sendRedirect(req.getContextPath() + "/admin/edit");
-			} else {
-				resp.sendRedirect("error.jsp");
-			}
+			courseTypeId = Integer.parseInt(courseTypeIdStr);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			resp.sendRedirect("error.jsp");
+			req.setAttribute("message", "Loại khóa học không hợp lệ");
+			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
+			return;
+		}
+
+		double coursePrice = 0;
+		try {
+			coursePrice = Double.parseDouble(coursePriceStr);
+		} catch (NumberFormatException e) {
+			req.setAttribute("message", "Giá khóa học không hợp lệ");
+			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
+			return;
+		}
+
+		// Tạo đối tượng Course mới và gán dữ liệu
+		Course course = new Course();
+		course.setCourseName(newCourseName);
+
+		// Gán CourseType từ ID đã có sẵn
+		CourseType courseType = new CourseType();
+		courseType.setId(courseTypeId); // Set ID cho CourseType
+		course.setCourseType(courseType);
+
+		course.setCoursePrice(coursePrice);
+
+		try {
+			// Gọi phương thức addCourse để thêm khóa học vào cơ sở dữ liệu
+			courseService.addCourse(course);
+			// Chuyển hướng về trang thành công
+			resp.sendRedirect(req.getContextPath() + "/admin/add");		
+			} catch (Exception e) {
+			// Xử lý lỗi khi thêm khóa học thất bại
+			req.setAttribute("message", "Lỗi thêm khóa học");
+			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
 		}
 	}
-
 }

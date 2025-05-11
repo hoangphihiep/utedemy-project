@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +44,7 @@ label {
 	font-weight: bold;
 }
 
-input[type="text"] {
+input[type="text"], input[type="number"], select {
 	width: 100%;
 	padding: 10px;
 	margin-bottom: 16px;
@@ -73,18 +74,43 @@ button:hover {
 
 		<form action="${pageContext.request.contextPath}/admin/edit"
 			method="post" class="form-box">
+			<!-- Giữ id của khóa học không thay đổi -->
 			<input type="hidden" name="id" value="${course.id}" />
+
 			<div>
-				<label>Tên khóa học:</label> <input type="text" name="courseName"
+				<label for="courseName">Tên khóa học:</label> <input type="text"
+					id="courseName" name="courseName" placeholder="Nhập tên khóa học"
 					value="${course.courseName}" required />
 			</div>
-			<button type="submit">Cập nhật</button>
+
+			<div>
+				<label for="courseTypeId">Loại khóa học:</label> <select
+					id="courseTypeId" name="courseTypeId" required>
+					<!-- Hiển thị danh sách các loại khóa học có sẵn -->
+					<c:forEach var="courseType" items="${courseTypes}">
+						<option value="${courseType.id}"
+							${courseType.id == course.courseType.id ? 'selected' : ''}>
+							${courseType.courseTypeName}</option>
+					</c:forEach>
+				</select>
+			</div>
+
+			<div>
+				<label for="coursePrice">Giá khóa học:</label> <input type="number"
+					id="coursePrice" name="coursePrice" min="0" step="50000"
+					placeholder="Nhập giá khóa học" value="${course.coursePrice}"
+					required />
+			</div>
+
+			<button type="submit">Cập nhật khóa học</button>
 		</form>
 
+		<!-- Form quay lại trang danh sách -->
 		<form action="${pageContext.request.contextPath}/admin/category"
 			method="post" class="form-box">
-			<button type="submit">Quay về trang hiển thị danh sách</button>
+			<button type="submit">Quay về danh sách</button>
 		</form>
+
 	</div>
 
 </body>
