@@ -123,6 +123,28 @@ public class OrderController extends HttpServlet {
 		   Set<OrderItem> orderItems = order.getOrderItems();
 		    double subtotalAmount = 0.0;
 
+			   for (OrderItem item : orderItems) {
+			       double coursePrice = item.getCourse().getCoursePrice();
+			       double discountAmount = 0.0;
+
+			       Discount discount = item.getDiscount();
+			       if (discount != null) {
+			           String type = discount.getType();
+			           double decreasedFee = Double.parseDouble(discount.getDecreasedFee());
+
+			           if ("PERCENTAGE".equalsIgnoreCase(type)) {
+			               discountAmount = coursePrice * (decreasedFee / 100);
+			           } else if ("AMOUNTMONEY".equalsIgnoreCase(type)) {
+			               discountAmount = decreasedFee;
+			           }
+			           
+			           // Đảm bảo giảm không vượt quá giá course
+			           discountAmount = Math.min(discountAmount, coursePrice);
+			       }
+
+			       subtotalAmount += (coursePrice - discountAmount);
+			   }
+
 		    for (String courseIdStr : selectedCourseIds) {
 		        int courseId = Integer.parseInt(courseIdStr);
 		        System.out.println("mmm"+courseId);
@@ -166,9 +188,13 @@ public class OrderController extends HttpServlet {
 		        }
 		    }
 		    System.out.println("đã ở đây hrhr6");
+		    
+		    //phải select lại
+		    order = order_service.findProcessingOrderByUserId(user.getId());
 		    session.setAttribute("order", order);
 		    req.setAttribute("subtotalAmount", subtotalAmount);
 		    req.getRequestDispatcher("/views/user/checkout.jsp").forward(req, resp);
+		    return;
 		}
 	}
 
@@ -223,7 +249,7 @@ public class OrderController extends HttpServlet {
  	        resp.sendRedirect(approveLink);
  	        return;
  	    } else {
- 	        resp.sendRedirect("/uteshop/views/error.jsp");
+ 	        resp.sendRedirect("/user/viewcheckout");
  	        return;
  	    }
 

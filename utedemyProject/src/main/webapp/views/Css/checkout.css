@@ -307,3 +307,14 @@
     margin-left: 5px;
     display: inline-block;
 }
+ .success-modal h3 {
+        color: #4CAF50;
+    }
+    
+    .fail-modal h3 {
+        color: #f44336;
+    }
+    
+    .cancel-modal h3 {
+        color: #ff9800;
+    }

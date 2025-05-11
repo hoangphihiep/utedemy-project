@@ -55,10 +55,39 @@ public class DiscountController  extends HttpServlet {
             String discountCode = req.getParameter("discountCode");
             int productId = Integer.parseInt(req.getParameter("productId"));
             
-        	int amount_code_used=discount_service.countUsersByDiscountId(0);
-        	int amount_code_require =Integer.parseInt(discount_service.getCodeAmountByDisCode(discountCode));
+            //lấy discount dựa vào discount code
+            //kiểm tra số lượng đã được sử dụng
+            //kiểm tra xem còn slot đã được sử dụng không bằng cách lấy số lượng quy định trừ cho số lượng đã được sử dụng
+            Discount discount_used = discount_service.findByDisCode(discountCode);
+            
+            //nếu mã không tồn tại thì trả json
+            if (discount_used == null) {
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Mã giảm giá không tồn tại.");
+                out.print(jsonResponse.toString());
+                return;
+            }
+            // Kiểm tra mã giảm giá
+            if (!discount_service.isCodeAvailable(discountCode)) {
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Mã giảm giá đã hết số lượng.");
+                out.print(jsonResponse.toString());
+                return;
+            }
+
+            // Kiểm tra hạn sử dụng
+            if (!discount_service.isCodeValidTime(discountCode)) {
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Mã giảm giá đã hết hạn hoặc chưa đến thời gian áp dụng.");
+                out.print(jsonResponse.toString());
+                return;
+            }
+            //check số lượng user đã sử dụng cái discount đó
+        	int amount_code_used=discount_service.countUsersByDiscountId(discount_used.getId());
         	
+        	int amount_code_require =Integer.parseInt(discount_service.getCodeAmountByDisCode(discountCode));
         	int check_amount_code = amount_code_require - amount_code_used;
+        	
         	if(check_amount_code<=0) {
         	   jsonResponse.addProperty("success", false);
  	           jsonResponse.addProperty("message", "Có lỗi xảy ra hết số lượng mã có thể sử dụng: ");
@@ -66,6 +95,8 @@ public class DiscountController  extends HttpServlet {
         	   return;
         	}
             
+        	//khi bấm vào xem đơn hàng trên header là đã gọi controller order, bên đó đã set thuộc tính order rồi
+        	//order này phải có status là PROCESSING
             Orders order = (Orders) session.getAttribute("order");
             
             if (order == null) {
@@ -83,6 +114,7 @@ public class DiscountController  extends HttpServlet {
                     break;
                 }
             }
+       
             
             if (targetItem == null) {
                 jsonResponse.addProperty("success", false);
@@ -90,68 +122,50 @@ public class DiscountController  extends HttpServlet {
                 out.print(jsonResponse.toString());
                 return;
             }
-            OrderItem lastItem = (OrderItem) session.getAttribute("lastDiscountedItem");
-           // targetItem_tmp = targetItem;
             
-            // Kiểm tra mã giảm giá
-            Discount discount = discount_service.findByDisCode(discountCode);
-            
-            if (discount == null) {
-                jsonResponse.addProperty("success", false);
-                jsonResponse.addProperty("message", "Mã giảm giá không tồn tại.");
-                out.print(jsonResponse.toString());
-                return;
-            }
-            if (!discount_service.isCodeAvailable(discountCode)) {
-                jsonResponse.addProperty("success", false);
-                jsonResponse.addProperty("message", "Mã giảm giá đã hết lượt sử dụng.");
-                out.print(jsonResponse.toString());
-                return;
-            }
-
-            // Kiểm tra hạn sử dụng
-            if (!discount_service.isCodeValidTime(discountCode)) {
-                jsonResponse.addProperty("success", false);
-                jsonResponse.addProperty("message", "Mã giảm giá đã hết hạn hoặc chưa đến thời gian áp dụng.");
-                out.print(jsonResponse.toString());
-                return;
-            }
+            System.out.println("kila"+targetItem.getId());
             //kiểm tra coi mã đó áp dụng đúng cho course không
-            if (!discount_service.isDiscountApplicableForCourse(targetItem.getCourse().getId(), discount.getId())) {
+            if (!discount_service.isDiscountApplicableForCourse(targetItem.getCourse().getId(), discount_used.getId())) {
                 jsonResponse.addProperty("success", false);
                 jsonResponse.addProperty("message", "Mã giảm giá không áp dụng cho khóa học này.");
                 out.print(jsonResponse.toString());
                 return;
             }
-
             
             // Áp dụng mã giảm giá
             double originalPrice = targetItem.getCourse().getCoursePrice();
             double discountAmount = 0;
             
-            if ("PERCENTAGE".equals(discount.getType())) {
+            if ("PERCENTAGE".equals(discount_used.getType())) {
                 // Giảm giá theo phần trăm
-                discountAmount = originalPrice *  Integer.parseInt(discount.getDecreasedFee()) / 100;
-            } else if ("AMOUNTMONEY".equals(discount.getType())) {
+                discountAmount = originalPrice *  Integer.parseInt(discount_used.getDecreasedFee()) / 100;
+            } else if ("AMOUNTMONEY".equals(discount_used.getType())) {
                 // Giảm giá cố định
-                discountAmount = Double.parseDouble(discount.getDecreasedFee());
+                discountAmount = Double.parseDouble(discount_used.getDecreasedFee());
             }
             
             // Đảm bảo giá sau giảm không âm
             double finishedFee = Math.max(0, originalPrice - discountAmount);
             
             // Cập nhật thông tin cho OrderItem
-            targetItem.setDiscount(discount);
+            targetItem.setDiscount(discount_used);
             targetItem.setFinishedFee(finishedFee);
             
             //cập nhật database
-            order_service.updateDiscountAndFinishedFee(targetItem.getId(),discount.getId(),finishedFee);
+             if (!order_service.updateDiscountAndFinishedFee(targetItem.getId(),discount_used.getId(),finishedFee)) {
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Đã có lỗi xảy ra khi cập nhật dữ liệu hệ thống vui lòng thử lại sau.");
+                out.print(jsonResponse.toString());
+                return;
+            }
             
             // Cập nhật session
             session.setAttribute("order", order);
             
             // Tính toán tổng cộng đơn hàng
             double subtotalAmount = 0;
+
+            //số tiền giảm
             double totalDiscountAmount = 0;
             
             for (OrderItem item : order.getOrderItems()) {
@@ -162,6 +176,7 @@ public class DiscountController  extends HttpServlet {
                 }
             }
             
+            //giá cuối cùng của toàn bộ order
             double totalOrderAmount = subtotalAmount - totalDiscountAmount;
             
             // Định dạng các giá trị tiền tệ
@@ -178,8 +193,8 @@ public class DiscountController  extends HttpServlet {
             
             // Tạo phản hồi JSON
             jsonResponse.addProperty("success", true);
-            jsonResponse.addProperty("discountType", discount.getType());
-            jsonResponse.addProperty("discountValue", discount.getDecreasedFee());
+            jsonResponse.addProperty("discountType", discount_used.getType());
+            jsonResponse.addProperty("discountValue", discount_used.getDecreasedFee());
             jsonResponse.addProperty("formattedDiscountAmount", formattedDiscountAmount);
             jsonResponse.addProperty("formattedFinishedFee", formattedFinishedFee);
             jsonResponse.addProperty("formattedOriginalPrice", formattedOriginalPrice);
@@ -190,64 +205,13 @@ public class DiscountController  extends HttpServlet {
             jsonResponse.addProperty("totalOrderAmount", totalOrderAmount);
             
             session.setAttribute("lastDiscountedItem", targetItem);
-            boolean check_discount_user = discount_service.updateUserDiscount(u.getId(), discount.getId());
-            if(check_discount_user) {
-             	System.out.println("Đã update discount dựa theo user");
+            boolean check_discount_user = discount_service.updateUserDiscount(u.getId(), discount_used.getId());
+            if(!check_discount_user) {
+             	jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Đã có lỗi xảy ra khi cập nhật dữ liệu hệ thống vui lòng thử lại sau.");
+                out.print(jsonResponse.toString());
+                return;
              }
-            
-            //cập nhật user_discount và coursse discount, cập nhật số lượng mã trong database
-            // if()
-            /* if (lastItem != null && lastItem.getCourse().getId() == productId) {
-                 // Đây là đúng OrderItem cũ
-                 System.out.println("Đúng item cũ rồi!");
-                 boolean check_course_discount = discount_service.updateDiscountCourse(productId, discount.getId());
-                 if(check_course_discount) {
-                 	System.out.println("Đã update discount dựa theo course");
-                 }
-                 boolean check_discount_user = discount_service.updateUserDiscount(u.getId(), discount.getId());
-                 if(check_discount_user) {
-                 	System.out.println("Đã update discount dựa theo user");
-                 }
-                 
-                 if(discount.getId() != lastItem.getDiscount().getId()) {
-                 	
-                 	String code_amount = discount_service.getCodeAmountByDiscountId(discount.getId());
-                     int code_amount_int = Integer.parseInt(code_amount);
-                     code_amount_int = code_amount_int -1;
-                     boolean check_updated_amount = discount_service.updateCodeAmountByDiscountId(discount.getId(), Integer.toString(code_amount_int));
-                     if(check_updated_amount) {
-                     	System.out.println("Đã update số lượng của course11111");
-                     }
-                     
-                     int code_amount_int_old = Integer.parseInt(lastItem.getDiscount().getCodeAmount());
-                     System.out.println("Đã update số lượng của course11111aaa");
-                     code_amount_int = code_amount_int + 1;
-                     boolean check_updated_amount_old = discount_service.updateCodeAmountByDiscountId(lastItem.getDiscount().getId(), Integer.toString(code_amount_int_old));
-                     System.out.println("Đã update số lượng của course11111bbbbb");
-                     if(check_updated_amount_old) {
-                     	System.out.println("Đã update số lượng của course cũ");
-                     }
-                 	
-                 }                
-             }
-             else {
-             	 boolean check_course_discount = discount_service.addDiscountCourse(productId, discount.getId());
-                  if(check_course_discount) {
-                  	System.out.println("Đã thêm course vào discoun23t");
-                  }
-                  boolean check_discount_user = discount_service.addUserDiscount(u.getId(), discount.getId());
-                  if(check_discount_user) {
-                  	System.out.println("Đã thêm user sử dụng discount23");
-                  }
-                  String code_amount = discount_service.getCodeAmountByDiscountId(discount.getId());
-                  int code_amount_int = Integer.parseInt(code_amount);
-                  code_amount_int = code_amount_int - 1;
-                  boolean check_updated_amount = discount_service.updateCodeAmountByDiscountId(discount.getId(), Integer.toString(code_amount_int));
-                  if(check_updated_amount) {
-                  	System.out.println("Đã update số lượng của course23");
-                  }
-             }
-            */
             
         } catch (Exception e) {
             jsonResponse.addProperty("success", false);
@@ -308,13 +272,22 @@ public class DiscountController  extends HttpServlet {
 	            
 	            // Đặt lại giá về giá gốc
 	            double originalPrice = targetItem.getCourse().getCoursePrice();
+                //đặt lại finishedfee cho order item 
 	            targetItem.setFinishedFee(originalPrice);
 	            
-	            // Có thể cần phải cập nhật lại user_discount nếu đã lưu vào database
-	            discount_service.deleteUserDiscount(u.getId(), targetItem.getDiscount().getId());
-	            // Cập nhật database: xóa discount_id và đặt lại finishedFee	            
-	            order_service.removeDiscountFromOrderItem(targetItem.getId());
-	            
+                //cập nhật database, user discount
+             if (!discount_service.deleteUserDiscount(u.getId(), targetItem.getDiscount().getId())) {
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Đã có lỗi xảy ra khi cập nhật dữ liệu hệ thống vui lòng thử lại sau.");
+                out.print(jsonResponse.toString());
+                return;
+            }
+              if (!order_service.removeDiscountFromOrderItem(targetItem.getId())) {
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Đã có lỗi xảy ra khi cập nhật dữ liệu hệ thống vui lòng thử lại sau.");
+                out.print(jsonResponse.toString());
+                return;
+            }
 	            // Có thể cần phải hoàn lại số lượng mã giảm giá
 	            // discount_service.increaseCodeAmount(removedDiscount.getId());
 	            

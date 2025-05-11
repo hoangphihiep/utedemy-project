@@ -39,42 +39,20 @@ public class PayPalCallbackController extends HttpServlet{
 	            //	OrderModel order_paypal = (OrderModel)session.getAttribute("orderpaypal");
 	          
 	               boolean isSucess = order_service.updateOrderStatus(order.getId(),"COMPLETED");
-					if(isSucess==true)
-					System.out.println("thuyen em di trong paypal");
-					 boolean check_status = order_service.updateOrderStatus(order.getId(),"COMPLETED");
-				        if(check_status) {
-				        	System.out.println("Đã cập nhật status của order");
-				        }
-				        String[] orderItemIds = (String[]) session.getAttribute("orderItemIds");
-				        String[] finishedFees = (String[]) session.getAttribute("finishedFees");
-				        String totalAmountStr = (String) session.getAttribute("totalAmountStr");
-
-						if (orderItemIds != null && finishedFees != null) {
-						    for (int i = 0; i < orderItemIds.length; i++) {
-						        String itemId = orderItemIds[i];
-						        String fee = finishedFees[i];
-						        boolean check = order_service.updateFinishedFee(Integer.parseInt(itemId), Double.parseDouble(fee));
-						        if(check) {
-						        	System.out.println("Cập nhật order item thành công");
-						        }
-						    }
-						}
-					else {
-						System.out.println("that bai");
-					}
-					
+					if(isSucess==true) {
 					session.setAttribute("order_state", "success");
 				    resp.sendRedirect("/utedemyProject/user/viewcheckout");
-				    
+					}
 
-	            } else {
-	              //  session.setAttribute("orderfail", "fail");
-	                resp.sendRedirect("/utedemyProject/user/homepage");
+	            }
+	            else {
+	                session.setAttribute("order_state", "fail");
+	                resp.sendRedirect("/utedemyProject/user/viewcheckout");
 	            }
 	        } else if (path.contains("cancel")) {
 	        
-	            session.setAttribute("orderpaymentcancel", "Payment was cancelled.");
-                resp.sendRedirect("/utedemyProject/user/homepage");
+	            session.setAttribute("order_state", "cancel");
+                resp.sendRedirect("/utedemyProject/user/viewcheckout");
 	        }
 	    }
 	}

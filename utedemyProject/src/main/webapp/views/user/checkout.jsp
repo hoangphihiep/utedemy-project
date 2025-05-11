@@ -168,6 +168,39 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal thông báo đơn hàng thành công -->
+<div id="successOrderModal" class="confirm-modal">
+    <div class="modal-content success-modal">
+        <h3>Thanh toán thành công!</h3>
+        <p>Đơn hàng của bạn đã được thanh toán thành công. Cảm ơn bạn đã mua khóa học!</p>
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="closeStatusModal('successOrderModal')">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal thông báo đơn hàng thất bại -->
+<div id="failOrderModal" class="confirm-modal">
+    <div class="modal-content fail-modal">
+        <h3>Thanh toán thất bại!</h3>
+        <p>Đã xảy ra lỗi trong quá trình thanh toán đơn hàng của bạn. Vui lòng thử lại sau hoặc liên hệ với chúng tôi để được hỗ trợ.</p>
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="closeStatusModal('failOrderModal')">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal thông báo đơn hàng đã hủy từ PayPal -->
+<div id="paypalCancelModal" class="confirm-modal">
+    <div class="modal-content cancel-modal">
+        <h3>Thanh toán đã bị hủy!</h3>
+        <p>Bạn đã hủy quá trình thanh toán tại PayPal. Bạn có thể tiếp tục thanh toán hoặc chọn phương thức thanh toán khác.</p>
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="closeStatusModal('paypalCancelModal')">Đóng</button>
+        </div>
+    </div>
+</div>
 
     <script>
  // Áp dụng mã giảm giá thông qua AJAX
@@ -348,6 +381,7 @@
     
     // Xử lý hủy đơn hàng
     function cancelOrder(orderId) {
+    	document.querySelector(".remove-btn").click();
         fetch('${pageContext.request.contextPath}/cancel-order', {
             method: 'POST',
             headers: {
@@ -374,6 +408,71 @@
             hideCancelConfirmation();
         });
     }
+    
+ // Kiểm tra trạng thái đơn hàng khi trang được tải
+    window.addEventListener('DOMContentLoaded', function() {
+        // Lấy thông tin trạng thái đơn hàng từ URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderState = urlParams.get('order_state');
+        
+        if (orderState === 'success') {
+            showStatusModal('successOrderModal');
+            // Xóa param khỏi URL để tránh hiển thị lại khi refresh
+            removeUrlParam('order_state');
+        } else if (orderState === 'fail') {
+            showStatusModal('failOrderModal');
+            removeUrlParam('order_state');
+        } else if (orderState === 'cancel') {
+            showStatusModal('paypalCancelModal'); // Hiển thị modal cancel từ PayPal
+            removeUrlParam('order_state');
+        }
+        
+        // Kiểm tra session attribute thông qua JSP
+        <c:if test="${sessionScope.order_state == 'success'}">
+            showStatusModal('successOrderModal');
+            <% session.removeAttribute("order_state"); %>
+        </c:if>
+        
+        <c:if test="${sessionScope.order_state == 'fail'}">
+            showStatusModal('failOrderModal');
+            <% session.removeAttribute("order_state"); %>
+        </c:if>
+        
+        <c:if test="${sessionScope.order_state == 'cancel'}">
+            showStatusModal('paypalCancelModal'); // Hiển thị modal cancel từ PayPal
+            <% session.removeAttribute("order_state"); %>
+        </c:if>
+    });
+    
+    // Hiển thị modal trạng thái
+    function showStatusModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+    
+    // Đóng modal
+    function closeStatusModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Xóa param khỏi URL
+    function removeUrlParam(param) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete(param);
+        window.history.replaceState({}, document.title, url);
+    }
+    
+    // Đóng modal khi click bên ngoài
+    window.onclick = function(event) {
+        if (event.target.classList.contains('confirm-modal')) {
+            event.target.style.display = 'none';
+        }
+    };
     </script>
 </body>
 </html>

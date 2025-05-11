@@ -2,6 +2,7 @@ package vn.iotstar.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -38,7 +39,7 @@ public class Orders implements Serializable {
 	private Date orderDate;
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private Set<OrderItem> orderItems;
+    private Set<OrderItem> orderItems = new HashSet<>();;
 	
 	@Column(name = "order_status")
 	private String orderStatus;
