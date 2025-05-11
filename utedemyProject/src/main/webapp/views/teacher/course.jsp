@@ -158,9 +158,6 @@
                                         <a href="<c:url value='/teacher/editBasicInformation?id=${course.id}'/>" class="action-btn btn-edit">
                                             <i class="fas fa-edit"></i> Sửa
                                         </a>
-                                        <a href="<c:url value='/teacher/previewCourse?id=${course.id}'/>" class="action-btn btn-view">
-                                            <i class="fas fa-eye"></i> Xem
-                                        </a>
                                     </div>
                                 </div>
                             </div>

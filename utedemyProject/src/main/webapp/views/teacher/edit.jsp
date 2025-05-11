@@ -69,8 +69,8 @@
                     </c:forEach>
 
                     <div class="lesson-actions">
-                        <button class="lesson-button" data-id="${section.id}">Bài học mới</button>
-                        <button class="lesson-button" data-id="${section.id}">Bài trắc nghiệm</button>
+                        <button class="lesson-button">Bài học mới</button>
+                        <button class="lesson-button">Bài trắc nghiệm</button>
                     </div>
 
                     <div class="lesson-info">

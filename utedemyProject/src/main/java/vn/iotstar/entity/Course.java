@@ -70,7 +70,7 @@ public class Course implements Serializable {
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private Set<Review> review = new HashSet<>();
 	
-	@ManyToMany(mappedBy = "courses", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
     private Set<FavoriteCourse> favoriteCourse = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "courses")
