@@ -265,8 +265,6 @@ public class OrderController extends HttpServlet {
         session.setAttribute("orderItemIds", orderItemIds);
         session.setAttribute("finishedFees", finishedFees);
         session.setAttribute("totalAmountStr", totalAmountStr);
-        User u = (User)session.getAttribute("account");
-        Orders order = (Orders)session.getAttribute("order");
         
         float totalAmount = Float.parseFloat(totalAmountStr);
         

@@ -341,11 +341,11 @@
             
 
             <div class="action-buttons">
-            	<c:if test="${orderStatus!='Complete' }">
+            	<c:if test="${orderStatus!='COMPLETED' }">
                 	<button class="primary-button" onclick="addToCart(${courseDetail.course.id})">THÊM VÀO GIỎ HÀNG</button>
                 </c:if>
                 <c:choose>
-                <c:when test="${orderStatus == 'Complete'}">
+                <c:when test="${orderStatus == 'COMPLETED'}">
                     <button class="secondary-button" onclick="goToLearn(${courseDetail.course.id})">VÀO HỌC NGAY</button>
                 </c:when>
                 <c:otherwise>
@@ -411,10 +411,10 @@ function previewImage(event, previewId, placeholderId) {
 
 //Hàm xử lý nút "VÀO HỌC NGAY"
 function goToLearn(courseId) {
-    // Chuyển hướng đến trang học (có thể tùy chỉnh URL)
-    window.location.href = '/utedemyProject/views/user/Course.jsp';
+    // Chuyển hướng đến Course.jsp và truyền courseId & userId
+    window.location.href = '/utedemyProject/views/user/Course?courseId=' + courseId;
+    
 }
-
 // Hàm hiển thị popup
 function showPopup(message, isSuccess) {
     const popup = document.getElementById('customPopup');

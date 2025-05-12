@@ -182,11 +182,11 @@ public class CourseDetailController extends HttpServlet {
                     // Tạo một biến final để sử dụng trong lambda
                     final int finalCourseId = courseId; // Biến này không thay đổi, thỏa mãn "effectively final"
                     Orders completedOrder = userOrders.stream()
-                            .filter(o -> "Complete".equals(o.getOrderStatus()) && o.getOrderItems().stream()
+                            .filter(o -> "COMPLETED".equals(o.getOrderStatus()) && o.getOrderItems().stream()
                                     .anyMatch(oi -> oi.getCourse().getId() == finalCourseId))
                             .findFirst()
                             .orElse(null);
-                    String orderStatus = (completedOrder != null) ? "Complete" : "PROCESSING";
+                    String orderStatus = (completedOrder != null) ? "COMPLETED" : "PROCESSING";
                     req.setAttribute("orderStatus", orderStatus);
                     System.out.println("Order status for course " + courseId + ": " + orderStatus);
                 } else {

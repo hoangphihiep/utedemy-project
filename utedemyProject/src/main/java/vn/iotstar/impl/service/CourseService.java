@@ -14,6 +14,11 @@ import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
 import vn.iotstar.entity.User;
 import vn.iotstar.entity.OrderItem;
+import java.util.Map;
+import vn.iotstar.entity.Discussion;
+import vn.iotstar.entity.CourseProgress;
+import vn.iotstar.entity.LessonProgress;
+import vn.iotstar.entity.Review;
 
 public class CourseService implements ICourseService {
 
@@ -208,6 +213,104 @@ public class CourseService implements ICourseService {
 	{
 		courseDao.addCourse(course);	
 	}
+	 @Override
+	  public List<Object[]> getSectionLessonCourse(int courseId) {
+	      return courseDao.findSectionLessonCourse(courseId);
+	  }
+
+	  @Override
+	  public List<Object[]> getRatingDestribution(int courseId) {
+		  return courseDao.findRatingDestribution(courseId);
+	  }
+
+	  @Override
+	  public List<Map> getCommentsAndReplys(int courseId) {
+	      return courseDao.findCommentsAndReplys(courseId);
+	  }
+
+	  @Override
+	  public List<Map> getReviews(int courseId) {
+	      return courseDao.findReviews(courseId);
+	  }
+
+	  @Override
+	    public void saveDiscussion(Discussion discussion) {
+	        courseDao.insertDiscussion(discussion);
+	    }
+
+	  @Override
+	  public void markLessonAsCompleted(LessonProgress lessonProgress) {
+	        courseDao.markLessonAsCompleted(lessonProgress);
+	    }
+
+	  @Override
+	  public void saveReplyDiscussion(Discussion discussion) {
+	        courseDao.insertReplyDiscussion(discussion);
+	    }
+
+	  @Override
+	  public void saveReview(Review review) {
+	        courseDao.insertReview(review);
+	    }
+
+	  @Override
+	  public void saveCourseProgress(CourseProgress courseProgress) {
+	        courseDao.saveCourseProgress(courseProgress);
+	    }
+
+	  @Override
+	  public double getAverageRating(int courseId) {
+	      return courseDao.findAverageRating(courseId);
+	  }
+
+	  @Override
+	  public List<Map> getInfoTeacher(int userId) {
+	      return courseDao.findInfoTeacher(userId);
+	  }
+
+	  @Override
+		public String getOverviewSection(int courseId) {
+	      return courseDao.findOverviewSection(courseId);
+	  }
+
+	  @Override
+		public Integer getCourseProgressId(int courseId, int userId) {
+	      return courseDao.findCourseProgressId(courseId, userId);
+	  }
+
+	  @Override
+	  public Integer getTotalLessonInCourse(int courseId) {
+	      return courseDao.findTotalLessonInCourse(courseId);
+	  }
+
+	  @Override
+	  public Integer getCurrentLessonFromUserId(int courseProgessId) {
+	      return courseDao.findCurrentLessonFromUserId(courseProgessId);
+	  }
+
+	  @Override
+	  public String getAvatarURL(int userId) {
+	      return courseDao.findAvatarURL(userId);
+	  }
+		@Override
+		public boolean checkUserProgressExists(int userId, int courseId) {
+			return courseDao.checkUserProgressExists(userId, courseId);
+		}
+
+		@Override
+		public boolean checkLessonProgressExists(int courseProgressID, int lessonId) {
+			return courseDao.checkLessonProgressExists(courseProgressID, lessonId);
+		}
+
+		@Override
+		public boolean checkLessonProgress(int courseProgressID) {
+			return courseDao.checkLessonProgress(courseProgressID);
+		}
+
+		@Override
+		public boolean checkUserRating(int userId, int courseId) {
+			return courseDao.checkUserRating(userId, courseId);
+		}
 
 }
 

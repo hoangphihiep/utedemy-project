@@ -12,6 +12,11 @@ import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Section;
 import vn.iotstar.entity.User;
+import java.util.Map;
+import vn.iotstar.entity.CourseProgress;
+import vn.iotstar.entity.Discussion;
+import vn.iotstar.entity.LessonProgress;
+import vn.iotstar.entity.Review;
 
 public interface ICourseDao {
 	
@@ -96,6 +101,46 @@ public interface ICourseDao {
 	public void addCourse(Course course);
 	
 	public Course getCourseById(int Id);
+	
+	List<Object[]> findSectionLessonCourse(int courseId);
+
+	public List<Map> findCommentsAndReplys(int courseID);
+
+	public List<Map> findReviews(int courseID);
+
+	public void markLessonAsCompleted(LessonProgress lessonProgress);
+
+	public void insertReview(Review review);
+
+	public void insertDiscussion(Discussion discussion);
+
+	public void insertReplyDiscussion(Discussion discussion);
+
+	public void saveCourseProgress(CourseProgress courseProgress);
+
+	public double findAverageRating(int courseID);
+
+	public List<Object[]> findRatingDestribution(int courseID);
+
+	public List<Map> findInfoTeacher(int courseId);
+
+	public String findOverviewSection(int courseId);
+
+	public Integer findCourseProgressId(int courseId, int userId);
+
+	public Integer findTotalLessonInCourse(int courseId);
+
+	public Integer findCurrentLessonFromUserId(int courseProgessId);
+
+	public String findAvatarURL(int userId);
+	
+	public boolean checkUserProgressExists (int userId, int courseId);
+
+	public boolean checkLessonProgressExists (int courseProgressID, int lessonId);
+
+	public boolean checkLessonProgress(int courseProgressID);
+
+	public boolean checkUserRating(int userId, int courseId);
 
 	
 }

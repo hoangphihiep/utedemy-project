@@ -152,6 +152,13 @@ public class DiscountController  extends HttpServlet {
             targetItem.setFinishedFee(finishedFee);
             
             //cập nhật database
+            boolean check_discount_user = discount_service.updateUserDiscount(u.getId(), discount_used.getId());
+            if(!check_discount_user) {
+             	jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Đã có lỗi xảy ra khi cập nhật dữ liệu hệ thống vui lòng thử lại sau.");
+                out.print(jsonResponse.toString());
+                return;
+             }
              if (!order_service.updateDiscountAndFinishedFee(targetItem.getId(),discount_used.getId(),finishedFee)) {
                 jsonResponse.addProperty("success", false);
                 jsonResponse.addProperty("message", "Đã có lỗi xảy ra khi cập nhật dữ liệu hệ thống vui lòng thử lại sau.");
@@ -205,13 +212,6 @@ public class DiscountController  extends HttpServlet {
             jsonResponse.addProperty("totalOrderAmount", totalOrderAmount);
             
             session.setAttribute("lastDiscountedItem", targetItem);
-            boolean check_discount_user = discount_service.updateUserDiscount(u.getId(), discount_used.getId());
-            if(!check_discount_user) {
-             	jsonResponse.addProperty("success", false);
-                jsonResponse.addProperty("message", "Đã có lỗi xảy ra khi cập nhật dữ liệu hệ thống vui lòng thử lại sau.");
-                out.print(jsonResponse.toString());
-                return;
-             }
             
         } catch (Exception e) {
             jsonResponse.addProperty("success", false);
@@ -266,9 +266,6 @@ public class DiscountController  extends HttpServlet {
 	                out.print(jsonResponse.toString());
 	                return;
 	            }
-	            
-	            // Lưu thông tin mã giảm giá trước khi xóa (nếu cần hoàn lại số lượng)
-	            Discount removedDiscount = targetItem.getDiscount();
 	            
 	            // Đặt lại giá về giá gốc
 	            double originalPrice = targetItem.getCourse().getCoursePrice();

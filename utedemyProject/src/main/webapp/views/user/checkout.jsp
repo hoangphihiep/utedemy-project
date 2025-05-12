@@ -138,7 +138,7 @@
                     </div>
                 </div>
             </div>
-            
+         <c:if test="${not empty order.orderItems}">   
          <form action="${pageContext.request.contextPath}/process-payment" method="post" id="paymentForm">
     <input type="hidden" name="paymentMethod" value="paypal">
     <input type="hidden" name="totalAmount" id="totalAmountField" value="${subtotalAmount}">
@@ -153,7 +153,8 @@
 
     <!-- Nút hủy đơn hàng -->
     <button class="btn-cancel-order" onclick="showCancelConfirmation()">HỦY ĐƠN HÀNG</button>
-
+    </c:if>
+    
         </div>
     </div>
 
