@@ -95,8 +95,36 @@ public class OrderController extends HttpServlet {
 				   }
 
 				   System.out.println("Tổng tiền sau giảm: " + subtotalAmount);
+				   // Lấy courseIdnow từ query string
+			        String courseIdStr = req.getParameter("courseIdnow");
 
-				    
+			        // Nếu courseIdnow tồn tại (không null và không rỗng)
+			        if (courseIdStr != null && !courseIdStr.isEmpty()) {
+			            try {
+			                int courseId = Integer.parseInt(courseIdStr);
+			                Course course = course_service.findByIdCourse(courseId);
+			                if (course != null) {
+					            System.out.println("courseisnull");
+					            // Kiểm tra xem order đã có course này chưa
+					            boolean exists = orderItems.stream()
+					                    .anyMatch(oi -> oi.getCourse().getId() == courseId);
+
+					            if (!exists) {
+					                // Nếu chưa có, thêm vào order
+					            	 System.out.println("courseisnulluhuhuhu");
+					                OrderItem orderItem = new OrderItem();
+					                orderItem.setCourse(course);
+					                orderItem.setFinishedFee(course.getCoursePrice());
+					                orderItem.setOrder(order);
+					                orderItems.add(orderItem);
+					                subtotalAmount += course.getCoursePrice();
+					            }
+					        }
+			            } catch (NumberFormatException e) {
+			                // Nếu không phải số thì cũng không làm gì
+			                // Hoặc chuyển hướng nếu muốn
+			            }
+			        }				    
 				    order.setOrderItems(orderItems);
 				    order_service.insertOrUpdateOrder(order);
 				    session.setAttribute("order", order);

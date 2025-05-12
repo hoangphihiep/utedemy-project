@@ -349,7 +349,7 @@
                     <button class="secondary-button" onclick="goToLearn(${courseDetail.course.id})">VÀO HỌC NGAY</button>
                 </c:when>
                 <c:otherwise>
-                    <button class="secondary-button">MUA NGAY</button>
+                    <button class="secondary-button" onclick="buyNow(${courseDetail.course.id})">MUA NGAY</button>
                 </c:otherwise>
             </c:choose>
             </div>
@@ -387,6 +387,12 @@
     
 </div>
 <script type="text/javascript">
+
+//hàm mua ngay
+function buyNow(courseId) {
+    window.location.href = '/utedemyProject/user/viewcheckout?courseIdnow=' + courseId;
+}
+
 // Function to preview images
 function previewImage(event, previewId, placeholderId) {
     const placeholderText = document.getElementById(placeholderId);
