@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -18,9 +18,32 @@
         <span class="header-title">Tổng quan về thuế</span>
     </div>
     <div class="user-controls">
+    		<div class="user-rating" id="btn-rating">
+    			<i class="far fa-star"></i>
+    			<span>Đưa ra đánh giá</span>
+    		</div>
+    		<div id="ratingModal" class="modal" style="display:none;">
+			    <div class="modal-content">
+			        <span class="close">&times;</span>
+			        <h3>Bạn sẽ xếp hạng khóa học này ở mức nào?</h3>
+			        <div class="rating-text" id="ratingText">Hãy chọn một mức đánh giá</div>
+			
+			        <div class="stars">
+			            <i class="far fa-star" data-value="1"></i>
+			            <i class="far fa-star" data-value="2"></i>
+			            <i class="far fa-star" data-value="3"></i>
+			            <i class="far fa-star" data-value="4"></i>
+			            <i class="far fa-star" data-value="5"></i>
+			        </div>
+			        <div id="feedbackForm" style="display: none; margin-top: 20px;">
+			            <textarea id="feedbackContent" placeholder="Nhập nội dung đánh giá..." rows="4" style="width:100%; padding:8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+			            <button id="submitFeedback" style="margin-top:10px; padding:10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Gửi đánh giá</button>
+			        </div>
+			    </div>
+			</div>
             <div class="user-progress" id="progressBtn">
                 <i class="fas fa-chart-line"></i>
-                <span>Tiến độ của bạn </span>
+                <span>Tiến độ của bạn</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
         </div>
@@ -28,7 +51,7 @@
         <!-- Popup tiến độ -->
         <div class="progress-popup" id="progressPopup">
             <div class="progress-content">
-                <div class="progress-header">Đã học ??/?? bài học</div>
+                <div class="progress-header"></div>
             </div>
         </div>
 </header>
@@ -97,8 +120,8 @@
 			<div id="comment-filter">
 			  <label for="comment-sort">Sắp xếp theo: </label>
 			  <select id="comment-sort">
-			    <option value="recent">Mới nhất</option>
-			    <option value="likes">Nhiều lượt thích</option>
+			    <option value="newest">Mới nhất</option>
+			    <option value="oldest">Cũ nhất</option>
 			  </select>
 			</div>
 		    <div id="comment-container"></div>
@@ -139,8 +162,6 @@
             <div class="lesson-list">
                 <div class="lesson-item active">
                 </div>
-                <div class="lesson-item">
-                </div>
             </div>
         </div>
 
@@ -151,8 +172,6 @@
             <div class="lesson-list" style="display: none;">
                 <div class="lesson-item">
                 </div>
-                <div class="lesson-item">
-                </div>
             </div>
         </div>
 
@@ -161,12 +180,6 @@
                 <span class="arrow">&#9654;</span>
             </div>
             <div class="lesson-list" style="display: none;">
-                <div class="lesson-item">
-                </div>
-                <div class="lesson-item">
-                </div>
-                <div class="lesson-item">
-                </div>
                 <div class="lesson-item">
                 </div>
             </div>
@@ -179,3 +192,29 @@
 </body>
 
 </html>
+
+<script>
+    let lessonData = JSON.parse('<%= request.getAttribute("lessonJson").toString().replace("'", "\\'") %>');
+    let courseDescription = JSON.parse('<%= request.getAttribute("overviewJson").toString().replace("'", "\\'") %>');
+    let instructorData = JSON.parse('<%= request.getAttribute("teacherJson").toString().replace("'", "\\'") %>');
+    let allComments = JSON.parse('<%= request.getAttribute("allCommentsJson").toString().replace("'", "\\'") %>');
+    let ratingData = JSON.parse('<%= request.getAttribute("reviewJson").toString().replace("'", "\\'") %>');
+    let reviewData = JSON.parse('<%= request.getAttribute("reviewsListJson").toString().replace("'", "\\'") %>');
+    renderLessons(lessonData);
+    renderOverviewIntro();
+    renderInstructorInfo(instructorData);
+    document.addEventListener("DOMContentLoaded", function () {
+    	  const sortSelect = document.getElementById("comment-sort");
+    	  sortSelect.value = "newest";
+
+    	  // Gọi render
+    	  renderNestedComments(allComments, "newest");
+
+    	  // Đợi DOM cập nhật xong rồi mới giới hạn
+    	  
+    	});
+
+    renderRatingSummary(ratingData);
+    renderReviews();
+</script>
+

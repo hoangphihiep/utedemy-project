@@ -1,9 +1,15 @@
 package vn.iotstar.service;
 
 import java.util.List;
+import java.util.Map;
+
 import vn.iotstar.entity.Answer;
 import vn.iotstar.entity.Course;
+import vn.iotstar.entity.Review;
+import vn.iotstar.entity.LessonProgress;
+import vn.iotstar.entity.Discussion;
 import vn.iotstar.entity.CourseDetail;
+import vn.iotstar.entity.CourseProgress;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.Question;
@@ -15,6 +21,46 @@ public interface ICourseService {
 
 	List<Object[]> getTodaySaleCourses(int limit);
 
+	List<Object[]> getSectionLessonCourse(int courseId);
+	
+	List<Object[]> getRatingDestribution(int courseId);
+	
+	List<Map> getInfoTeacher(int userId);
+
+	List<Map> getCommentsAndReplys(int courseId);
+	
+	List<Map> getReviews(int courseId);
+	
+	public void markLessonAsCompleted(LessonProgress lessonProgress);
+	
+	public void saveDiscussion(Discussion discussion);
+	
+	public void saveReview(Review review);
+	
+	public void saveCourseProgress(CourseProgress courseProgress);
+	
+	public boolean checkUserProgressExists(int userId, int courseId);
+	
+	public boolean checkLessonProgressExists(int courseProgressID, int lessonId);
+	
+	public boolean checkUserRating(int userId, int courseId);
+	
+	public boolean checkLessonProgress(int courseProgessId);
+	
+	public Integer getTotalLessonInCourse(int courseId);
+	
+	public Integer getCurrentLessonFromUserId(int courseProgessId);
+	
+	public String getAvatarURL(int userId);
+	
+	public void saveReplyDiscussion(Discussion discussion);
+	
+	public double getAverageRating(int courseId);
+		
+	public String getOverviewSection(int courseId);
+	
+	public Integer getCourseProgressId(int courseId, int userId);
+	
 	public List<CourseType> listCourseType();
 	
 	public boolean saveCoure (Course course);

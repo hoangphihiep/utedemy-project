@@ -125,6 +125,11 @@
 		    <version>2.15.2</version> <!-- Use the latest version available -->
 		</dependency>
 
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-text</artifactId>
+		    <version>1.10.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

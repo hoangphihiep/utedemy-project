@@ -18,6 +18,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,8 +46,8 @@ public class Discussion implements Serializable{
     @JoinColumn(name = "user_id", nullable = false)
     private User askedBy;
 
-    @Column(name = "asked_at", nullable = false, columnDefinition = "TEXT")
-    private Date askedAt;
+    @Column(name = "asked_at", nullable = false)
+    private LocalDateTime askedAt;
 
     @ManyToOne
     @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)

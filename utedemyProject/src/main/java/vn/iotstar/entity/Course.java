@@ -81,8 +81,8 @@ public class Course implements Serializable {
 	@ManyToMany(mappedBy = "appliedCourses")
     private Set<Discount> discounts = new HashSet<>();
 	
-	@ManyToMany(mappedBy = "courses")
-	private Set<OrderItem> orderItems = new HashSet<>();
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItem = new HashSet<>();
 	
 	@Column(name = "status")
     private int status;

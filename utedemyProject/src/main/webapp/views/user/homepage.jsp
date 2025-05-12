@@ -120,6 +120,7 @@
               price: ${course[3] != null ? course[3] : 0},
               originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
               image: "<c:out value='${course[4] != null ? course[4] : "/api/placeholder/300/200"}'/>",
+              favbtn: active;
               badge: "Bán chạy"
           <c:out value="}" escapeXml="false"/><c:if test="${!status.last}">,</c:if>
           </c:forEach>
@@ -360,6 +361,9 @@
               let detailsBtn = document.createElement('button');
               detailsBtn.classList.add('details-btn');
               detailsBtn.textContent = 'Xem chi tiết';
+              detailsBtn.addEventListener('click', () => {
+            	  console.log('Khóa học:', course.id);
+              })
               
               actions.append(cartBtn, favBtn, detailsBtn);
               

@@ -1,18 +1,26 @@
 package vn.iotstar.impl.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.dao.ICourseDao;
 import vn.iotstar.entity.Course;
+import vn.iotstar.entity.Discussion;
 import vn.iotstar.entity.CourseDetail;
+import vn.iotstar.entity.CourseProgress;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
+import vn.iotstar.entity.LessonProgress;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
+import vn.iotstar.entity.Review;
 import vn.iotstar.entity.Section;
 import vn.iotstar.entity.Answer;
 
@@ -24,17 +32,36 @@ public class CourseDao implements ICourseDao {
 	public List<Object[]> findBestSellingCourseDetails(int limit) {
 	    EntityManager em = JPAConfig.getEntityManager();
 	    try {
-	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, c.id\r\n"
-	    			+ "FROM OrderItem o\r\n"
-	    			+ "JOIN o.courses c\r\n"
-	    			+ "JOIN c.teacher t\r\n"
-	    			+ "LEFT JOIN c.review r\r\n"
-	    			+ "JOIN c.courseDetail cd\r\n"
-	    			+ "GROUP BY c.id, c.courseName, t.fullname, c.coursePrice, cd.courseImage\r\n"
+	    	String jpql = "SELECT c.courseName, t.fullname, AVG(CAST(r.rate AS double)), c.coursePrice, cd.courseImage, c.id"
+	    			+ "FROM OrderItem o"
+	    			+ "JOIN o.courses c"
+	    			+ "JOIN c.teacher t"
+	    			+ "LEFT JOIN c.review r"
+	    			+ "JOIN c.courseDetail cd"
+	    			+ "GROUP BY c.id, c.courseName, t.fullname, c.coursePrice, cd.courseImage"
 	    			+ "ORDER BY COUNT(o.id) DESC";
 
 	        TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
 	        query.setMaxResults(limit);
+	        return query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public List<Object[]> findSectionLessonCourse(int courseId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	    	String jpql = "SELECT s.title, l.title, l.videoUrl, l.description, l.numberItem, l.isFreeLesson "
+	                + "FROM Lesson l "
+	                + "JOIN l.section s "
+	                + "JOIN s.course c "
+	                + "WHERE c.id = :courseId";
+	        
+	        TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
+	        query.setParameter("courseId", courseId);
+	        
 	        return query.getResultList();
 	    } finally {
 	        em.close();
@@ -82,6 +109,266 @@ public class CourseDao implements ICourseDao {
 	        TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
 	        query.setMaxResults(limit);
 	        return query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+	public List<Map> findCommentsAndReplys(int courseID) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT new map(" +
+	                "d.id as id, " +
+	                "d.askedBy.fullname as fullname, " +
+	                "d.askedBy.avatarUrl as avatarUrl, " +
+	                "d.content as content, " +
+	                "d.askedAt as askedAt, " +
+	                "d.parent.id as parentId, " + // ← sửa lại ở đây
+	                "(SELECT COUNT(r) FROM Discussion r WHERE r.parent.id = d.id) as repliesCount" +
+	            ") " +
+	            "FROM Discussion d " +
+	            "WHERE d.course.id = :courseId";
+
+	        TypedQuery<Map> query = em.createQuery(jpql, Map.class);
+	        query.setParameter("courseId", courseID);
+	        return query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	
+	@Override
+	public List<Map> findReviews(int courseID) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT new map(\r\n"
+	        		+ "    u.fullname as author,\r\n"
+	        		+ "    u.avatarUrl as avatar,\r\n"
+	        		+ "    r.rate as rating,\r\n"
+	        		+ "    r.content as content\r\n"
+	        		+ ")\r\n"
+	        		+ "FROM Review r\r\n"
+	        		+ "JOIN r.createdBy u\r\n"
+	        		+ "WHERE r.course.id = :courseId\r\n"
+	        		+ "ORDER BY r.createdAt DESC";
+
+	        TypedQuery<Map> query = em.createQuery(jpql, Map.class);
+	        query.setParameter("courseId", courseID);
+	        return query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public double findAverageRating(int courseID) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT AVG(r.rate) FROM Review r WHERE r.course.id = :courseId";
+	        TypedQuery<Double> query = em.createQuery(jpql, Double.class);
+	        query.setParameter("courseId", courseID);
+	        Double avg = query.getSingleResult();
+	        return avg != null ? avg : 0.0;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public List<Object[]> findRatingDestribution(int courseId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT r.rate, COUNT(r) FROM Review r WHERE r.course.id = :courseId GROUP BY r.rate";
+	        TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
+	        query.setParameter("courseId", courseId);
+	        return query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	
+	@Override
+	public List<Map> findInfoTeacher(int courseId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT new map(" +
+	                "    t.fullname as name, " +
+	                "    t.socialUrl as url, " +
+	                "    t.avatarUrl as avatar, " +
+	                "    t.description as bio, " +
+	                "    (SELECT AVG(r.rate) FROM Review r WHERE r.course.teacher.id = t.id) as rating, " +
+	                "    (SELECT COUNT(r.id) FROM Review r WHERE r.course.teacher.id = t.id) as reviews, " +
+	                "    (SELECT COUNT(oi.id) FROM OrderItem oi WHERE oi.course.teacher.id = t.id) as students, " +
+	                "    (SELECT COUNT(c2.id) FROM Course c2 WHERE c2.teacher.id = t.id) as courses " +
+	                ") " +
+	                "FROM Course c " +
+	                "JOIN c.teacher t " +
+	                "WHERE c.id = :courseId";
+
+	        TypedQuery<Map> query = em.createQuery(jpql, Map.class);
+	        query.setParameter("courseId", courseId);
+	        return query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+    public void insertDiscussion(Discussion discussion) {
+        EntityManager em = JPAConfig.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            em.persist(discussion);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+	@Override
+    public void insertReview(Review review) {
+        EntityManager em = JPAConfig.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            em.persist(review);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+	@Override
+    public void markLessonAsCompleted(LessonProgress lessonProgress) {
+        EntityManager em = JPAConfig.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            em.persist(lessonProgress);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+	
+	@Override
+    public void insertReplyDiscussion(Discussion discussion) {
+        EntityManager em = JPAConfig.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            em.persist(discussion);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+	
+	@Override
+	public String findOverviewSection(int courseId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT c.courseDetail.description FROM Course c WHERE c.id = :courseId";
+	        return em.createQuery(jpql, String.class)
+	                 .setParameter("courseId", courseId)
+	                 .getSingleResult();
+	    } catch (NoResultException e) {
+	        return null;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public String findAvatarURL(int userId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT u.avatarUrl FROM User u WHERE u.id = :userId";
+	        return em.createQuery(jpql, String.class)
+	                 .setParameter("userId", userId)
+	                 .getSingleResult();
+	    } catch (NoResultException e) {
+	        return null;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+	public Integer findCourseProgressId(int courseId, int userId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT cp.id FROM CourseProgress cp " +
+	                      "WHERE cp.course.id = :courseId AND cp.user.id = :userId";
+	        return em.createQuery(jpql, Integer.class)
+	                 .setParameter("courseId", courseId)
+	                 .setParameter("userId", userId)
+	                 .getSingleResult();
+	    } catch (NoResultException e) {
+	        return null;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        em.close();
+	    }
+	}
+
+	@Override
+	public Integer findTotalLessonInCourse(int courseId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT COUNT(l) FROM Lesson l WHERE l.section.course.id = :courseId";
+	        Long count = em.createQuery(jpql, Long.class)
+	                       .setParameter("courseId", courseId)
+	                       .getSingleResult();
+	        return count.intValue();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return 0;
+	    } finally {
+	        em.close();
+	    }
+	}
+	
+	@Override
+	public Integer findCurrentLessonFromUserId(int courseProgressId) {
+	    EntityManager em = JPAConfig.getEntityManager();
+	    try {
+	        String jpql = "SELECT COUNT(lp) FROM LessonProgress lp WHERE lp.courseProgress.id = :courseProgressId";
+	        Long count = em.createQuery(jpql, Long.class)
+	                       .setParameter("courseProgressId", courseProgressId)
+	                       .getSingleResult();
+	        return count.intValue();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return 0;
 	    } finally {
 	        em.close();
 	    }
@@ -327,6 +614,139 @@ public class CourseDao implements ICourseDao {
 	        em.close();
 	    }
 	}
+	
+	public boolean checkUserProgressExists(int userId, int courseId) {
+	    EntityManager em = null;
+	    EntityTransaction trans = null;
+	    try {
+	        em = JPAConfig.getEntityManager();
+	        trans = em.getTransaction();
+	        trans.begin();
+	        String jpql = "SELECT COUNT(cp) FROM CourseProgress cp " +
+	                      "WHERE cp.user.id = :userId AND cp.course.id = :courseId";
+	        Query query = em.createQuery(jpql);
+	        query.setParameter("userId", userId);
+	        query.setParameter("courseId", courseId);
+	        Long count = (Long) query.getSingleResult();
+	        trans.commit();
+	        return count > 0;
+	    } catch (Exception e) {
+	        if (trans != null && trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
+	
+	public boolean checkLessonProgressExists(int courseProgressID, int lessonId) {
+	    EntityManager em = null;
+	    EntityTransaction trans = null;
+	    try {
+	        em = JPAConfig.getEntityManager();
+	        trans = em.getTransaction();
+	        trans.begin();
+
+	        String jpql = "SELECT COUNT(lp) FROM LessonProgress lp " +
+	                      "WHERE lp.lesson.id = :lessonId AND lp.courseProgress.id = :courseProgressID";
+	        Query query = em.createQuery(jpql);
+	        query.setParameter("lessonId", lessonId);
+	        query.setParameter("courseProgressID", courseProgressID);
+
+	        Long count = (Long) query.getSingleResult();
+	        trans.commit();
+	        return count > 0;
+	    } catch (Exception e) {
+	        if (trans != null && trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
+	
+	public boolean checkLessonProgress(int courseProgressID) {
+	    EntityManager em = null;
+	    EntityTransaction trans = null;
+	    try {
+	        em = JPAConfig.getEntityManager();
+	        trans = em.getTransaction();
+	        trans.begin();
+
+	        String jpql = "SELECT COUNT(lp) FROM LessonProgress lp WHERE lp.courseProgress.id = :courseProgressID";
+	        Query query = em.createQuery(jpql);
+	        query.setParameter("courseProgressID", courseProgressID);
+
+	        Long count = (Long) query.getSingleResult();
+	        trans.commit();
+	        return count > 0;
+	    } catch (Exception e) {
+	        if (trans != null && trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
+
+	
+	public boolean checkUserRating(int userId, int courseId) {
+	    EntityManager em = null;
+	    EntityTransaction trans = null;
+	    try {
+	        em = JPAConfig.getEntityManager();
+	        trans = em.getTransaction();
+	        trans.begin();
+
+	        String jpql = "SELECT COUNT(r) FROM Review r " +
+	                      "WHERE r.createdBy.id = :userId AND r.course.id = :courseId";
+	        Query query = em.createQuery(jpql);
+	        query.setParameter("userId", userId);
+	        query.setParameter("courseId", courseId);
+
+	        Long count = (Long) query.getSingleResult();
+	        trans.commit();
+	        return count > 0;
+	    } catch (Exception e) {
+	        if (trans != null && trans.isActive()) {
+	            trans.rollback();
+	        }
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
+
+    public void saveCourseProgress(CourseProgress courseProgress) {
+        EntityManager em = JPAConfig.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            em.persist(courseProgress);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
 	
 	@Override
 	public boolean saveQuiz(Quiz quiz) {

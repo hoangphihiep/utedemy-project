@@ -1,8 +1,11 @@
 package vn.iotstar.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -10,6 +13,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import vn.iotstar.entity.Course;
+import vn.iotstar.entity.Section;
+import vn.iotstar.entity.Lesson;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.impl.service.CourseService;
 import java.io.PrintWriter;
@@ -35,6 +40,5 @@ public class CourseController extends HttpServlet {
     	req.setAttribute("todaySaleCourses", todaySaleCourses);
 
     	req.getRequestDispatcher("/views/user/homepage.jsp").forward(req, resp);
-
     }
 }

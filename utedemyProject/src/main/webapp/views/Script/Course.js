@@ -3,7 +3,9 @@ var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-let player;
+let userAvatar;
+
+let avatarURL;
 
 // Extract YouTube video ID from URL
 	  function extractYouTubeVideoId(url) {
@@ -27,8 +29,10 @@ let player;
 	  }
 
 document.addEventListener("DOMContentLoaded", function () {
+	  document.querySelector(".user-rating").style.display = "none";
 	const autoplayCheckbox = document.querySelector(".autoplay-toggle input[type='checkbox']");
 
+	
 	  // Function to initialize YouTube player API
 	  window.onYouTubeIframeAPIReady = function() {
 	    initializeYouTubePlayer();
@@ -64,11 +68,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	  // Handle player state changes
 	  function onPlayerStateChange(event) {
-	    // State 0 means the video has ended
 	    if (event.data === 0) {
-	      // Check if autoplay is enabled
+	      // Lấy lesson đang active để lấy ID
+	      const activeLesson = document.querySelector("#lesson-container .lesson-item.active");
+	      const currentLessonId = activeLesson?.getAttribute("data-lesson-id") || "1";
+
+	      markLessonAsCompleted(currentLessonId);
+		  setTimeout(() => {
+			takeProgressRequest();
+		  }, 3000);
 	      if (autoplayCheckbox && autoplayCheckbox.checked) {
-	        // If autoplay is checked, click the next button
 	        const nextButton = document.querySelector(".btn-next");
 	        if (nextButton && !nextButton.disabled) {
 	          nextButton.click();
@@ -77,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	    }
 	  }
 
-
 	//Kích hoạt CKEditor
 	CKEDITOR.replace('comment', {
 	  toolbar: [
@@ -85,12 +93,57 @@ document.addEventListener("DOMContentLoaded", function () {
 	    { name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
 	    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] },
 	    { name: 'links', items: [ 'Link', 'Unlink' ] },
-	    { name: 'insert', items: [ 'Image' ] },
 	    { name: 'clipboard', items: [ 'Undo', 'Redo' ] }
 	  ],
 	  removePlugins: 'elementspath',
 	  resize_enabled: false
 	});
+
+	// Xử lý click btn-comment
+	document.addEventListener("click", function(e) {
+	  if (e.target.closest(".btn-submit-comment")) {
+		const btn = e.target.closest(".btn-submit-comment");
+	    var content = CKEDITOR.instances.comment.getData();
+
+		if (content == null || content == "") return;
+
+		// Tạo spinner loading
+		const loadingSpinner = document.createElement('div');
+		loadingSpinner.classList.add('loading-spinner');
+		btn.appendChild(loadingSpinner); // Thêm spinner vào nút gửi comment
+
+		// Disable button để tránh người dùng nhấn lần nữa
+		btn.disabled = true;
+		
+	    fetch('/utedemyProject/views/user/Course', {
+	      method: 'POST',
+	      headers: {
+	        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+	      },
+	      body: `content=${encodeURIComponent(content)}`
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+
+	      // Reset CKEditor
+	      CKEDITOR.instances.comment.setData("");
+		  
+		  renderNestedComments(data);
+
+		  // Ẩn spinner và enable lại nút
+		  loadingSpinner.remove();
+		  btn.disabled = false;
+	    })
+	    .catch(error => {
+			showToast("Đã xảy ra lỗi!", "error");
+			// Ẩn spinner và enable lại nút
+			        loadingSpinner.remove();
+			        btn.disabled = false;
+	    });
+	  }
+	});
+	
+	
 
   // Tab switching
   const tabButtons = document.querySelectorAll(".tab-menu div");
@@ -133,16 +186,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  checkUPERequest();
+  takeProgressRequest();
+  checkRatingRequest();
+  takeAvatarURLRequest();
+  
   // Gọi render bài học khi DOM đã sẵn sàng
-  renderLessons(lessonData);
   setTimeout(() => {
     initializeYouTubePlayer();
   }, 1000); // đảm bảo DOM đã có iframe
-  renderComments(commentData); 
-  renderOverviewIntro();
-  renderInstructorInfo(instructorData);
-  renderRatingSummary(ratingData);
-  renderReviews();
 
     const loadMoreBtn = document.getElementById("load-more-btn");
     if (loadMoreBtn) {
@@ -156,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (sortSelect) {
     sortSelect.addEventListener("change", function () {
       const selectedFilter = this.value;
-      renderComments(commentData, selectedFilter);
+      renderNestedComments(allComments, selectedFilter);
     });
   }
 
@@ -240,6 +292,26 @@ document.addEventListener("DOMContentLoaded", function () {
 	const initialIndex = Array.from(allLessons).findIndex(item => item.classList.contains("active"));
 	updateNavigationButtons(initialIndex, allLessons.length);
 
+	const ratingBtn = document.getElementById("btn-rating");
+		  const ratingModal = document.getElementById("ratingModal");
+		  const closeRatingModal = document.querySelector("#ratingModal .close");
+
+		  if (ratingBtn && ratingModal && closeRatingModal) {
+		    ratingBtn.addEventListener("click", function () {
+		      ratingModal.style.display = "block";
+		    });
+
+		    closeRatingModal.addEventListener("click", function () {
+		      ratingModal.style.display = "none";
+		    });
+
+		    window.addEventListener("click", function (event) {
+		      if (event.target === ratingModal) {
+		        ratingModal.style.display = "none";
+		      }
+		    });
+		  }
+	
 	const reportBtn = document.getElementById("btn-report");
 	  const reportModal = document.getElementById("reportModal");
 	  const closeModal = document.querySelector("#reportModal .close");
@@ -282,22 +354,16 @@ document.addEventListener("DOMContentLoaded", function () {
 					 reportModal.style.display = "none";
 			    }
 
-				showToast("Hãy chọn loại lỗi trước khi gửi!");
+				showToast("Hãy chọn loại lỗi trước khi gửi!", "error");
 	          return; // Không gửi nữa
 	        }
-
-	        // Nếu hợp lệ thì gửi dữ liệu
-	        console.log("=== Thông tin báo lỗi ===");
-	        console.log("Bài học:", lessonTitle);
-	        console.log("Loại lỗi:", errorType || "Không chọn");
-	        console.log("Nội dung:", errorContent || "Không nhập");
 
 	        // (Option) Đóng modal sau khi báo lỗi xong
 	        const reportModal = document.getElementById("reportModal");
 	        if (reportModal) {
 	          reportModal.style.display = "none";
 
-				showToast("Đã gửi báo lỗi thành công!");
+				showToast("Đã gửi báo lỗi thành công!", "success");
 	        }
 
 	        // (Option) Reset form sau khi gửi
@@ -307,28 +373,245 @@ document.addEventListener("DOMContentLoaded", function () {
 	        }
 	      });
 	    }
+		
+		const stars = document.querySelectorAll(".stars i");
+		const ratingText = document.getElementById("ratingText");
+		const feedbackForm = document.getElementById("feedbackForm"); // Lấy feedback form
+		const submitFeedbackBtn = document.getElementById("submitFeedback"); // Nút Gửi
+		const feedbackContent = document.getElementById("feedbackContent"); // Ô nhập nội dung
+		let selectedRating = 0;
+
+		const ratingDescriptions = [
+		  "Rất tệ, hoàn toàn không như tôi mong đợi",
+		  "Kém, khá thất vọng",
+		  "Trung bình, lẽ ra có thể hay hơn",
+		  "Tốt, như tôi mong đợi",
+		  "Tuyệt vời, khóa học quá sức mong đợi!"
+		];
+
+		stars.forEach((star, index) => {
+		  star.addEventListener("mouseover", () => {
+		    highlightStars(index);
+		    ratingText.textContent = ratingDescriptions[index];
+		  });
+
+		  star.addEventListener("mouseout", () => {
+		    if (selectedRating === 0) {
+		      ratingText.textContent = "Hãy chọn một mức đánh giá";
+		    } else {
+		      ratingText.textContent = ratingDescriptions[selectedRating - 1];
+		    }
+		    highlightStars(selectedRating - 1);
+		  });
+
+		  star.addEventListener("click", () => {
+		    selectedRating = index + 1;
+		    ratingText.textContent = ratingDescriptions[index];
+		    highlightStars(index);
+			
+			feedbackForm.style.display = "block";
+		  });
+		});
+
+		function highlightStars(index) {
+		  stars.forEach((star, i) => {
+		    if (i <= index) {
+		      star.classList.remove("far");
+		      star.classList.add("fas");
+		    } else {
+		      star.classList.remove("fas");
+		      star.classList.add("far");
+		    }
+		  });
+		}
+		
+		// Xử lý khi click nút Gửi
+		submitFeedbackBtn.addEventListener("click", () => {
+		  const feedback = feedbackContent.value.trim();
+		  if (selectedRating === 0) {
+		    showToast("Vui lòng chọn số sao đánh giá!", "error");
+		    return;
+		  }
+		  if (feedback === "") {
+		    showToast("Vui lòng nhập nội dung đánh giá!", "error");
+		    return;
+		  }
+		  sendFeedback(selectedRating, feedback);
+		  showToast("Đánh giá của bạn đã được ghi nhận!", "success");
+		  document.querySelector(".user-rating").style.display = "none";
+		  // Reset lại form
+		  selectedRating = 0;
+		  highlightStars(-1);
+		  feedbackContent.value = "";
+		  feedbackForm.style.display = "none";
+		  ratingText.textContent = "Hãy chọn một mức đánh giá";
+		  ratingModal.style.display = "none";
+		});
+		
 });
 
+function checkRatingRequest() {
+	const checkRating = true;
+	fetch('/utedemyProject/views/user/Course', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+		},
+		body: `checkRating=${checkRating}`
+	})
+	.then(response => response.json())
+	.then(data => {
+		if (data) {
+			document.querySelector(".user-rating").style.display = "block";
+		}
+	})
+	.catch(error => {
+	});
+}
 
-function showToast(message) {
+function checkUPERequest() {
+	const checkUPE = true;
+	fetch('/utedemyProject/views/user/Course', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+		},
+		body: `checkUPE=${checkUPE}`
+	})
+	.then(response => response.json())
+	.then(data => {
+	})
+	.catch(error => {
+	});
+}
+
+function takeAvatarURLRequest() {
+	const takeavatarURL = true;
+		  
+		  fetch('/utedemyProject/views/user/Course', {
+		  		method: 'POST',
+		  		headers: {
+		  			'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+		  		},
+		  		body: `takeavatarURL=${takeavatarURL}`
+		  	})
+		  	.then(response => response.json())
+		  	.then(data => {
+		  		if (data != null) {
+		  			userAvatar = data;
+		  		}
+		  	})
+		  	.catch(error => {
+		  	});
+}
+
+function takeProgressRequest() {
+	const takeProgress = true;
+	fetch('/utedemyProject/views/user/Course', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+			},
+			body: `takeProgress=${takeProgress}`
+		})
+		.then(response => response.json())
+		.then(data => {
+			renderProgressPopup(data);
+		})
+		.catch(error => {
+		});
+}
+
+function sendFeedback(selectedRating, feedback)
+{
+	fetch('/utedemyProject/views/user/Course', {
+	      method: 'POST',
+	      headers: {
+	        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+	      },
+	      body: `feedback=${feedback}&selectedRating=${selectedRating}`
+	    })
+	      .then(response => response.json())
+	      .then(data => {
+	      })
+		.catch(error => {
+		  console.error('Lỗi khi gửi đánh giá:', error);
+		});
+}
+
+let currentToast = null; 
+
+function markLessonAsCompleted(lessonId) {
+  fetch('/utedemyProject/views/user/Course', {
+    method: 'POST',
+    headers: {
+		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    },
+	body: `lessonId=${lessonId}`
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Có lỗi khi gửi dữ liệu về server');
+    }
+    return response.json();
+  })
+  .then(data => {
+	checkRatingRequest();
+  })
+  .catch(error => {
+    console.error('Lỗi khi gửi lessonId:', error);
+  });
+}
+
+function showToast(message, type = "success") {
+  if (currentToast) {
+    currentToast.remove();
+    currentToast = null;
+  }
+
   const toast = document.createElement("div");
   toast.innerText = message;
   toast.style.position = "fixed";
-  toast.style.bottom = "20px";
-  toast.style.right = "20px";
-  toast.style.background = "#4caf50";
+  toast.style.top = "50%";
+  toast.style.left = "50%";
+  toast.style.transform = "translate(-50%, -500%)";
   toast.style.color = "white";
-  toast.style.padding = "10px 20px";
-  toast.style.borderRadius = "5px";
-  toast.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+  toast.style.padding = "15px 30px";
+  toast.style.borderRadius = "8px";
+  toast.style.boxShadow = "0 2px 10px rgba(0,0,0,0.3)";
   toast.style.zIndex = "9999";
+  toast.style.fontSize = "18px";
+  toast.style.textAlign = "center";
+  toast.style.minWidth = "200px";
+
+  switch (type) {
+    case "error":
+      toast.style.background = "#f44336";
+      break;
+    case "success":
+      toast.style.background = "#4caf50";
+      break;
+    case "warning":
+      toast.style.background = "#ff9800";
+      break;
+    case "info":
+      toast.style.background = "#2196f3";
+      break;
+    default:
+      toast.style.background = "#4caf50";
+  }
 
   document.body.appendChild(toast);
+  currentToast = toast; 
 
   setTimeout(() => {
-    toast.remove();
+    if (currentToast === toast) { 
+      toast.remove();
+      currentToast = null;
+    }
   }, 3000);
 }
+
 
 //Xử lý click like
 document.addEventListener("click", function(e) {
@@ -344,51 +627,125 @@ function attachCommentListeners() {
     icon.addEventListener('click', function () {
       const commentDiv = this.closest('.comment');
       const replyDiv = commentDiv.querySelector('.comment-reply-editor');
+      const parentId = commentDiv.getAttribute('data-comment-id');
+      const editorId = `reply-editor-${parentId}`;
 
+      // Ẩn tất cả reply editors khác và destroy CKEditor
+      document.querySelectorAll('.comment-reply-editor').forEach(div => {
+        div.style.display = 'none';
+        if (div.querySelector('textarea')) {
+          const ta = div.querySelector('textarea');
+          const id = ta.id;
+          if (CKEDITOR.instances[id]) {
+            CKEDITOR.instances[id].destroy();
+            delete CKEDITOR.instances[id];
+          }
+        }
+        div.innerHTML = '';
+      });
+
+      // Toggle nếu đã mở
       if (replyDiv.style.display === 'block') {
         replyDiv.style.display = 'none';
         replyDiv.innerHTML = '';
-      } else {
-        // Ẩn mọi CKEditor khác
-        document.querySelectorAll('.comment-reply-editor').forEach(div => {
-          div.style.display = 'none';
-          div.innerHTML = '';
-        });
-
-        // Hiển thị khung reply
-        replyDiv.style.display = 'block';
-
-        // Tạo layout với avatar, textarea, và nút gửi
-		replyDiv.innerHTML = `
-		  <div class="editor-wrapper">6
-		    <div class="editor-top">
-		      <img class="avatar" src="${userAvatar}" alt="Avatar">
-		      <div class="editor-content">
-		        <textarea name="reply-editor"></textarea>
-		      </div>
-		    </div>
-		    <div class="editor-bottom">
-		      <button class="submit-reply-btn">Gửi</button>
-		    </div>
-		  </div>
-		`;
-
-        // Khởi tạo CKEditor
-        CKEDITOR.replace(replyDiv.querySelector('textarea'), {
-          toolbar: [
-            { name: 'styles', items: ['Styles', 'Format'] },
-            { name: 'basicstyles', items: ['Bold', 'Italic'] },
-            { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
-            { name: 'links', items: ['Link', 'Unlink'] },
-            { name: 'insert', items: ['Image'] },
-            { name: 'clipboard', items: ['Undo', 'Redo'] }
-          ],
-          removePlugins: 'elementspath',
-          resize_enabled: false
-        });
+        return;
       }
+
+      // Tạo layout reply
+      replyDiv.style.display = 'block';
+      replyDiv.innerHTML = `
+        <div class="editor-wrapper">
+          <div class="editor-top">
+            <img class="avatar" src="${userAvatar}" alt="Avatar">
+            <div class="editor-content">
+              <textarea id="${editorId}"></textarea>
+            </div>
+          </div>
+          <div class="editor-bottom">
+            <button class="submit-reply-btn" data-editor-id="${editorId}" data-parent-id="${parentId}">Gửi</button>
+          </div>
+        </div>
+      `;
+
+      // Khởi tạo CKEditor
+      CKEDITOR.replace(editorId, {
+        toolbar: [
+          { name: 'styles', items: ['Styles', 'Format'] },
+          { name: 'basicstyles', items: ['Bold', 'Italic'] },
+          { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+          { name: 'links', items: ['Link', 'Unlink'] },
+          { name: 'clipboard', items: ['Undo', 'Redo'] }
+        ],
+        removePlugins: 'elementspath',
+        resize_enabled: false
+      });
     });
   });
+}
+
+// GẮN SỰ KIỆN MỘT LẦN DUY NHẤT Ở NGOÀI
+document.addEventListener("click", function (e) {
+  if (e.target.closest(".submit-reply-btn")) {
+    const btn = e.target.closest(".submit-reply-btn");
+    const editorId = btn.getAttribute("data-editor-id");
+    const parentId = btn.getAttribute("data-parent-id");
+    const replyDiv = btn.closest('.comment-reply-editor');
+	
+    const editorInstance = CKEDITOR.instances[editorId];
+    const replyContent = editorInstance.getData();
+
+    if (!replyContent.trim()) return;
+
+	const loadingSpinner = document.createElement('div');
+	loadingSpinner.classList.add('loading-spinner');
+	btn.appendChild(loadingSpinner);
+	btn.disabled = true;
+
+    fetch('/utedemyProject/views/user/Course', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      },
+      body: `content=${encodeURIComponent(replyContent)}&parentId=${parentId}`
+    })
+      .then(response => response.json())
+      .then(data => {
+        editorInstance.setData("");
+        editorInstance.destroy();
+        delete CKEDITOR.instances[editorId];
+        replyDiv.style.display = 'none';
+        replyDiv.innerHTML = '';
+        renderNestedComments(data);
+		document.querySelectorAll('.comment').forEach(commentDiv => {
+		    limitReplyDisplay(commentDiv);
+		  });
+		  
+		  // Ẩn spinner và enable lại nút
+		          loadingSpinner.remove();
+		          btn.disabled = false;
+      })
+      .catch(error => {
+        showToast("Gửi trả lời thất bại!", "error");
+		
+		// Ẩn spinner và enable lại nút
+		        loadingSpinner.remove();
+		        btn.disabled = false;
+      });
+  }
+});
+
+// Hàm render hiển thị popup với tiến độ khóa học
+function renderProgressPopup(data) {
+    const progressPopup = document.getElementById("progressPopup");
+    const progressHeader = progressPopup.querySelector(".progress-header");
+
+    const total = data.total;
+    const current = data.current;
+
+    // Tính phần trăm đã học, làm tròn xuống
+    const percent = total > 0 ? Math.floor((current / total) * 100) : 0;
+
+    progressHeader.textContent = `Đã học ${percent}% (${current}/${total} bài học)`;
 }
 
 
@@ -430,35 +787,33 @@ function renderLessons(data) {
       const item = document.createElement("div");
       item.classList.add("lesson-item");
 
-      if (index === 0 && i === 0) item.classList.add("active");
+      const isFirstLesson = index === 0 && i === 0;
+      if (isFirstLesson) item.classList.add("active");
 
       item.setAttribute("data-video-url", lesson.videoUrl);
       item.setAttribute("data-description", lesson.description || "");
+      item.setAttribute("data-lesson-id", lesson.id);
 
-      item.innerHTML = `
-        <span>${lesson.title}</span>
-        <span>${lesson.duration || ''}</span>
-      `;
-
+      item.innerHTML = `<span>${lesson.title}</span>`;
       lessonList.appendChild(item);
 
-	  // Gắn sự kiện click vào mỗi bài học
-	  item.addEventListener("click", function () {
-	    // Xóa class active khỏi tất cả bài học
-	    document.querySelectorAll(".lesson-item").forEach(el => el.classList.remove("active"));
-	    this.classList.add("active");
+	  if (isFirstLesson) {
+	    const url = lesson.videoUrl;
+	    const title = lesson.title;
+	    const description = lesson.description || "";
+	    const lessonId = lesson.id;
 
-	    const url = this.getAttribute("data-video-url");
-	    const title = this.querySelector("span").innerText;
-	    const description = this.getAttribute("data-description") || "";
+	    window.currentLessonId = lessonId; 
 
-	    // Cập nhật tiêu đề và mô tả bài học
+	    const playerContainer = document.getElementById("youtube-player");
+	    if (playerContainer && lessonId) {
+	      playerContainer.setAttribute("data-lesson-id", lessonId);
+	    }
+
 	    document.getElementById("lesson-title").innerText = title;
 	    document.getElementById("lesson-description").innerText = description;
 
-	    // Đổi video theo player API hoặc iframe
-	    const ytPlayerDiv = document.getElementById('youtube-player');
-	    if (ytPlayerDiv && window.YT && window.YT.Player && player) {
+	    if (window.YT && window.YT.Player && player) {
 	      const videoId = extractYouTubeVideoId(url);
 	      if (videoId) {
 	        player.loadVideoById(videoId);
@@ -470,62 +825,51 @@ function renderLessons(data) {
 	      }
 	    }
 
-	    // Scroll bài học vào giữa màn hình cho đẹp
-	    this.scrollIntoView({ behavior: "smooth", block: "center" });
-
-	    const allLessons = document.querySelectorAll(".lesson-item");
-	    const currentIndex = Array.from(allLessons).indexOf(this);
-	    updateNavigationButtons(currentIndex, allLessons.length);
-	  });
+	    updateNavigationButtons(0, document.querySelectorAll(".lesson-item").length);
+	  }
 
 
+      item.addEventListener("click", function () {
+        document.querySelectorAll(".lesson-item").forEach(el => el.classList.remove("active"));
+        this.classList.add("active");
 
+        const url = this.getAttribute("data-video-url");
+        const title = this.querySelector("span").innerText;
+        const description = this.getAttribute("data-description") || "";
+        const lessonId = this.getAttribute("data-lesson-id");
+
+        const playerContainer = document.getElementById("youtube-player");
+        if (playerContainer && lessonId) {
+          playerContainer.setAttribute("data-lesson-id", lessonId);
+        }
+
+        document.getElementById("lesson-title").innerText = title;
+        document.getElementById("lesson-description").innerText = description;
+
+        if (window.YT && window.YT.Player && player) {
+          const videoId = extractYouTubeVideoId(url);
+          if (videoId) {
+            player.loadVideoById(videoId);
+          }
+        } else {
+          const iframe = document.getElementById("lesson-video");
+          if (iframe) {
+            iframe.src = url;
+          }
+        }
+
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        const allLessons = document.querySelectorAll(".lesson-item");
+        const currentIndex = Array.from(allLessons).indexOf(this);
+        updateNavigationButtons(currentIndex, allLessons.length);
+      });
     });
 
     sectionDiv.appendChild(titleDiv);
     sectionDiv.appendChild(lessonList);
     container.appendChild(sectionDiv);
   });
-}
-
-
-//render reply comment
-function renderRepliesForAuthor(commentDiv, authorName) {
-  const replies = replyData[authorName];
-
-  const replyList = document.createElement("div");
-  replyList.classList.add("reply-list");
-
-  if (replies && replies.length > 0) {
-    replies.forEach(reply => {
-      const replyDiv = document.createElement("div");
-      replyDiv.classList.add("reply");
-
-      replyDiv.innerHTML = `
-        <div class="reply-body">
-          <img class="avatar" src="${reply.avatar || 'https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg'}" alt="avatar">
-          <div class="reply-content-box">
-            <strong>${reply.author}</strong> <span class="reply-time">${formatTimeAgo(reply.time) || ""}</span>
-            <div class="reply-content">${reply.content}</div>
-          </div>
-        </div>
-      `;
-
-      replyList.appendChild(replyDiv);
-    });
-
-    commentDiv.appendChild(replyList);
-    limitReplyDisplay(commentDiv);
-  } else {
-    // Nếu không có reply, vẫn cần gắn div.reply-list để đảm bảo layout
-    commentDiv.appendChild(replyList);
-  }
-
-  // Luôn tạo comment-reply-editor
-  const replyEditorDiv = document.createElement("div");
-  replyEditorDiv.className = "comment-reply-editor";
-  replyEditorDiv.style.display = "none";
-  commentDiv.appendChild(replyEditorDiv);
 }
 
 
@@ -540,65 +884,144 @@ function limitReplyDisplay(commentDiv) {
       if (index >= 2) reply.style.display = 'none';
     });
 
-    // Tạo nút "Hiển thị thêm"
-    const showMoreBtn = document.createElement('button');
-    showMoreBtn.className = 'show-more-btn';
-    showMoreBtn.textContent = 'Xem thêm phản hồi';
+    // Kiểm tra xem đã có nút "Xem thêm phản hồi" chưa để tránh thêm nhiều lần
+    if (!commentDiv.querySelector('.show-more-btn')) {
+      const showMoreBtn = document.createElement('button');
+      showMoreBtn.className = 'show-more-btn';
+      showMoreBtn.textContent = 'Xem thêm phản hồi';
 
-    // Xử lý khi nhấn "Hiển thị thêm"
-    showMoreBtn.addEventListener('click', () => {
-      replies.forEach(reply => reply.style.display = 'block');
-      showMoreBtn.style.display = 'none';
-    });
+      showMoreBtn.addEventListener('click', () => {
+        replies.forEach(reply => reply.style.display = 'block');
+        showMoreBtn.style.display = 'none';
+      });
 
-    // Thêm nút vào sau danh sách reply
-    commentDiv.appendChild(showMoreBtn);
+      // Thêm nút vào sau danh sách reply (nên gắn sau reply-list nếu có)
+      if (replyList) {
+        replyList.appendChild(showMoreBtn);
+      } else {
+        commentDiv.appendChild(showMoreBtn);
+      }
+    }
   }
 }
 
 
-//render comment chính
-function renderComments(data, filterType = "recent") {
+function decodeHtmlEntities(str) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
+
+
+function renderNestedComments(allComments, filterType = "recent") {
   const container = document.getElementById("comment-container");
   if (!container) return;
 
-  // Clone mảng để không ảnh hưởng dữ liệu gốc
-  let sortedData = [...data];
+  // Tách comment gốc và reply
+  const comments = allComments.filter(c => c.parentId == null);
+  const repliesMap = {};
 
-  if (filterType === "likes") {
-    sortedData.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-  } else if (filterType === "recent") {
-    sortedData.sort((a, b) => new Date(b.time) - new Date(a.time));
-  }
+  allComments.forEach(c => {
+    if (c.parentId !== null) {
+      if (!repliesMap[c.parentId]) repliesMap[c.parentId] = [];
+      repliesMap[c.parentId].push(c);
+    }
+  });
+
+  sortComments(comments, filterType);
 
   container.innerHTML = "";
 
-  sortedData.forEach(comment => {
-    const commentDiv = document.createElement("div");
-    commentDiv.classList.add("comment");
+  comments.forEach(comment => {
+    const commentDiv = createCommentElement(comment);
 
-    commentDiv.innerHTML = `
-      <div class="comment-body">
-        <img class="avatar" src="${comment.avatar || 'https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg'}" alt="avatar">
-        <div class="comment-content">
-          <div class="author-name"><strong>${comment.author}</strong></div>
-          <div class="comment-text">${comment.content}</div>
-          <div class="comment-actions">
-		  <div class="left-actions">${formatTimeAgo(comment.time)}</div>
-            <div class="right-actions">
-              <span class="reply-editor"><i class="fa-regular fa-thumbs-up"></i> ${comment.likes || 0}</span>
-              <span class="reply-editor"><i class="fa-regular fa-comment"></i> ${comment.replies || 0}</span>
-            </div>
+    // Thêm replies nếu có
+    const replies = repliesMap[comment.id] || [];
+	if (replies.length > 0) {
+	  replies.sort((a, b) => b.id - a.id);
+
+	  const replyList = document.createElement("div");
+	  replyList.classList.add("reply-list");
+
+	  replies.forEach(reply => {
+	    const replyDiv = createReplyElement(reply);
+	    replyList.appendChild(replyDiv);
+	  });
+
+	  commentDiv.appendChild(replyList);
+	  limitReplyDisplay(commentDiv);
+	}
+
+
+    // Thêm khung soạn thảo trả lời (ẩn)
+    const replyEditorDiv = document.createElement("div");
+    replyEditorDiv.className = "comment-reply-editor";
+    replyEditorDiv.style.display = "none";
+    commentDiv.appendChild(replyEditorDiv);
+
+    container.appendChild(commentDiv);
+  });
+
+  // Re-attach các listener sau khi render lại
+  attachCommentListeners();
+}
+
+
+function sortComments(comments, filterType) {
+  return comments.sort((a, b) => {
+    if (filterType === "newest") {
+      return new Date(b.time) - new Date(a.time); 
+    } else if (filterType === "oldest") {
+      return new Date(a.time) - new Date(b.time); 
+    } else {
+      return 0;
+    }
+  });
+}
+
+function createCommentElement(comment) {
+  const div = document.createElement("div");
+  div.classList.add("comment");
+  div.setAttribute("data-comment-id", comment.id);
+
+  const avatar = comment.avatar || 'https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg';
+  const timeAgo = formatTimeAgo(comment.time) || "";
+
+  div.innerHTML = `
+    <div class="comment-body">
+      <img class="avatar" src="${avatar}" alt="avatar">
+      <div class="comment-content">
+        <div class="author-name"><strong>${comment.author}</strong></div>
+        <div class="comment-text">${decodeHtmlEntities(comment.content)}</div>
+        <div class="comment-actions">
+          <div class="left-actions">${timeAgo}</div>
+          <div class="right-actions">
+            <span class="reply-editor"><i class="fa-regular fa-comment"></i> ${comment.replies || 0}</span>
           </div>
         </div>
       </div>
-    `;
+    </div>
+  `;
+  return div;
+}
 
-    container.appendChild(commentDiv);
-    renderRepliesForAuthor(commentDiv, comment.author);
-  });
+function createReplyElement(reply) {
+  const div = document.createElement("div");
+  div.classList.add("reply");
 
-  attachCommentListeners();
+  const avatar = reply.avatar || 'https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg';
+  const timeAgo = formatTimeAgo(reply.time) || "";
+
+  div.innerHTML = `
+    <div class="reply-body">
+      <img class="avatar" src="${avatar}" alt="avatar">
+      <div class="reply-content-box">
+        <strong>${reply.author}</strong> <span class="reply-time">${timeAgo}</span>
+        <div class="reply-content">${decodeHtmlEntities(reply.content)}</div>
+      </div>
+    </div>
+  `;
+  return div;
 }
 
 function formatTimeAgo(dateString) {
@@ -658,41 +1081,53 @@ function renderOverviewIntro() {
 //render thông tin giảng viên
 function renderInstructorInfo(instructor) {
   if (!instructor) return;
-  const { rating, reviews, students, courses } = instructor.stats;
+
+  // Gán mặc định nếu undefined
+  const {
+    name = "Không rõ",
+    avatar = "",
+    url = "#",
+    bio = "Chưa có thông tin",
+    rating = 0,
+    reviews = 0,
+    students = 0,
+    courses = 0,
+    organization = ""
+  } = instructor;
 
   document.getElementById("instructor-info").innerHTML = `
     <div class="instructor-wrapper">
-	<h3>Giảng viên</h3>
+      <h3>Giảng viên</h3>
       <p class="instructor-name">
-        <a href="${instructor.url}" target="_blank" rel="noopener">
-          ${instructor.name}
+        <a href="${url}" target="_blank" rel="noopener">
+          ${name}
         </a>
       </p>
-      <p class="instructor-org">${instructor.organization}</p>
+      <p class="instructor-org">${organization}</p>
       <div class="instructor-top">
-        <img class="instructor-avatar" src="${instructor.avatar}" alt="Avatar">
+        <img class="instructor-avatar" src="${avatar}" alt="Avatar">
         <div class="instructor-stats">
           <div class="instructor-stat">
             <i class="fas fa-star"></i>
-            <span>${rating.toFixed(1)} xếp hạng</span>
+            <span>${Number(rating).toFixed(1)} xếp hạng</span>
           </div>
           <div class="instructor-stat">
             <i class="far fa-star"></i>
-            <span>${reviews.toLocaleString()} đánh giá</span>
+            <span>${Number(reviews).toLocaleString()} đánh giá</span>
           </div>
           <div class="instructor-stat">
             <i class="fas fa-user"></i>
-            <span>${students.toLocaleString()} học viên</span>
+            <span>${Number(students).toLocaleString()} học viên</span>
           </div>
           <div class="instructor-stat">
             <i class="fas fa-play-circle"></i>
-            <span>${courses} khóa học</span>
+            <span>${Number(courses).toLocaleString()} khóa học</span>
           </div>
         </div>
       </div>
       <div class="instructor-bio-section">
         <div class="collapsible-container" id="instructor-bio-content">
-          ${instructor.bio}
+          ${bio}
         </div>
         <span class="toggle-button"
               onclick="toggleContent('instructor-bio-content', this)">
@@ -702,6 +1137,7 @@ function renderInstructorInfo(instructor) {
     </div>
   `;
 }
+
 
 //Render bảng đánh giá
 function renderRatingSummary(data) {
@@ -806,329 +1242,3 @@ function renderReviews() {
     loadMoreBtn.style.display = "block";
   }
 }
-
-
-const reviewData = [
-  {
-    author: "Phạm Bá Hổ",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194935.png",
-    rating: 4,
-    content: "Bài giảng của thầy rất hay, tôi tiếp thu được thêm nhiều kiến thức. Cảm ơn Giảng viên Nguyễn Lê Hoàng và Unica"
-  },
-  {
-    author: "Nguyễn Thị Lan",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194938.png",
-    rating: 5,
-    content: "Nội dung bài học dễ hiểu, giảng viên truyền đạt rõ ràng."
-  },
-  {
-    author: "Trần Minh Tuấn",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194931.png",
-    rating: 4,
-    content: "Khóa học rất hữu ích cho công việc của tôi."
-  },
-  {
-    author: "Lê Thị Bích",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194937.png",
-    rating: 5,
-    content: "Giảng viên dạy rất tâm huyết, tài liệu chi tiết."
-  },
-  {
-    author: "Hoàng Quốc Việt",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194936.png",
-    rating: 3,
-    content: "Một số phần kiến thức còn hơi khó tiếp cận với người mới."
-  },
-  {
-    author: "Đỗ Hồng Sơn",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194939.png",
-    rating: 4,
-    content: "Bài tập thực hành rất thực tế, giúp tôi hiểu bài sâu hơn."
-  },
-  {
-    author: "Phan Thị Ngọc",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194933.png",
-    rating: 5,
-    content: "Khóa học tuyệt vời! Tôi sẽ giới thiệu cho bạn bè."
-  },
-  {
-    author: "Vũ Văn An",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194930.png",
-    rating: 2,
-    content: "Một số video có âm thanh nhỏ, cần cải thiện."
-  },
-  {
-    author: "Lâm Quốc Bảo",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194940.png",
-    rating: 5,
-    content: "Giảng viên giải thích rất dễ hiểu, phù hợp cho người mới bắt đầu."
-  },
-  {
-    author: "Ngô Thị Hương",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194932.png",
-    rating: 4,
-    content: "Khóa học cung cấp nhiều ví dụ thực tế hữu ích."
-  },
-  {
-    author: "Bùi Thanh Hằng",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194934.png",
-    rating: 5,
-    content: "Cách trình bày bài học rất logic và dễ theo dõi."
-  },
-  {
-    author: "Đặng Minh Khoa",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194935.png",
-    rating: 3,
-    content: "Tôi mong muốn có thêm bài tập thực hành nhiều hơn nữa."
-  },
-  {
-    author: "Nguyễn Tấn Phát",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194938.png",
-    rating: 5,
-    content: "Khóa học đáng đồng tiền bát gạo. Cảm ơn Unica và giảng viên!"
-  },
-  {
-    author: "Trịnh Bảo Trâm",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194931.png",
-    rating: 4,
-    content: "Tôi đã áp dụng được kiến thức vào công việc thực tế ngay sau khóa học."
-  },
-  {
-    author: "Lưu Gia Hân",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194937.png",
-    rating: 1,
-    content: "Khóa học rất hay, dễ tiếp thu, phù hợp cho người đi làm."
-  },
-  {
-    author: "Mai Hữu Nghĩa",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194936.png",
-    rating: 3,
-    content: "Một vài phần bài giảng hơi ngắn, cần chi tiết hơn."
-  },
-  {
-    author: "Võ Quốc Hưng",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194939.png",
-    rating: 5,
-    content: "Bài giảng sinh động, giảng viên nhiệt tình giải đáp thắc mắc."
-  },
-  {
-    author: "Huỳnh Thị Mỹ Duyên",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194933.png",
-    rating: 4,
-    content: "Tôi cảm thấy tự tin hơn sau khi hoàn thành khóa học."
-  },
-  {
-    author: "Tạ Minh Nhật",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194930.png",
-    rating: 5,
-    content: "Khóa học thiết kế bài bản, dễ hiểu từ cơ bản đến nâng cao."
-  },
-  {
-    author: "Châu Hồng Ngọc",
-    avatar: "https://cdn-icons-png.flaticon.com/512/194/194940.png",
-    rating: 4,
-    content: "Cảm ơn thầy cô và đội ngũ hỗ trợ rất nhiệt tình."
-  },
-];
-
-
-//Thông tin đánh giá
-const ratingData = {
-  average: 4.9,
-  distribution: {
-    5: 90.5,
-    4: 8.8,
-    3: 0.7,
-    2: 0,
-    1: 0
-  }
-};
-
-//Thông tin giới thiệu khóa học
-const courseDescription = `
-Bạn có biết:
-Hầu hết công dân nào cũng biết mình có quyền và nghĩa vụ phải đóng thuế cho nhà nước, nhưng thuế là gì, vì sao phải đóng thuế, đối tượng phải đóng thuế là ai cũng như cách đóng thuế như thế nào lại rất ít người biết. Điều này đã vô tình làm ảnh hưởng đến quyền và lợi ích của công dân khi chưa ý thức được tầm quan trọng của Thuế như điều chỉnh và ổn định kinh tế, xã hội, phúc lợi xã hội của từng công dân, đảm bảo công bằng xã hội giữa các chủ thể kinh doanh, giữa các tầng lớp xã hội...
-Với nhu cầu tìm hiểu về Thuế một cách bài bản, cụ thể và dễ hiểu nhất đến tất cả mọi người, khóa học trực tuyến "Tổng quan về thuế" của giảng viên Nguyễn Hoàng sẽ cung cấp cho bạn các kiến thức tổng quan về thuế một cách chi tiết và dễ hiểu nhất, bao gồm:
-Tổng quan về quản lý thuế, giới thiệu hệ thống cơ quan quản lý thuế
-Nguyên tắc khai thuế, tính thuế, thời hạn nộp hồ sơ khai thuế, thời hạn nộp tiền thuế
-Quy trình gửi, nộp hồ sơ thuế, trả kết quả từ cơ quan thuế
-Như thế nào là ấn định thuế, cưỡng chễ thuế
-Tìm hiểu chi tiết quy định về Kiểm tra thuế, Thanh tra thuế
-Quy định về thời hiệu xử phạt vi phạm hành chính thuế
-Quy định về khai bổ sung hồ sơ thuế, cách tính tiền chậm nộp tiền thuế
-Hướng dẫn cài đặt các phần mềm hỗ trợ cho công tác kế toán thuế tại doanh nghiệp
-Tìm hiểu quy định của pháp luật về Lệ phí môn bài
-Hướng dẫn thực hành kê khai và nộp lệ phí môn bài
-Hướng dẫn đăng ký tờ khai thuế qua mạng, cách nộp thuế qua mạng và lập thư rà soát nộp thuế.
-Không chỉ là kiến thức lý thuyết chi tiết đầy đủ, mỗi một bài giảng trong khóa học còn là những TRẢI NGHIỆM THÚ VỊ do chính giảng viên đã tự trải nghiệm và đúc kết thành những kinh nghiệm quý báu trong suốt hơn 15 năm làm việc trong nghề. Với phương pháp giảng dạy hướng dẫn hiện đại, khoa học, chi tiết và đơn giản dễ hiểu nhất bạn sẽ được lắng nghe và thực hành theo sự hướng dẫn TẬN TÌNH của thầy.
-Chắc chắn với khóa học "Tổng quan về thuế" bạn rằng đây sẽ là một chương trình huấn luyện Kế toán online TUYỆT VỜI dành cho bạn!
-Hãy nhanh chóng sở hữu khóa học ngay hôm nay!
-`;
-
-//thông tin giảng viên
-const instructorData = {
-  name: "Đăng Nhựt",
-  url: "https://www.facebook.com/NhutDang2908",
-  organization: "Viện Đào Tạo Kế Toán Online",
-  avatar: "https://th.bing.com/th/id/R.76b548009cb114a2dfa5c9a2bfdaa5c4?rik=oUsgRDeehBEWwA&pid=ImgRaw&r=0", // hoặc đường dẫn phù hợp
-  bio: `
-    <ul>
-      <li>Hơn 15 năm kinh nghiệm làm kế toán và huấn luyện kế toán thực tế</li>
-      <li>Trực tiếp huấn luyện hàng nghìn học viên học kế toán mỗi năm, cả trực tiếp và online</li>
-      <li>Tư vấn thuế, kế toán cho hàng trăm doanh nghiệp</li>
-      <li>Tác giả phần mềm kế toán Excel VAA – cung cấp miễn phí cho doanh nghiệp</li>
-    </ul>
-  `,
-	stats: {
-	  rating: 4.8,
-	  reviews: 8755,
-	  students: 14712,
-	  courses: 15
-	}
-};
-
-
-//avt user
-const userAvatar = "https://th.bing.com/th/id/R.76b548009cb114a2dfa5c9a2bfdaa5c4?rik=oUsgRDeehBEWwA&pid=ImgRaw&r=0";
-
-//thông tin comment
-const commentData = [
-  {
-    author: "Đăng Nhựt",
-    avatar: "https://th.bing.com/th/id/R.76b548009cb114a2dfa5c9a2bfdaa5c4?rik=oUsgRDeehBEWwA&pid=ImgRaw&r=0",
-    content: "Em đã hoàn thành khóa học này. Cảm ơn Thầy nhiều!",
-    time: "2025-02-21T20:30:00",
-    likes: 5,
-    replies: 1
-  },
-  {
-      author: "Phi Hiệp",
-      avatar: "",
-      content: "Em đã hoàn thành khóa học này. Cảm ơn Thầy nhiều!",
-      time: "2025-04-25T18:29:59",
-      likes: 3,
-      replies: 3
-    },
-	{
-	    author: "Hưng",
-	    avatar: "",
-	    content: "Em đã hoàn thành khóa học này. Cảm ơn Thầy nhiều!",
-	    time: "2025-04-23T10:30:00",
-	    likes: 2,
-	    replies: 0
-	  },
-	  {
-	      author: "Khang",
-	      avatar: "",
-	      content: "Em đã hoàn thành khóa học này. Cảm ơn Thầy nhiều!",
-	      time: "2025-04-23T10:30:00",
-	      likes: 3,
-	      replies: 0
-	    },
-		{
-		    author: "Phúc",
-		    avatar: "",
-		    content: "Em đã hoàn thành khóa học này. Cảm ơn Thầy nhiều!",
-		    time: "2025-04-23T10:30:00",
-		    likes: 3,
-		    replies: 0
-		  }
-];
-
-const replyData = {
-  "Đăng Nhựt": [
-    {
-      author: "Thầy Tuấn",
-      avatar: "https://cdn-icons-png.flaticon.com/512/194/194935.png",
-      content: "Cảm ơn em nhiều, chúc em áp dụng thành công!",
-      time: "2025-04-23T10:30:00"
-    }
-  ],
-  "Phi Hiệp": [
-    {
-      author: "Giảng viên",
-      avatar: "",
-      content: "Chúc mừng em đã học xong!",
-      time: "2025-04-23T10:30:00"
-    },
-    {
-      author: "Học viên khác",
-      avatar: "",
-      content: "Bạn học nhanh ghê!",
-      time: "2025-04-23T10:30:00"
-    },
-	{
-	  author: "Học viên khác",
-	  avatar: "",
-	  content: "Bạn học lẹ ghê!",
-	  time: "2025-04-23T10:30:00"
-	}
-  ]
-};
-
-// Dữ liệu bài học
-const lessonData = [
-  {
-    title: "Phần 1: Tổng quan và cài đặt ứng dụng khai thuế",
-    lessons: [
-      { 
-        title: "Bài 1: Giới thiệu khóa học", 
-        duration: "04:47",
-        videoUrl: "https://www.youtube.com/embed/jtFsZRHUyPE",
-        description: "Giới thiệu tổng quan về khóa học và mục tiêu bạn sẽ đạt được."
-      },
-      { 
-        title: "Bài 2: Cài đặt phần mềm hỗ trợ kê khai thuế", 
-        duration: "11:48",
-        videoUrl: "https://www.youtube.com/embed/Xnabk4pjrHA",
-        description: "Hướng dẫn chi tiết cách tải và cài đặt phần mềm HTKK."
-      }
-    ]
-  },
-  {
-    title: "Phần 2: Thiết lập hệ thống và sửa lỗi",
-    lessons: [
-      { 
-        title: "Bài 1: Sửa lỗi phần mềm",
-        duration: "05:26",
-        videoUrl: "https://www.youtube.com/embed/mnQMvKnvEKs",
-        description: "Khắc phục một số lỗi thường gặp khi cài đặt và sử dụng phần mềm."
-      },
-      { 
-        title: "Bài 2: Khai báo thông tin cho phần mềm HTKK", 
-        duration: "16:00",
-        videoUrl: "https://www.youtube.com/embed/6NQaShPUD5M",
-        description: "Thiết lập và khai báo thông tin doanh nghiệp trên phần mềm."
-      }
-    ]
-  },
-  {
-    title: "Phần 3: Công cụ hỗ trợ và quản lý dữ liệu",
-    lessons: [
-      { 
-        title: "Bài 1: Tìm hiểu về năm tài chính", 
-        duration: "11:51",
-        videoUrl: "https://www.youtube.com/embed/WJ1Y9pZrNjA",
-        description: "Tổng quan về khái niệm và cách thiết lập năm tài chính trong phần mềm."
-      },
-      { 
-        title: "Bài 2: Cài đặt các công cụ hỗ trợ", 
-        duration: "07:07",
-        videoUrl: "https://www.youtube.com/embed/cPbp2iFaZRo",
-        description: "Các công cụ giúp bạn khai thuế hiệu quả hơn."
-      },
-      { 
-        title: "Bài 3: Định dạng lại ngày, tháng", 
-        duration: "10:15",
-        videoUrl: "https://www.youtube.com/embed/zDrji1Uwnh8",
-        description: "Chỉnh định dạng ngày tháng theo yêu cầu phần mềm."
-      },
-      { 
-        title: "Bài 4: Sao lưu phục hồi dữ liệu", 
-        duration: "04:58",
-        videoUrl: "https://www.youtube.com/embed/USvnDk1hi5I",
-        description: "Hướng dẫn sao lưu và phục hồi dữ liệu HTKK an toàn."
-      }
-    ]
-  }
-];
