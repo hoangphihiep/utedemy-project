@@ -14,26 +14,30 @@ import vn.iotstar.impl.service.CourseDetailService;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.service.*;
 
-@WebServlet(urlPatterns = { "/admin/edit" })
+@WebServlet(urlPatterns = { "/admin/edit2" })
 public class EditCategoryController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ICourseService courseService = new CourseService();
-	private ICourseDetailService courseDetailService = new CourseDetailService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int courseId = Integer.parseInt(req.getParameter("id"));
-		Course course = courseService.getCourseById(courseId);
-		List<CourseType> courseType = courseDetailService.getAllCourseTypes();
+		String idStr = req.getParameter("id");
+	    int id = 0;
 
+	    try {
+	        id = Integer.parseInt(idStr);
+	    } catch (NumberFormatException e) {
+	        resp.sendRedirect(req.getContextPath() + "/admin/add2"); // hoặc hiển thị lỗi
+	        return;
+	    }
 
-		if (course != null) {
-			req.setAttribute("course", course);
-			req.setAttribute("courseTypes", courseType);
-			req.getRequestDispatcher("/views/admin/editCa.jsp").forward(req, resp);
-		} else {
-			resp.sendRedirect("categorypage");
-		}
+	    CourseType courseType = courseService.getCourseTypeById(id);
+	    if (courseType != null) {
+	        req.setAttribute("courseType", courseType);
+	        req.getRequestDispatcher("/views/admin/editCa2.jsp").forward(req, resp);
+	    } else {
+	        resp.sendRedirect(req.getContextPath() + "/admin/edit2"); // Không tìm thấy -> về danh sách
+	    }
 	}
 
 	@Override
@@ -41,46 +45,41 @@ public class EditCategoryController extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 
-		int courseId = Integer.parseInt(req.getParameter("id"));
-		String newCourseName = req.getParameter("courseName"); 
-		String courseTypeIdStr = req.getParameter("courseTypeId");
-		String coursePriceStr = req.getParameter("coursePrice");
-		int courseTypeId = 0;
+		String idStr = req.getParameter("id");
+		String newCourseTypeName = req.getParameter("courseTypeName");
+		int id = 0;
+
 		try {
-			courseTypeId = Integer.parseInt(courseTypeIdStr);
+			id = Integer.parseInt(idStr);
 		} catch (NumberFormatException e) {
-			req.setAttribute("message", "Loại khóa học không hợp lệ");
-			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
+			req.setAttribute("message", "ID không hợp lệ");
+			req.getRequestDispatcher("/views/admin/editCa2.jsp").forward(req, resp);
 			return;
 		}
 
-		double coursePrice = 0;
-		try {
-			coursePrice = Double.parseDouble(coursePriceStr);
-		} catch (NumberFormatException e) {
-			req.setAttribute("message", "Giá khóa học không hợp lệ");
-			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
+		if (newCourseTypeName == null || newCourseTypeName.trim().isEmpty()) {
+			req.setAttribute("message", "Tên loại khóa học không được để trống");
+			CourseType courseType = courseService.getCourseTypeById(id);
+			req.setAttribute("courseType", courseType);
+			req.getRequestDispatcher("/views/admin/editCa2.jsp").forward(req, resp);
 			return;
 		}
-		Course course = courseService.getCourseById(courseId);
-		if (course != null) {
-			course.setCourseName(newCourseName);
-			CourseType courseType = new CourseType();
-			courseType.setId(courseTypeId); // Set ID cho CourseType
-			course.setCourseType(courseType);
-			course.setCoursePrice(coursePrice);
 
-			boolean isUpdated = courseService.updateCourse(course); 
-			if (isUpdated) {
-				resp.sendRedirect(req.getContextPath() + "/admin/edit?id=" + courseId + "&success=true");
-			} else {
-				req.setAttribute("message", "Lỗi cập nhật khóa học");
-				req.setAttribute("course", course);
-				req.getRequestDispatcher("/views/admin/editCa.jsp").forward(req, resp);
-			}
+		CourseType courseType = courseService.getCourseTypeById(id);
+		if (courseType == null) {
+			req.setAttribute("message", "Không tìm thấy loại khóa học");
+			req.getRequestDispatcher("/views/admin/editCa2.jsp").forward(req, resp);
+			return;
+		}
+
+		courseType.setCourseTypeName(newCourseTypeName.trim());
+		boolean isUpdated = courseService.updateCourseType(courseType);
+		if (isUpdated) {
+			resp.sendRedirect(req.getContextPath() + "/admin/edit2");
 		} else {
-			resp.sendRedirect("categorypage");
+			req.setAttribute("message", "Cập nhật thất bại");
+			req.setAttribute("courseType", courseType);
+			req.getRequestDispatcher("/views/admin/editCa2.jsp").forward(req, resp);
 		}
 	}
-
 }

@@ -24,7 +24,7 @@
 	            <span>Khóa học</span>
 	        </a>
             
-            <a href="/utedemyProject/admin/category" class="sidebar-item" data-path="category">
+            <a href="/utedemyProject/admin/category2" class="sidebar-item" data-path="category2">
                 <i class="fas fa-th-list"></i>
                 <span>Danh mục</span>
             </a>

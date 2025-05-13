@@ -311,6 +311,26 @@ public class CourseService implements ICourseService {
 		public boolean checkUserRating(int userId, int courseId) {
 			return courseDao.checkUserRating(userId, courseId);
 		}
+		
+		@Override
+		public void addCourseType(CourseType courseType) {
+			courseDao.addCourseType(courseType);
+		}
+		@Override
+		public List<CourseType> getAllCourseTypes() 
+		{
+			return courseDao.getAllCourseTypes();
+		}
+		@Override
+		public boolean updateCourseType(CourseType courseType)
+		{
+			return courseDao.updateCourseType(courseType);
+		}
+		@Override
+		public CourseType getCourseTypeById(int id)
+		{
+			return courseDao.getCourseTypeById(id);
+		}
 
 }
 

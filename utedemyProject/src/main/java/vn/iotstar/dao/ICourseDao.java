@@ -141,6 +141,14 @@ public interface ICourseDao {
 	public boolean checkLessonProgress(int courseProgressID);
 
 	public boolean checkUserRating(int userId, int courseId);
+	
+	public void addCourseType(CourseType courseType);
+
+	public List<CourseType> getAllCourseTypes(); 
+
+	public boolean updateCourseType(CourseType courseType);
+
+	public CourseType getCourseTypeById(int id);
 
 	
 }

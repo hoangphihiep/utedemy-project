@@ -139,6 +139,14 @@ public interface ICourseService {
 	public String getOverviewSection(int courseId);
 
 	public Integer getCourseProgressId(int courseId, int userId);
+	
+	public void addCourseType(CourseType courseType);
+
+	public List<CourseType> getAllCourseTypes(); 
+
+	public boolean updateCourseType(CourseType courseType);
+
+	public CourseType getCourseTypeById(int id);
 
 }
 

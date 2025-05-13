@@ -18,6 +18,9 @@
 	<mapping path="/admin/homePage" name="admin" decorator="admin.jsp" />
 	<mapping path="/admin/accountManagement" name="admin" decorator="admin.jsp" />
 	<mapping path="/admin/courseManagement" name="admin" decorator="admin.jsp" />
+	<mapping path="/admin/edit2" name="admin" decorator="admin.jsp" />
+	<mapping path="/admin/add2" name="admin" decorator="admin.jsp" />
+	<mapping path="/admin/category2" name="admin" decorator="admin.jsp" />
 	<mapping path="/user/courseBookingHistory" name="user" decorator="registeredStudent.jsp" />
 
 	<mapping path="/viewTeacherProfile" name="user" decorator="user.jsp" />

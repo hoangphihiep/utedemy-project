@@ -1322,6 +1322,100 @@ public class CourseDao implements ICourseDao {
 	            em.close();
 	        }
 	    }
+	    
+	    @Override
+		public void addCourseType(CourseType courseType) {
+		    EntityManager em = JPAConfig.getEntityManager();
+		    EntityTransaction trans = em.getTransaction();
+
+		    try {
+		        if (courseType == null) {
+		            throw new IllegalArgumentException("CourseType cannot be null");
+		        }
+
+		        trans.begin();
+
+		        // Lưu courseType vào DB
+		        em.persist(courseType);
+
+		        // Commit transaction
+		        trans.commit();
+		    } catch (Exception e) {
+		        if (trans.isActive()) {
+		            trans.rollback();
+		        }
+		        e.printStackTrace();
+		    } finally {
+		        if (em != null && em.isOpen()) {
+		            em.close(); // Đảm bảo đóng EntityManager
+		        }
+		    }
+		}
+
+		@Override
+		public List<CourseType> getAllCourseTypes() {
+		    EntityManager em = JPAConfig.getEntityManager();
+		    List<CourseType> courseTypes = new ArrayList<>();
+
+		    try {
+		        String sql = "SELECT ct FROM CourseType ct";
+		        courseTypes = em.createQuery(sql, CourseType.class).getResultList();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    } finally {
+		        if (em != null && em.isOpen()) {
+		            em.close(); // Đảm bảo đóng EntityManager
+		        }
+		    }
+
+		    return courseTypes;
+		}
+
+		@Override
+		public boolean updateCourseType(CourseType courseType) {
+		    EntityManager enma = JPAConfig.getEntityManager();
+		    EntityTransaction trans = enma.getTransaction();
+
+		    try {
+		        trans.begin();
+
+		        // Kiểm tra xem có tồn tại không
+		        CourseType existingType = enma.find(CourseType.class, courseType.getId());
+		        if (existingType != null) {
+		            existingType.setCourseTypeName(courseType.getCourseTypeName());
+		            enma.merge(existingType);
+		        } else {
+		            return false; // Không tìm thấy
+		        }
+
+		        trans.commit();
+		        return true;
+		    } catch (Exception e) {
+		        if (trans.isActive()) {
+		            trans.rollback();
+		        }
+		        e.printStackTrace();
+		        return false;
+		    } finally {
+		        enma.close();
+		    }
+		}
+
+		@Override
+		public CourseType getCourseTypeById(int id) {
+		    EntityManager em = JPAConfig.getEntityManager();
+		    CourseType courseType = null;
+		    try {
+		        courseType = em.find(CourseType.class, id); // Tìm theo khóa chính
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    } finally {
+		        if (em != null && em.isOpen()) {
+		            em.close();
+		        }
+		    }
+		    return courseType;
+		}
 
 
 
