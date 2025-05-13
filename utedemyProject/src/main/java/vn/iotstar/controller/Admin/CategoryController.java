@@ -12,7 +12,7 @@ import vn.iotstar.entity.*;
 import vn.iotstar.impl.service.*;
 import vn.iotstar.service.*;
 
-@WebServlet(urlPatterns = { "/admin/category" })
+@WebServlet(urlPatterns = { "/admin/category2" })
 
 public class CategoryController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,9 +26,14 @@ public class CategoryController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Course> list = courseService.getAllCourses();
+//		List<Course> list = courseService.getAllCourses();
+//
+//		req.setAttribute("List", list);
+//		req.getRequestDispatcher("/views/admin/categorypage.jsp").forward(req, resp);
+		
+		List<CourseType> list = courseService.getAllCourseTypes();
 
 		req.setAttribute("List", list);
-		req.getRequestDispatcher("/views/admin/categorypage.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/admin/categorypage2.jsp").forward(req, resp);
 	}
 }

@@ -18,22 +18,26 @@ import vn.iotstar.service.*;
 public class EditCategoryController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ICourseService courseService = new CourseService();
-	private ICourseDetailService courseDetailService = new CourseDetailService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int courseId = Integer.parseInt(req.getParameter("id"));
-		Course course = courseService.getCourseById(courseId);
-		List<CourseType> courseType = courseDetailService.getAllCourseTypes();
+	    String idStr = req.getParameter("id");
+	    int id = 0;
 
+	    try {
+	        id = Integer.parseInt(idStr);
+	    } catch (NumberFormatException e) {
+	        resp.sendRedirect(req.getContextPath() + "/admin/category2");
+	        return;
+	    }
 
-		if (course != null) {
-			req.setAttribute("course", course);
-			req.setAttribute("courseTypes", courseType);
-			req.getRequestDispatcher("/views/admin/editCa.jsp").forward(req, resp);
-		} else {
-			resp.sendRedirect("categorypage");
-		}
+	    CourseType courseType = courseService.getCourseTypeById(id);
+	    if (courseType != null) {
+	        req.setAttribute("courseType", courseType);
+	        req.getRequestDispatcher("/views/admin/editCa2.jsp").forward(req, resp);
+	    } else {
+	        resp.sendRedirect(req.getContextPath() + "/admin/category2");
+	    }
 	}
 
 	@Override
@@ -49,7 +53,7 @@ public class EditCategoryController extends HttpServlet {
 		try {
 			courseTypeId = Integer.parseInt(courseTypeIdStr);
 		} catch (NumberFormatException e) {
-			req.setAttribute("message", "Loại khóa học không hợp lệ");
+			req.setAttribute("message1", "Loại khóa học không hợp lệ");
 			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
 			return;
 		}
@@ -58,7 +62,7 @@ public class EditCategoryController extends HttpServlet {
 		try {
 			coursePrice = Double.parseDouble(coursePriceStr);
 		} catch (NumberFormatException e) {
-			req.setAttribute("message", "Giá khóa học không hợp lệ");
+			req.setAttribute("message2", "Giá khóa học không hợp lệ");
 			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
 			return;
 		}
@@ -66,7 +70,7 @@ public class EditCategoryController extends HttpServlet {
 		if (course != null) {
 			course.setCourseName(newCourseName);
 			CourseType courseType = new CourseType();
-			courseType.setId(courseTypeId); // Set ID cho CourseType
+			courseType.setId(courseTypeId); 
 			course.setCourseType(courseType);
 			course.setCoursePrice(coursePrice);
 

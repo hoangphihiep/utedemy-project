@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Thêm khóa học</title>
+<title>Cập nhật khóa học</title>
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -68,38 +68,36 @@ button:hover {
 </style>
 </head>
 <body>
-
 	<div class="container">
-		<h3>Thêm khóa học mới</h3>
+		<h3>Chỉnh sửa khóa học</h3>
 
-		<form action="${pageContext.request.contextPath}/admin/add"
+		<!-- Form chỉnh sửa khóa học -->
+		<form action="${pageContext.request.contextPath}/admin/edit2"
 			method="post" class="form-box">
+			<!-- Giữ id của loại khóa học không thay đổi -->
+			<input type="hidden" name="id" value="${courseType.id}" />
+
 			<div>
-				<label for="courseName">Tên khóa học:</label> <input type="text"
-					id="courseName" name="courseName" placeholder="Nhập tên khóa học"
-					required />
+				<label for="courseTypeName">Tên loại khóa học:</label>
+				<!-- Hiển thị tên loại khóa học cũ, người dùng có thể chỉnh sửa -->
+				<input type="text" id="courseTypeName" name="courseTypeName"
+					placeholder="Nhập tên loại khóa học"
+					value="${courseType.courseTypeName}" required />
 			</div>
-			<div>
-				<label for="courseTypeId">Loại khóa học:</label> <select
-					id="courseTypeId" name="courseTypeId" required>
-					<c:forEach var="courseType" items="${courseTypes}">
-						<option value="${courseType.id}">${courseType.courseTypeName}</option>
-					</c:forEach>
-					<p>${message1}</p>
-				</select>
-			</div>
-			<div>
-				<label for="coursePrice">Giá khóa học:</label> <input type="number"
-					id="coursePrice" name="coursePrice" min="0" step="50000"
-					placeholder="Nhập giá khóa học" required />
-			</div>
-			<button type="submit">Thêm khóa học</button>
-			<p>${message2}</p>
+			<button type="submit">Cập nhật khóa học</button>
 		</form>
-		<form action="${pageContext.request.contextPath}/admin/category"
+
+		<!-- Hiển thị thông báo lỗi hoặc thành công -->
+		<c:if test="${not empty message}">
+			<p style="color: red; font-weight: bold;">${message}</p>
+		</c:if>
+
+		<!-- Form quay lại trang danh sách -->
+		<form action="${pageContext.request.contextPath}/admin/category2"
 			method="post" class="form-box">
 			<button type="submit">Quay về danh sách</button>
 		</form>
 	</div>
 </body>
+
 </html>

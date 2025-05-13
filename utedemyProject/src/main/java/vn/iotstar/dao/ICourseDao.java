@@ -96,6 +96,12 @@ public interface ICourseDao {
 	public void addCourse(Course course);
 	
 	public Course getCourseById(int Id);
-
 	
+	public void addCourseType(CourseType courseType);
+	
+	public List<CourseType> getAllCourseTypes(); 
+	
+	public boolean updateCourseType(CourseType courseType);
+	
+	public CourseType getCourseTypeById(int id);
 }

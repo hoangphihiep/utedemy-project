@@ -72,31 +72,19 @@ button:hover {
 	<div class="container">
 		<h3>Thêm khóa học mới</h3>
 
-		<form action="${pageContext.request.contextPath}/admin/add"
+		<form action="${pageContext.request.contextPath}/admin/add2"
 			method="post" class="form-box">
 			<div>
-				<label for="courseName">Tên khóa học:</label> <input type="text"
-					id="courseName" name="courseName" placeholder="Nhập tên khóa học"
-					required />
+				<label for="courseTypeName">Tên khóa học:</label> <input type="text"
+					id="courseTypeName" name="courseTypeName"
+					placeholder="Nhập tên danh mục" required />
 			</div>
-			<div>
-				<label for="courseTypeId">Loại khóa học:</label> <select
-					id="courseTypeId" name="courseTypeId" required>
-					<c:forEach var="courseType" items="${courseTypes}">
-						<option value="${courseType.id}">${courseType.courseTypeName}</option>
-					</c:forEach>
-					<p>${message1}</p>
-				</select>
-			</div>
-			<div>
-				<label for="coursePrice">Giá khóa học:</label> <input type="number"
-					id="coursePrice" name="coursePrice" min="0" step="50000"
-					placeholder="Nhập giá khóa học" required />
-			</div>
-			<button type="submit">Thêm khóa học</button>
-			<p>${message2}</p>
+			<button type="submit">Thêm danh mục</button>
 		</form>
-		<form action="${pageContext.request.contextPath}/admin/category"
+		<c:if test="${not empty message}">
+			<p style="color: red; font-weight: bold;">${message}</p>
+		</c:if>
+		<form action="${pageContext.request.contextPath}/admin/category2"
 			method="post" class="form-box">
 			<button type="submit">Quay về danh sách</button>
 		</form>

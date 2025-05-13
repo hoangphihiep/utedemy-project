@@ -60,7 +60,7 @@ public class AddCategoryController extends HttpServlet {
 		try {
 			coursePrice = Double.parseDouble(coursePriceStr);
 		} catch (NumberFormatException e) {
-			req.setAttribute("message", "Giá khóa học không hợp lệ");
+			req.setAttribute("message1", "Giá khóa học không hợp lệ");
 			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
 			return;
 		}
@@ -83,7 +83,7 @@ public class AddCategoryController extends HttpServlet {
 			resp.sendRedirect(req.getContextPath() + "/admin/add");		
 			} catch (Exception e) {
 			// Xử lý lỗi khi thêm khóa học thất bại
-			req.setAttribute("message", "Lỗi thêm khóa học");
+			req.setAttribute("message2", "Lỗi thêm khóa học");
 			req.getRequestDispatcher("/views/admin/addCourse.jsp").forward(req, resp);
 		}
 	}

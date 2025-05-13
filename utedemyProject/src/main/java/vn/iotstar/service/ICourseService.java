@@ -94,6 +94,13 @@ public interface ICourseService {
 	public int getMaxCourseId();
 
 	void addCourse(Course course);
-
+	
+	public void addCourseType(CourseType courseType);
+	
+	public List<CourseType> getAllCourseTypes(); 
+	
+	public boolean updateCourseType(CourseType courseType);
+	
+	public CourseType getCourseTypeById(int id);
 }
 
