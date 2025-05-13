@@ -12,7 +12,7 @@
 
 <header class="header-bar">
     <div class="logo-area">
-        <a href="homepage.jsp" class="logo-link">
+        <a href="/utedemyProject/user/homepage" class="logo-link">
 			<img src="https://photo.salekit.com/uploads/salekit_c196362f511b1291152d3dec9805e706/logo-unica-2.png" alt="Unica Logo" class="logo-circle" id="logoImg">
 		</a>
         <span class="header-title">Tổng quan về thuế</span>

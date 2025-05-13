@@ -52,10 +52,11 @@
 						</td>
 	                    <td style="padding: 10px;">
 					        <c:if test="${course.status == 2}">
-					            <a href="<c:url value='"/admin/reviewCourse"?id=${course.id}'/>" 
-					               style="background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; display: inline-block; text-decoration: none;">
-					               Chấp nhận
-					            </a>
+					           <a href="<c:url value='/admin/reviewCourse?id=${course.id}' />"
+   style="background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; display: inline-block; text-decoration: none;">
+   Chấp nhận
+</a>
+
 					        </c:if>
 					        <c:if test="${course.status == 1 || course.status == 2}">
 					             <button type="button" class="btn-modal"

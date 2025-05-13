@@ -992,6 +992,14 @@
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script>
+//Hàm xử lý nút "VÀO HỌC NGAY"
+function goToLearn(courseId) {
+    // Chuyển hướng đến Course.jsp và truyền courseId & userId
+    window.location.href = '/utedemyProject/views/user/Course?courseId=' + courseId;
+    
+}
+</script>
 	<script>
 	    function toggleDropdown(event) {
 	        event.preventDefault();
@@ -1004,13 +1012,13 @@
 	        }
 	    }
 	
-	    // Đóng dropdown nếu click ra ngoài
 	    document.addEventListener('click', function(event) {
 	        const dropdown = document.getElementById('notificationDropdown');
-	        if (!event.target.closest('.dropdown')) {
+	        if (dropdown && !event.target.closest('.dropdown')) {
 	            dropdown.style.display = 'none';
 	        }
 	    });
+
 	</script>
 	<script>
         // JavaScript functionality can be added here

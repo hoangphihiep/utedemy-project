@@ -122,12 +122,6 @@ table th, table td {
 </style>
 </head>
 <body>
-	<div class="sidebar">
-		<h2>Admin</h2>
-		<a href="#">Trang chủ</a> 
-		<a href="#">Tài khoản</a> 
-		<a href="#">Khóa học</a>
-	</div>
 
 	<div class="main">
 		<h2>Danh mục</h2>
@@ -136,7 +130,7 @@ table th, table td {
 				<thead>
 					<tr>
 						<th>STT</th>
-						<th>Tên Khóa Học</th>
+						<th>Tên loại khóa học</th>
 						<th>Hành động</th>
 					</tr>
 				</thead>
@@ -155,8 +149,7 @@ table th, table td {
 		<!-- Styled button to add course -->
 		<form action="${pageContext.request.contextPath}/admin/add"
 			method="get">
-			<button type="submit" class="add-course-button">Thêm khóa
-				học</button>
+			<button type="submit" class="add-course-button">Thêm loại khóa học</button>
 		</form>
 	</div>
 </body>

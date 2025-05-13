@@ -360,27 +360,17 @@
 			</div>
 			
             <div class="course-features">
-                <div class="feature-item">
-                    <span class="feature-icon">⌚</span>
-                    <span>Thời lượng: 09 giờ 49 phút</span>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">📚</span>
-                    <span>Giáo trình: 59 Bài giảng</span>
-                </div>
+              <div class="feature-item">
+    <span class="feature-icon">📚</span>
+    <span>Giáo trình: ${courseLessions} Bài giảng</span>
+</div>
+
                 <div class="feature-item">
                     <span class="feature-icon">🔄</span>
                     <span>Sở hữu khóa học trọn đời</span>
                 </div>
-                <div class="feature-item">
-                    <span class="feature-icon">🏆</span>
-                    <span>Cấp chứng nhận hoàn thành</span>
-                </div>
             </div>
 
-            <div class="subscription-note">
-                Học không giới hạn 600 khóa học, chỉ với 199K / tháng
-            </div>
         </div>
     </div>
     

@@ -136,6 +136,17 @@
       
       const bestsellerCourses = [
     	    <c:forEach var="course" items="${bestSellerCourses}" varStatus="status">
+    	        <c:choose>
+    	            <c:when test="${not empty course[4] && course[4].substring(0,5) == 'https'}">
+    	                <c:url value="${course[4]}" var="imgUrl" />
+    	            </c:when>
+    	            <c:when test="${not empty course[4]}">
+    	                <c:url value="/image?fname=${course[4]}" var="imgUrl" />
+    	            </c:when>
+    	            <c:otherwise>
+    	                <c:set var="imgUrl" value="/api/placeholder/300/200" />
+    	            </c:otherwise>
+    	        </c:choose>
     	    {
     	        id: ${course[5] != null ? course[5] : 0},
     	        title: "${fn:escapeXml(course[0])}",
@@ -143,15 +154,27 @@
     	        rating: ${course[2] != null ? course[2] : 0},
     	        price: ${course[3] != null ? course[3] : 0},
     	        originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
-    	        image: "${course[4] != null ? fn:escapeXml(course[4]) : '/api/placeholder/300/200'}",
+    	        image: "${imgUrl}",
     	        badge: "Bán chạy"
     	    }${!status.last ? ',' : ''}
     	    </c:forEach>
     	];
+
     	console.log('bestsellerCourses:', bestsellerCourses); // Log dữ liệu
 
     	const todaySaleCourses = [
     	    <c:forEach var="course" items="${todaySaleCourses}" varStatus="status">
+    	        <c:choose>
+    	            <c:when test="${not empty course[4] && course[4].substring(0,5) == 'https'}">
+    	                <c:url value="${course[4]}" var="imgUrl" />
+    	            </c:when>
+    	            <c:when test="${not empty course[4]}">
+    	                <c:url value="/image?fname=${course[4]}" var="imgUrl" />
+    	            </c:when>
+    	            <c:otherwise>
+    	                <c:set var="imgUrl" value="/api/placeholder/300/200" />
+    	            </c:otherwise>
+    	        </c:choose>
     	    {
     	        id: ${course[6] != null ? course[6] : 0},
     	        title: "${fn:escapeXml(course[0])}",
@@ -159,7 +182,7 @@
     	        rating: ${course[2] != null ? course[2] : 0},
     	        price: ${course[3] != null ? course[3] * 1 : 0},
     	        originalPrice: ${course[3] != null ? course[3] * 1.5 : 0},
-    	        image: "${course[4] != null ? fn:escapeXml(course[4]) : '/api/placeholder/300/200'}",
+    	        image: "${imgUrl}",
     	        badge: "Giảm ${course[5] != null ? course[5] : 0}%"
     	    }${!status.last ? ',' : ''}
     	    </c:forEach>

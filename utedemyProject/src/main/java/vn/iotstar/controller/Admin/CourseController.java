@@ -31,14 +31,16 @@ public class CourseController extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		if (url.contains("/admin/courseManagement")) {
+			System.out.println("Có vào đây2");
 			List<Course> listCourse = courseService.findAllCourse();
 			req.setAttribute("listCourse", listCourse);
 			req.getRequestDispatcher("/views/admin/listCourse.jsp").forward(req, resp);
 		}
-		if (url.contains("/admin/cancelCourse")) {
+		else if (url.contains("/admin/cancelCourse")) {
 			HttpSession session = req.getSession();
 			String idCourseStr = req.getParameter("id");
 			String content  = req.getParameter("noidung");
+			System.out.println("Có vào đây2");
 
 			User user = (User)session.getAttribute("account");
 
@@ -62,8 +64,9 @@ public class CourseController extends HttpServlet {
 				}
 			}
 		}
-		if (url.contains("/admin/restoreCourse")) {
+		else if (url.contains("/admin/restoreCourse")) {
 			String idCourseStr = req.getParameter("id");
+			System.out.println("Có vào đây1");
 			if (idCourseStr != null) {
 				int idCourse = Integer.parseInt(idCourseStr);
 				Course course = courseService.findByIdCourse(idCourse); 
@@ -77,8 +80,9 @@ public class CourseController extends HttpServlet {
 				}
 			}
 		}
-		if (url.contains("/admin/reviewCourse")) {
+		else if (url.contains("/admin/reviewCourse")) {
 			String idCourseStr = req.getParameter("id");
+			System.out.println("Có vào đây");
 			if (idCourseStr != null) {
 				int idCourse = Integer.parseInt(idCourseStr);
 				Course course = courseService.findByIdCourse(idCourse); 

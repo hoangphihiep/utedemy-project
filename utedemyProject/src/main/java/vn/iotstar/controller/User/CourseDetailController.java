@@ -78,6 +78,17 @@ public class CourseDetailController extends HttpServlet {
             req.setAttribute("courseLearner", courseDetail.getCourseLearner() != null 
                 ? courseDetail.getCourseLearner() 
                 : "9732 Học viên");
+            
+            int totalLessons = 0;
+            if (course.getSections() != null) {
+                for (Section section : course.getSections()) {
+                    if (section.getLessons() != null) {
+                        totalLessons += section.getLessons().size();
+                    }
+                }
+            }
+
+            req.setAttribute("courseLessions", totalLessons);
 
             String learnerAchievementsStr = courseDetail.getLearnerAchievements();
             List<String> learnerAchievements;

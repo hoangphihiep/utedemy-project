@@ -53,9 +53,9 @@ public class SearchController extends HttpServlet {
 		} else {
 			for (Course c : courses) {
 				System.out.println("Vo day");
-				if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase())) {
-					courseList.add(c);
-					i++;
+				if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase()) && c.getStatus() == 1) {
+				    courseList.add(c);
+				    i++;
 				}
 			}
 		}

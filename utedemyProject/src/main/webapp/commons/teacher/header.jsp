@@ -7,7 +7,9 @@
 <header class="header-container">
 	<div class="top-bar">
 		<div class="logo-section">
-			<span class="unica-logo">unica</span>
+			    <a href="${pageContext.request.contextPath}/user/homepage">
+        <span class="unica-logo">unica</span>
+    </a>
 		</div>
 		<form action="${pageContext.request.contextPath}/user/search"
 			method="post">
@@ -28,7 +30,9 @@
 					<c:if test="${!empty slthongbao}">
 						<a href="#" onclick="toggleDropdown(event)" class="nav-link"
 							style="color: white; margin: 0 10px; text-decoration: none; padding: 8px; border-radius: 4px; position: relative;">
+							
 							<img src="/do_An/Content/Images/notification.png"
+							
 							alt="Notification" valign="middle" width="20" height="20" /> <span
 							class="notification-count"
 							style="position: absolute; top: 0; right: -5px; background: red; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%;">${slthongbao}</span>
@@ -79,10 +83,13 @@
 						id="avatarDropdown">
 
 					<div class="dropdown-content" id="userDropdown">
-						<a href="/learning">Vào học</a> <a href="/member">Hội viên</a> <a
-							href="/activate-course">Kích hoạt khóa học</a> <a
-							href="/business">Doanh nghiệp</a> <a href="/profile">Cập nhật
-							hồ sơ</a> <a href="/wallet">Ví của bạn</a> <a href="/logout">Đăng
+						<a href="/utedemyProject/user/mycourse">Vào học</a> <a href="/member">Hội viên</a> <a
+							href="/activate-course">Kích hoạt khóa học</a> <c:forEach var="role" items="${sessionScope.account.roles}">
+    <c:if test="${role.id == 2}">
+        <a href="/utedemyProject/teacher/course">Giảng viên</a>
+    </c:if>
+</c:forEach> <a href="/profile">Cập nhật
+							hồ sơ</a> <a href="/wallet">Ví của bạn</a> <a href="/utedemyProject/logout">Đăng
 							xuất</a>
 					</div>
 				</div>

@@ -69,8 +69,12 @@
 					<div
 						style="padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
 						<div>
-							<h3
-								style="font-size: 16px; font-weight: bold; margin-bottom: 5px; color: #333;">${i.courseName}</h3>
+				<h3 id="courseName"  
+    style="font-size: 16px; font-weight: bold; margin-bottom: 5px; color: #333; cursor: pointer;"
+    onclick="window.location.href='/utedemyProject/course/courseDetail?courseId=${i.id}'">
+    ${i.courseName}
+</h3>
+
 							<p class="instructor">${i.teacher.fullname}</p>
 							<c:set var="reviewCount" value="0" scope="page" />
 							<div class="rating">

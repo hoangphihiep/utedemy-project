@@ -43,9 +43,7 @@
 			<div class="form-group">
 				<label class="form-label">Giới thiệu khóa học <span
 					class="required">*</span></label>
-				<form action="saveCourse.jsp" method="post">
-				    <textarea name="courseIntroduction" id="courseIntroduction"></textarea>
-				</form>
+					<textarea class="form-input" name="courseIntroduction" id="courseIntroduction"></textarea>
 			</div>
 			<!-- Add this inside the main-content div, after the existing form-group for course introduction -->
 			<div class="form-group">

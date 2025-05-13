@@ -37,10 +37,15 @@
         <img src="${imgUrl_avt}" alt="User Avatar" class="avatar-img" id="avatarDropdown">
         
         <div class="dropdown-content" id="userDropdown">
-         <a href="/utedemyProject/user/Course">Vào học</a>
+         <a href="/utedemyProject/user/mycourse">Vào học</a>
           <a href="/member">Hội viên</a>
           <a href="/activate-course">Kích hoạt khóa học</a>
-          <a href="/business">Doanh nghiệp</a>
+        <c:forEach var="role" items="${sessionScope.account.roles}">
+    <c:if test="${role.id == 2}">
+        <a href="/utedemyProject/teacher/course">Giảng viên</a>
+    </c:if>
+</c:forEach>
+
           <a href="${pageContext.request.contextPath}/user/InformationManagement">Cập nhật hồ sơ</a>
           <a href="/wallet">Ví của bạn</a>
            <a href="${pageContext.request.contextPath}/user/viewcheckout">Xem đơn hàng đang đặt</a>

@@ -20,7 +20,7 @@
 	<mapping path="/admin/courseManagement" name="admin" decorator="admin.jsp" />
 	<mapping path="/user/courseBookingHistory" name="user" decorator="registeredStudent.jsp" />
 
-	
+	<mapping path="/viewTeacherProfile" name="user" decorator="user.jsp" />
 	<mapping path="/user/search" name="user" decorator="user.jsp" />
 	    <mapping path="/user/homepage" name="user" decorator="user.jsp" />
 	    <mapping path="/user/homeRegisterTeacher" name="user" decorator="user.jsp" />

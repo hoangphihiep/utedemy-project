@@ -18,7 +18,6 @@
     	<link rel="stylesheet" href="/utedemyProject/views/Css/searchcourse.css">
 	<link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 	<script src="/utedemyProject/views/Script/searchcourse.js"></script>
 </head>
 <body>

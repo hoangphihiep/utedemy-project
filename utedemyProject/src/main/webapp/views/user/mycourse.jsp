@@ -40,7 +40,8 @@
 					</c:if>
 
 					<div style="padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee;">
-						<button style="padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">Vào học ngay</button>
+						<button onclick="goToLearn('${c.course.id}')" style="padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">Vào học ngay</button>
+						
 						<div style="width: 42px; height: 42px; border: 2px solid #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; color: #333;">${percent}%</div>
 					</div>
 				</div>
