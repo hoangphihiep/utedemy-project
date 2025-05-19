@@ -150,5 +150,5 @@ public interface ICourseDao {
 
 	public CourseType getCourseTypeById(int id);
 
-	
+	public List<User> findPurchasedCourseUsers(int teacherId);
 }

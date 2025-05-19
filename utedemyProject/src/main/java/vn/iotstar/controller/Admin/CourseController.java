@@ -10,11 +10,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import observer_pattern.EmailNotifier;
+import observer_pattern.NewCourseNotificationManager;
+import observer_pattern.PushSystemNotifier;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.Notification;
+import vn.iotstar.entity.Teacher;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.impl.service.NotificationService;
+import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.INotificationService;
 
@@ -24,6 +29,7 @@ public class CourseController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ICourseService courseService = new CourseService();
 	INotificationService notificationService = new NotificationService();
+	UserService userService = new UserService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -75,6 +81,7 @@ public class CourseController extends HttpServlet {
 					boolean check = courseService.updateCourse(course);
 					if (check) {
 						System.out.println("Đã mở khóa khóa học");
+												
 						resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
 					}
 				}
@@ -91,6 +98,21 @@ public class CourseController extends HttpServlet {
 					boolean check = courseService.updateCourse(course);
 					if (check) {
 						System.out.println("Đã duyệt");
+						// we send created course notification right here
+						Teacher teacher = (Teacher) userService.findById(course.getTeacher().getId());
+						List<User> purchasedCourseUsers = courseService.getPurchasedCourseUsers(teacher.getId());
+						
+						NewCourseNotificationManager notificationManager = new NewCourseNotificationManager();
+						notificationManager.addObserver(new EmailNotifier());
+						notificationManager.addObserver(new PushSystemNotifier());
+						// add others observer if need
+						
+						for (User follower : purchasedCourseUsers) {
+							System.out.println("Test follower data: " + follower.getFullname());
+							
+							notificationManager.notifyAllObservers(follower, course);
+						}
+						
 						resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
 					}
 				}

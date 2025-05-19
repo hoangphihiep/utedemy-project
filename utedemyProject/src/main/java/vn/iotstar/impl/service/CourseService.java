@@ -332,5 +332,14 @@ public class CourseService implements ICourseService {
 			return courseDao.getCourseTypeById(id);
 		}
 
+
+		@Override
+		public List<User> getPurchasedCourseUsers(int teacherId) {
+			// TODO Auto-generated method stub
+			List<User> listUsers = courseDao.findPurchasedCourseUsers(teacherId);
+			System.out.println("Number of following users = " + listUsers.size());
+			return listUsers;
+		}
+
 }
 

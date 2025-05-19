@@ -3,6 +3,7 @@ package vn.iotstar.impl.dao;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import vn.iotstar.entity.CourseDetail;
 import vn.iotstar.entity.CourseType;
 import vn.iotstar.entity.Lesson;
 import vn.iotstar.entity.OrderItem;
+import vn.iotstar.entity.Orders;
 import vn.iotstar.entity.Question;
 import vn.iotstar.entity.Quiz;
 import vn.iotstar.entity.Review;
@@ -1419,5 +1421,60 @@ public class CourseDao implements ICourseDao {
 
 
 
+		@Override
+		public List<User> findPurchasedCourseUsers(int userId) {
+		    EntityManager em = JPAConfig.getEntityManager();
+		    List<User> users = new ArrayList<>();
+
+		    try {
+		        // Bước 1: Lấy danh sách khóa học của giáo viên
+		        String courseJpql = "SELECT c FROM Course c WHERE c.teacher.id = :userId";
+		        TypedQuery<Course> courseQuery = em.createQuery(courseJpql, Course.class);
+		        courseQuery.setParameter("userId", userId);
+		        List<Course> courses = courseQuery.getResultList();
+		        
+		        System.out.println("Course size = " + courses.size());
+
+		        Set<Integer> addedUserIds = new HashSet<>(); // Để tránh trùng lặp
+
+		        // Bước 2: Lặp qua từng khóa học
+		        for (Course course : courses) {
+		        	System.out.println("Name of course: " + course.getCourseName() + "Course id: " + course.getId());
+		        	
+		            String orderItemJpql = "SELECT oi FROM OrderItem oi WHERE oi.course.id = :courseId";
+		            TypedQuery<OrderItem> orderItemQuery = em.createQuery(orderItemJpql, OrderItem.class);
+		            orderItemQuery.setParameter("courseId", course.getId());
+		            List<OrderItem> orderItems = orderItemQuery.getResultList();
+
+		            // Bước 3: Với mỗi OrderItem, lấy ra Order và từ đó lấy User
+		            for (OrderItem item : orderItems) {
+		                Orders order = item.getOrder();
+		                System.out.println("Order id: " + order.getId());
+		                if (order != null) {
+		                    User buyer = order.getUser();
+		                    System.out.println("Buyer id: " + buyer.getId());
+		                    if (buyer != null && !addedUserIds.contains(buyer.getId())) {
+		                        users.add(buyer);
+		                        addedUserIds.add(buyer.getId());
+		                    }
+		                }
+		            }
+		        }
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    } finally {
+		        if (em != null && em.isOpen()) {
+		            em.close();
+		        }
+		    }
+
+		    return users;
+		}
+
+
+
+
 }
 
+ 
