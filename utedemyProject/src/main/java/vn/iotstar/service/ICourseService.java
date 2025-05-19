@@ -147,6 +147,8 @@ public interface ICourseService {
 	public boolean updateCourseType(CourseType courseType);
 
 	public CourseType getCourseTypeById(int id);
+	
+	public List<User> getPurchasedCourseUsers(int teacherId);
 
 }
 

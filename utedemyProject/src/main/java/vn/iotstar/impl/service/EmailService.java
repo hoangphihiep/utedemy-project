@@ -11,6 +11,7 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import vn.iotstar.utils.EmailUtil;
 
 
 
@@ -46,6 +47,7 @@ public class EmailService {
         props.put("mail.smtp.port", port);
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(senderEmail, senderPassword);
@@ -71,4 +73,26 @@ public class EmailService {
             return false;
         }
     }
+    
+    public boolean sendNewCourseNotification(String email, String message) {    	
+    	try {
+    		Session session = EmailUtil.createMailSession();
+    		
+    		Message msg = new MimeMessage(session);
+    		msg.setFrom(new InternetAddress(EmailUtil.SENDER_EMAIL));
+    		msg.addRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+    		msg.setSubject("Thông báo khóa học mới");
+            msg.setContent(message, "text/html; charset=utf-8"); // ✅ Gửi HTML đúng cách
+    		
+    		// send email
+    		Transport.send(msg);
+    		
+    		System.out.println("Send notification about new course successfully !");
+    		return true;
+    	}catch(MessagingException ex) {
+    		System.out.println("Error" + ex.getMessage());
+    		return false;
+    	}
+    }
+    
 }

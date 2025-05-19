@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import observer_pattern.EmailNotifier;
+import observer_pattern.NewCourseNotificationManager;
 import vn.iotstar.entity.Answer;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
@@ -143,6 +145,7 @@ public class AddCourseController extends HttpServlet{
 			}else {
 				System.out.println("Tạo không thành công");
 			}
+			
 		}
 		else if (url.contains("/teacher/adBasicInformation")) 
 		{
