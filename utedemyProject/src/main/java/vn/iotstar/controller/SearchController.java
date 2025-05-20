@@ -70,11 +70,16 @@ public class SearchController extends HttpServlet {
 		String[] keywordParts = normalizedKeyword.split("\\s+");
 
 		List<Course> allCourses = courseService.getAllCourses();
-
-		// Nếu có dấu hiệu mô tả
-		if (normalizedKeyword.contains("khoa hoc") || normalizedKeyword.contains("ve") || keywordParts.length >= 4) {
-			return new SearchByDescription();
+		
+		for(Course course:allCourses) {
+			if(course.getCourseType()!=null && course.getCourseType().getCourseTypeName()!=null) {
+				String typename=VietnameseNormalizer.normalize(course.getCourseType().getCourseTypeName());
+				if(typename.contains(normalizedKeyword)) {
+					return new SearchByType();
+				}
+			}
 		}
+		
 
 		// Kiểm tra khớp tên giảng viên (so sánh không dấu)
 		for (Course course : allCourses) {
@@ -91,9 +96,9 @@ public class SearchController extends HttpServlet {
 		// Kiểm tra khớp tên khóa học (so sánh không dấu)
 		for (Course course : allCourses) {
 			if (course.getCourseName() != null) {
-				String name = VietnameseNormalizer.normalize(course.getCourseName());
+				String coursename = VietnameseNormalizer.normalize(course.getCourseName());
 				for (String part : keywordParts) {
-					if (name.contains(part)) {
+					if (coursename.contains(part)) {
 						return new SearchByCourseName();
 					}
 				}
