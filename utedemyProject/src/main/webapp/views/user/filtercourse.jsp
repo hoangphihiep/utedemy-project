@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="vi">
-<head>
+  <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/utedemyProject/views/Css/searchcourse.css">
@@ -16,34 +16,10 @@
 <title>Unica - Kết quả tìm kiếm</title>
 
 </head>
+
+
 <body>
-	<!-- Navbar -->
-	<div class="navbar">
-		<div class="logo">
-			<img src="/api/placeholder/100/30" alt="Unica Logo"
-				style="width: 100px; height: 30px;">
-			<div class="category-btn">DANH MỤC</div>
-		</div>
-
-		<form action="${pageContext.request.contextPath}/user/filter"
-			method="post">
-			<div class="search-box">
-				<input type="text" name="keyword" placeholder="Search..."
-					value="${keyWord}">
-				<button type="submit">🔍</button>
-			</div>
-		</form>
-
-
-		<div class="nav-links">
-			<a href="#" class="nav-btn login-btn">Doanh nghiệp</a> <a href="#"
-				class="nav-btn login-btn">Hội viên</a>
-			<button class="nav-btn cta-btn">→ Vào học</button>
-			<button class="icon-btn">❤️</button>
-			<button class="icon-btn">🛒</button>
-			<button class="icon-btn">👤</button>
-		</div>
-	</div>
+	
 
 	<!-- Main Content -->
 	<div class="container">

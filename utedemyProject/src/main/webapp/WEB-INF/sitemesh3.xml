@@ -25,6 +25,7 @@
 
 	<mapping path="/viewTeacherProfile" name="user" decorator="user.jsp" />
 	<mapping path="/user/search" name="user" decorator="user.jsp" />
+	<mapping path="/user/filter" name="user" decorator="user.jsp" />
 	    <mapping path="/user/homepage" name="user" decorator="user.jsp" />
 	    <mapping path="/user/homeRegisterTeacher" name="user" decorator="user.jsp" />
 	    <mapping path="/user/cart" name="user" decorator="cart.jsp" />

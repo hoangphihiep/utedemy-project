@@ -14,8 +14,8 @@
 
             <form action="${pageContext.request.contextPath}/user/search" method="post">
                 <div class="search-box-inner">
-                    <input type="text" name="keyword" placeholder="Tìm khóa học, giảng viên">
-                    <button class="search-btn">
+                    <input type="text" name="keyword" placeholder="Tìm khóa học, giảng viên, mô tả">
+                    <button class="search-btn" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
