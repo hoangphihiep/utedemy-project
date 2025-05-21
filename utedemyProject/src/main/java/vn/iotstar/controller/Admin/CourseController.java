@@ -17,6 +17,7 @@ import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.impl.service.NotificationService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.INotificationService;
+import vn.iotstar.state.CourseContext;
 
 @WebServlet(urlPatterns = {"/admin/courseManagement","/admin/cancelCourse","/admin/restoreCourse","/admin/reviewCourse"})
 public class CourseController extends HttpServlet {
@@ -36,65 +37,61 @@ public class CourseController extends HttpServlet {
 			req.setAttribute("listCourse", listCourse);
 			req.getRequestDispatcher("/views/admin/listCourse.jsp").forward(req, resp);
 		}
+		
 		else if (url.contains("/admin/cancelCourse")) {
-			HttpSession session = req.getSession();
-			String idCourseStr = req.getParameter("id");
-			String content  = req.getParameter("noidung");
-			System.out.println("Có vào đây2");
+		    HttpSession session = req.getSession();
+		    String idCourseStr = req.getParameter("id");
+		    String content  = req.getParameter("noidung");
 
-			User user = (User)session.getAttribute("account");
+		    User user = (User)session.getAttribute("account");
 
-			if (idCourseStr != null) {
-				int idCourse = Integer.parseInt(idCourseStr);
-				Course course = courseService.findByIdCourse(idCourse);
-				course.setStatus(0);
-				if (content != null) {
-					Notification notification = new Notification();
-					notification.setSender(user);
-					notification.setReceiver(course.getTeacher());
-					notification.setContent(content);
-					Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-					notification.setSentDate(timestamp.toString());
-					if (notificationService.insert(notification)) {
-						if (courseService.updateCourse(course)) {
-							resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
-						}
+		    if (idCourseStr != null) {
+		        int idCourse = Integer.parseInt(idCourseStr);
+		        Course course = courseService.findByIdCourse(idCourse);
+		        CourseContext context = new CourseContext(course);
+		        context.cancel(course); // Sử dụng state pattern
 
-					}
-				}
-			}
+		        if (content != null) {
+		            Notification notification = new Notification();
+		            notification.setSender(user);
+		            notification.setReceiver(course.getTeacher());
+		            notification.setContent(content);
+		            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		            notification.setSentDate(timestamp.toString());
+
+		            if (notificationService.insert(notification) && courseService.updateCourse(course)) {
+		                resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
+		            }
+		        }
+		    }
 		}
+
 		else if (url.contains("/admin/restoreCourse")) {
-			String idCourseStr = req.getParameter("id");
-			System.out.println("Có vào đây1");
-			if (idCourseStr != null) {
-				int idCourse = Integer.parseInt(idCourseStr);
-				Course course = courseService.findByIdCourse(idCourse); 
-				if (course.getStatus() == 0) {
-					course.setStatus(1);
-					boolean check = courseService.updateCourse(course);
-					if (check) {
-						System.out.println("Đã mở khóa khóa học");
-						resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
-					}
-				}
-			}
+		    String idCourseStr = req.getParameter("id");
+		    if (idCourseStr != null) {
+		        int idCourse = Integer.parseInt(idCourseStr);
+		        Course course = courseService.findByIdCourse(idCourse);
+		        CourseContext context = new CourseContext(course);
+		        context.restore(course); // Sử dụng state pattern
+		        if (courseService.updateCourse(course)) {
+		            resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
+		        }
+		    }
 		}
+
+		
 		else if (url.contains("/admin/reviewCourse")) {
-			String idCourseStr = req.getParameter("id");
-			System.out.println("Có vào đây");
-			if (idCourseStr != null) {
-				int idCourse = Integer.parseInt(idCourseStr);
-				Course course = courseService.findByIdCourse(idCourse); 
-				if (course.getStatus() == 2) {
-					course.setStatus(1);
-					boolean check = courseService.updateCourse(course);
-					if (check) {
-						System.out.println("Đã duyệt");
-						resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
-					}
-				}
-			}
+		    String idCourseStr = req.getParameter("id");
+		    if (idCourseStr != null) {
+		        int idCourse = Integer.parseInt(idCourseStr);
+		        Course course = courseService.findByIdCourse(idCourse); 
+		        CourseContext context = new CourseContext(course);
+		        context.review(course); // Sử dụng state pattern
+		        if (courseService.updateCourse(course)) {
+		            resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
+		        }
+		    }
 		}
+
 	}
 }
