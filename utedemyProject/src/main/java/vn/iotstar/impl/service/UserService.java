@@ -133,5 +133,10 @@ public class UserService implements IUserService {
 	    {
 	    	return userDao.getAllUsers();
 	    }
+		@Override
+		public User findByEmail(String email) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 }

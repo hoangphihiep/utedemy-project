@@ -14,8 +14,8 @@
 
             <form action="${pageContext.request.contextPath}/user/search" method="post">
                 <div class="search-box-inner">
-                    <input type="text" name="keyword" placeholder="Tìm khóa học, giảng viên">
-                    <button class="search-btn">
+                    <input type="text" name="keyword" placeholder="Tìm khóa học, giảng viên, mô tả">
+                    <button class="search-btn" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -25,34 +25,80 @@
     <div class="user-menu-container">
       <a href="${pageContext.request.contextPath}/user/cart"><i class="fas fa-shopping-cart cart-icon"></i></a>
       <a href="${pageContext.request.contextPath}/user/favoriteCourse"><i class="fas fa-heart heart-icon"></i></a>
-      <div class="dropdown">    
-       <c:if test="${sessionScope.account.avatarUrl != ''}">
-                                          <c:if test ="${sessionScope.account.avatarUrl.substring(0,5) != 'https' }">
-                                             <c:url value="/image?fname=${sessionScope.account.avatarUrl}" var="imgUrl_avt"></c:url>
-                                         </c:if>
-                                  <c:if test ="${sessionScope.account.avatarUrl.substring(0,5) == 'https' }">
-                                          <c:url value="${sessionScope.account.avatarUrl}" var="imgUrl_avt"></c:url>
-                                 </c:if>
-                         </c:if>                   
-        <img src="${imgUrl_avt}" alt="User Avatar" class="avatar-img" id="avatarDropdown">
-        
-        <div class="dropdown-content" id="userDropdown">
-         <a href="/utedemyProject/user/mycourse">Vào học</a>
-          <a href="/member">Hội viên</a>
-          <a href="/activate-course">Kích hoạt khóa học</a>
-        <c:forEach var="role" items="${sessionScope.account.roles}">
-    <c:if test="${role.id == 2}">
-        <a href="/utedemyProject/teacher/course">Giảng viên</a>
-    </c:if>
-</c:forEach>
+				<div class="notification-dropdown">
+					<div class="notification-bell" id="notificationBell">
+						<i class="fas fa-bell bell-icon"></i>
+						<c:set var="unreadCount" value="0" />
+						<c:forEach var="notification" items="${sessionScope.notifications}">
+							<c:set var="unreadCount" value="${sessionScope.unreadCount + 1}" />
+						</c:forEach>
+						<c:if test="${sessionScope.unreadCount > 0}">
+							<span class="notification-badge">${sessionScope.unreadCount}</span>
+						</c:if>
+					</div>
+					<div class="notification-content" id="notificationDropdown">
+						<div class="notification-header">
+							<h3>Thông báo</h3>
+						</div>
+						<div class="notification-list">
+							<c:choose>
+								<c:when test="${empty sessionScope.notifications}">
+									<div class="no-notifications">
+										<p>Bạn không có thông báo nào.</p>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<c:forEach var="notification" items="${sessionScope.notifications}">
+										<div
+											data-notification-id="${notification.id}">
+											<div class="notification-info">
+												<div class="notification-title">
+													${notification.content}
+												</div>
+												<div class="notification-time">
+													${notification.sentDate}
+												</div>
+											</div>
+										</div>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</div>
+				</div>
+				<div class="dropdown">
+					<c:if test="${sessionScope.account.avatarUrl != ''}">
+						<c:if
+							test="${sessionScope.account.avatarUrl.substring(0,5) != 'https' }">
+							<c:url value="/image?fname=${sessionScope.account.avatarUrl}"
+								var="imgUrl_avt"></c:url>
+						</c:if>
+						<c:if
+							test="${sessionScope.account.avatarUrl.substring(0,5) == 'https' }">
+							<c:url value="${sessionScope.account.avatarUrl}" var="imgUrl_avt"></c:url>
+						</c:if>
+					</c:if>
+					<img src="${imgUrl_avt}" alt="User Avatar" class="avatar-img"
+						id="avatarDropdown">
 
-          <a href="${pageContext.request.contextPath}/user/InformationManagement">Cập nhật hồ sơ</a>
-          <a href="/wallet">Ví của bạn</a>
-           <a href="${pageContext.request.contextPath}/user/viewcheckout">Xem đơn hàng đang đặt</a>
-          <a href="/utedemyProject/logout">Đăng xuất</a>
-        </div>
-      </div>
-    </div>
+					<div class="dropdown-content" id="userDropdown">
+						<a href="/utedemyProject/user/mycourse">Vào học</a> <a
+							href="/member">Hội viên</a> <a href="/activate-course">Kích
+							hoạt khóa học</a>
+						<c:forEach var="role" items="${sessionScope.account.roles}">
+							<c:if test="${role.id == 2}">
+								<a href="/utedemyProject/teacher/course">Giảng viên</a>
+							</c:if>
+						</c:forEach>
+
+						<a
+							href="${pageContext.request.contextPath}/user/InformationManagement">Cập
+							nhật hồ sơ</a> <a href="/wallet">Ví của bạn</a> <a
+							href="${pageContext.request.contextPath}/user/viewcheckout">Xem
+							đơn hàng đang đặt</a> <a href="/utedemyProject/logout">Đăng xuất</a>
+					</div>
+				</div>
+			</div>
   </c:if>
   
   <c:if test="${empty sessionScope.account}">

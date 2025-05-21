@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
 import com.google.gson.JsonObject;
@@ -14,12 +15,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import vn.iotstar.entity.Course;
 import vn.iotstar.entity.Discount;
 import vn.iotstar.entity.OrderItem;
 import vn.iotstar.entity.Orders;
 import vn.iotstar.entity.User;
+import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.impl.service.DiscountService;
 import vn.iotstar.impl.service.OrderService;
+import vn.iotstar.service.ICourseService;
 
 @WebServlet(urlPatterns = {"/apply-discount","/remove-discount"})
 public class DiscountController  extends HttpServlet {
@@ -27,6 +31,7 @@ public class DiscountController  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	DiscountService discount_service = new DiscountService();
 	OrderService order_service = new OrderService();
+	ICourseService courseService = new CourseService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -46,7 +51,8 @@ public class DiscountController  extends HttpServlet {
 		String url = req.getRequestURI();
 		if (url.contains("apply-discount")) {
 			
-			
+		User user = (User)session.getAttribute("account");	
+		
         PrintWriter out = resp.getWriter();
         JsonObject jsonResponse = new JsonObject();
         
@@ -81,6 +87,53 @@ public class DiscountController  extends HttpServlet {
                 jsonResponse.addProperty("message", "Mã giảm giá đã hết hạn hoặc chưa đến thời gian áp dụng.");
                 out.print(jsonResponse.toString());
                 return;
+            }
+            
+            String code = discount_used.getDecreasedFee();
+            System.out.println("Mã giảm giá: " + code);
+            String[] conditions = discount_used.getDecreasedFee().split(",");
+            Course course = courseService.findByIdCourse(productId);
+            for (String cond : conditions) {
+            	cond = cond.trim();  // Xử lý khoảng trắng
+                switch (cond) {
+                    case "NEW_USER":
+                        if (!order_service.checkOrder(user.getId(), course.getTeacher().getId())) {
+                            jsonResponse.addProperty("success", false);
+                            jsonResponse.addProperty("message", "Mã này chỉ áp dụng cho người dùng mới.");
+                            out.print(jsonResponse.toString());
+                            return;
+                        }
+                        break;
+
+                    case "LOYAL_CUSTOMER":
+                        if (!order_service.isLoyalCustomer(user.getId(), course.getTeacher().getId())) {
+                            jsonResponse.addProperty("success", false);
+                            jsonResponse.addProperty("message", "Mã này chỉ áp dụng cho khách hàng thân thiết.");
+                            out.print(jsonResponse.toString());
+                            return;
+                        }
+                        break;
+
+                    case "MIN_ORDER_500K":
+                        if (!order_service.isHighValueCustomer(user.getId(), course.getTeacher().getId())) {
+                            jsonResponse.addProperty("success", false);
+                            jsonResponse.addProperty("message", "Đơn hàng không đủ điều kiện tối thiểu 500.000đ.");
+                            out.print(jsonResponse.toString());
+                            return;
+                        }
+                        break;
+
+                    case "FIRST_COURSE":
+                        if (!order_service.isFirstCourse(course.getId())) {
+                            jsonResponse.addProperty("success", false);
+                            jsonResponse.addProperty("message", "Chỉ áp dụng cho người mua khóa học đầu tiên.");
+                            out.print(jsonResponse.toString());
+                            return;
+                        }
+                        break;
+                    default:
+                        System.out.println("Điều kiện không hợp lệ: " + cond);
+                }
             }
             //check số lượng user đã sử dụng cái discount đó
         	int amount_code_used=discount_service.countUsersByDiscountId(discount_used.getId());
@@ -135,13 +188,27 @@ public class DiscountController  extends HttpServlet {
             // Áp dụng mã giảm giá
             double originalPrice = targetItem.getCourse().getCoursePrice();
             double discountAmount = 0;
+            int decreasedFee = 0;
+            try {
+                String regex = "\\d+";
+                java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex);
+                java.util.regex.Matcher matcher = pattern.matcher(discount_used.getDecreasedFee());
+                
+                if (matcher.find()) {
+                    String numberStr = matcher.group();
+                    decreasedFee =  Integer.parseInt(numberStr);
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             
             if ("PERCENTAGE".equals(discount_used.getType())) {
                 // Giảm giá theo phần trăm
-                discountAmount = originalPrice *  Integer.parseInt(discount_used.getDecreasedFee()) / 100;
+                discountAmount = originalPrice *  decreasedFee / 100;
             } else if ("AMOUNTMONEY".equals(discount_used.getType())) {
                 // Giảm giá cố định
-                discountAmount = Double.parseDouble(discount_used.getDecreasedFee());
+                discountAmount = decreasedFee;
             }
             
             // Đảm bảo giá sau giảm không âm

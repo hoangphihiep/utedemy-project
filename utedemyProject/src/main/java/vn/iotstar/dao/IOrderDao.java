@@ -23,5 +23,13 @@ public interface IOrderDao {
 	List<Orders> getOrdersByUserId(int userId);
 	
 	public List<OrderItem> getAllOrderItems();
+	
+	public boolean checkOrder (int idUser, int idTeacher);
+	
+	public boolean isLoyalCustomer(int idUser, int idTeacher);
+	
+	public boolean isHighValueCustomer(int idUser, int idTeacher);
+	
+	public boolean isFirstCourse (int idCourse);
 
 }

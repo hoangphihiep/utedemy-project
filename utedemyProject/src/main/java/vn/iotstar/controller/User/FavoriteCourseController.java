@@ -18,7 +18,7 @@ import vn.iotstar.impl.service.FavoriteCourseService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IFavoriteCourseService;
 
-@WebServlet(urlPatterns = {"/user/favoriteCourse","/user/addFavoriteCourse", "/user/removeFavoriteCourse"})
+@WebServlet(urlPatterns = {"/user/favoriteCourse","/user/addFavoriteCourse1", "/user/removeFavoriteCourse"})
 public class FavoriteCourseController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -58,8 +58,9 @@ public class FavoriteCourseController extends HttpServlet {
 	    HttpSession session = req.getSession();
 	    PrintWriter out = resp.getWriter();
 
-		if (url.contains("/user/addFavoriteCourse")) 
+	    if (url.contains("/user/addFavoriteCourse1")) 
 		{
+			System.out.println ("Có vào đây nha");
 			User user = (User)session.getAttribute("account");
 			try {
 	            int courseId = Integer.parseInt(req.getParameter("courseId"));

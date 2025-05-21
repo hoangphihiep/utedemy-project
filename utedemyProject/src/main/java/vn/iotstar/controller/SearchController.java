@@ -16,6 +16,7 @@ import vn.iotstar.service.IUserService;
 import vn.iotstar.service.IReviewService;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.entity.*;
+import vn.iotstar.strategy.*;
 
 @WebServlet(urlPatterns = { "/user/search" })
 public class SearchController extends HttpServlet {
@@ -39,32 +40,65 @@ public class SearchController extends HttpServlet {
 		session.setAttribute("keyWord", keyWord);
 		System.out.println("Keyword: " + keyWord);
 		List<Review> reviews = reviewService.getAllReviews();
-		List<Course> courseList = new ArrayList<>();
-		List<Course> courses =  courseService.getAllCourses();
-		int i = 0;
-		System.out.println("Ten khoa hoc: ");
-		for(Course c : courseList)
-		{
-			System.out.print(c.getCourseName());
-		}
+		
+		List<Course> allCourses=courseService.getAllCourses();
+		
+		SearchStrategy strategy=detectSearchStrategy(keyWord);
+		SearchContext context=new SearchContext();
+		
+		context.setStrategy(strategy);
+		List<Course> courseList=context.executeSearch(keyWord, allCourses);
+		
+		req.setAttribute("CourseList", courseList);
+		req.setAttribute("Review", reviews);
+		req.setAttribute("searchAmount", courseList.size());
+		req.setAttribute("keyWord", keyWord);
+		
+		req.getRequestDispatcher("/views/user/searchcourse.jsp").forward(req, resp);
+	}
+	private SearchStrategy detectSearchStrategy(String keyWord) {
 		if (keyWord == null || keyWord.trim().isEmpty()) {
-			System.out.println("Vo day");
-			courseList.addAll(courses);
-		} else {
-			for (Course c : courses) {
-				System.out.println("Vo day");
-				if (c.getCourseName().toLowerCase().contains(keyWord.toLowerCase()) && c.getStatus() == 1) {
-				    courseList.add(c);
-				    i++;
+			return (k, courses) -> courses;
+		}
+
+		String normalizedKeyword = VietnameseNormalizer.normalize(keyWord);
+		String[] keywordParts = normalizedKeyword.split("\\s+");
+
+		List<Course> allCourses = courseService.getAllCourses();
+		
+		for(Course course:allCourses) {
+			if(course.getCourseType()!=null && course.getCourseType().getCourseTypeName()!=null) {
+				String typename=VietnameseNormalizer.normalize(course.getCourseType().getCourseTypeName());
+				if(typename.contains(normalizedKeyword)) {
+					return new SearchByType();
 				}
 			}
 		}
 
-		req.setAttribute("CourseList", courseList);
-		req.setAttribute("Review", reviews);
-		req.setAttribute("searchAmount", i);
-		req.setAttribute("keyWord", keyWord);
+		// Kiểm tra khớp tên giảng viên (so sánh không dấu)
+		for (Course course : allCourses) {
+			if (course.getTeacher() != null && course.getTeacher().getFullname() != null) {
+				String fullname = VietnameseNormalizer.normalize(course.getTeacher().getFullname());
+				for (String part : keywordParts) {
+					if (fullname.contains(part)) {
+						return new SearchByInstructorName();
+					}
+				}
+			}
+		}
 
-		req.getRequestDispatcher("/views/user/searchcourse.jsp").forward(req, resp);
+		// Kiểm tra khớp tên khóa học (so sánh không dấu)
+		for (Course course : allCourses) {
+			if (course.getCourseName() != null) {
+				String name = VietnameseNormalizer.normalize(course.getCourseName());
+				for (String part : keywordParts) {
+					if (name.contains(part)) {
+						return new SearchByCourseName();
+					}
+				}
+			}
+		}
+
+		return new SearchByCourseName();
 	}
 }

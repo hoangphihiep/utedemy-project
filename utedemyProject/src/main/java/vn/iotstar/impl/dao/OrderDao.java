@@ -219,6 +219,120 @@ public class OrderDao implements IOrderDao{
 			}
 			return orderItems;
 		}
+	@Override
+	public boolean checkOrder(int idUser, int idTeacher) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    
+	    try {
+	        // Truy vấn số lượng khóa học đã mua của giảng viên
+	    	String jpql = "SELECT COUNT(oi) FROM OrderItem oi " +
+                    "JOIN oi.order o " +
+                    "JOIN oi.course c " +
+                    "JOIN c.teacher i " +
+                    "WHERE o.user.id = :userId " +
+                    "AND i.id = :teacherId " +
+                    "AND o.orderStatus = 'COMPLETED'";
+	        
+	        Long purchasedCoursesCount = em.createQuery(jpql, Long.class)
+	                                    .setParameter("userId", idUser)
+	                                    .setParameter("teacherId", idTeacher)
+	                                    .getSingleResult();
+	        
+	        return purchasedCoursesCount == 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        // em.close(); // Tùy thuộc vào cách quản lý EntityManager của bạn
+	    }
+	}
+	@Override
+	public boolean isLoyalCustomer(int idUser, int idTeacher) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    
+	    try {
+	        // Truy vấn số lượng khóa học đã mua của giảng viên
+	        String jpql = "SELECT COUNT(DISTINCT c.id) FROM OrderItem oi " +
+	                     "JOIN oi.order o " +
+	                     "JOIN oi.course c " +
+	                     "JOIN c.teacher i " +
+	                     "WHERE o.user.id = :userId " +
+	                     "AND i.id = :instructorId " +
+	                     "AND o.orderStatus = 'COMPLETED'";
+	        
+	        Long purchasedCoursesCount = em.createQuery(jpql, Long.class)
+	                                    .setParameter("userId", idUser)
+	                                    .setParameter("instructorId", idTeacher)
+	                                    .getSingleResult();
+	        
+	        // Nếu số lượng khóa học đã mua >= 5, người dùng là khách hàng thân thiết
+	        return purchasedCoursesCount >= 5;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        // em.close(); // Tùy thuộc vào cách quản lý EntityManager của bạn
+	    }
+	}
+	@Override
+	public boolean isHighValueCustomer(int idUser, int idTeacher) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    
+	    try {
+	        // Truy vấn tổng số tiền người dùng đã chi cho khóa học của giảng viên
+	        String jpql = "SELECT SUM(oi.finishedFee) FROM OrderItem oi " +
+	                     "JOIN oi.order o " +
+	                     "JOIN oi.course c " +
+	                     "JOIN c.teacher i " +
+	                     "WHERE o.user.id = :userId " +
+	                     "AND i.id = :instructorId " +
+	                     "AND o.orderStatus = 'COMPLETED'";
+	        
+	        Double totalSpent = em.createQuery(jpql, Double.class)
+	                            .setParameter("userId", idUser)
+	                            .setParameter("instructorId", idTeacher)
+	                            .getSingleResult();
+	        
+	        // Nếu tổng chi tiêu null (chưa mua khóa học nào) thì gán bằng 0
+	        if (totalSpent == null) {
+	            totalSpent = 0.0;
+	        }
+	        
+	        // Kiểm tra nếu tổng chi tiêu > 5,000,000 VNĐ
+	        final double HIGH_VALUE_THRESHOLD = 5000000.0;
+	        return totalSpent > HIGH_VALUE_THRESHOLD;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        // em.close(); // Tùy thuộc vào cách quản lý EntityManager của bạn
+	    }
+	}
+	@Override
+	public boolean isFirstCourse(int idCourse) {
+		EntityManager em = JPAConfig.getEntityManager();
+	    
+	    try {
+	        // Đếm số đơn hàng đã hoàn thành có chứa khóa học này
+	        String jpql = "SELECT COUNT(o) FROM Orders o " +
+	                     "JOIN o.orderItems oi " +
+	                     "JOIN oi.course c " +
+	                     "WHERE c.id = :courseId " +
+	                     "AND o.orderStatus = 'COMPLETED'";
+	        
+	        Long purchaseCount = em.createQuery(jpql, Long.class)
+	                            .setParameter("courseId", idCourse)
+	                            .getSingleResult();
+	        
+	        // Nếu purchaseCount = 0, chưa ai mua khóa học này
+	        return purchaseCount == 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        // em.close(); // Tùy thuộc vào cách quản lý EntityManager của bạn
+	    }
+	}
 
 
 

@@ -54,12 +54,6 @@ public class Course implements Serializable {
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Section> sections = new HashSet<>();
 	
-	public void addSection(Section section) {
-        if (section != null && section != null && !sections.contains(section)) {
-        	sections.add(section);
-        }
-    }
-	
 	@Column(name = "course_price")
     private double coursePrice;
 	
@@ -87,4 +81,126 @@ public class Course implements Serializable {
 	
 	@Column(name = "status")
     private int status;
+	
+	public void addSection(Section section) {
+        if (section != null && section != null && !sections.contains(section)) {
+        	sections.add(section);
+        }
+    }
+	
+	// Builder class
+    public static class Builder {
+        private int id;
+        private String courseName;
+        private CourseType courseType;
+        private CourseDetail courseDetail;
+        private Set<Section> sections = new HashSet<>();
+        private double coursePrice;
+        private Teacher teacher;
+        private Set<Review> review = new HashSet<>();
+        private Set<FavoriteCourse> favoriteCourse = new HashSet<>();
+        private Set<Voucher> vouchers = new HashSet<>();
+        private Set<Cart> cart = new HashSet<>();
+        private Set<Discount> discounts = new HashSet<>();
+        private Set<OrderItem> orderItems = new HashSet<>();
+        private int status;
+
+        public Builder() {}
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder courseName(String courseName) {
+            this.courseName = courseName;
+            return this;
+        }
+
+        public Builder courseType(CourseType courseType) {
+            this.courseType = courseType;
+            return this;
+        }
+
+        public Builder courseDetail(CourseDetail courseDetail) {
+            this.courseDetail = courseDetail;
+            return this;
+        }
+
+        public Builder sections(Set<Section> sections) {
+            this.sections = sections;
+            return this;
+        }
+
+        public Builder addSection(Section section) {
+            if (section != null) {
+                this.sections.add(section);
+            }
+            return this;
+        }
+
+        public Builder coursePrice(double coursePrice) {
+            this.coursePrice = coursePrice;
+            return this;
+        }
+
+        public Builder teacher(Teacher teacher) {
+            this.teacher = teacher;
+            return this;
+        }
+
+        public Builder review(Set<Review> review) {
+            this.review = review;
+            return this;
+        }
+
+        public Builder favoriteCourse(Set<FavoriteCourse> favoriteCourse) {
+            this.favoriteCourse = favoriteCourse;
+            return this;
+        }
+
+        public Builder vouchers(Set<Voucher> vouchers) {
+            this.vouchers = vouchers;
+            return this;
+        }
+
+        public Builder cart(Set<Cart> cart) {
+            this.cart = cart;
+            return this;
+        }
+
+        public Builder discounts(Set<Discount> discounts) {
+            this.discounts = discounts;
+            return this;
+        }
+
+        public Builder orderItems(Set<OrderItem> orderItems) {
+            this.orderItems = orderItems;
+            return this;
+        }
+
+        public Builder status(int status) {
+            this.status = status;
+            return this;
+        }
+
+        public Course build() {
+            Course course = new Course();
+            course.setId(this.id);
+            course.setCourseName(this.courseName);
+            course.setCourseType(this.courseType);
+            course.setCourseDetail(this.courseDetail);
+            course.setSections(this.sections);
+            course.setCoursePrice(this.coursePrice);
+            course.setTeacher(this.teacher);
+            course.setReview(this.review);
+            course.setFavoriteCourse(this.favoriteCourse);
+            course.setVouchers(this.vouchers);
+            course.setCart(this.cart);
+            course.setDiscounts(this.discounts);
+            course.setOrderItems(this.orderItems);
+            course.setStatus(this.status);
+            return course;
+        }
+    }
 }

@@ -12,6 +12,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import vn.iotstar.decorator.DiscountDecorator;
+import vn.iotstar.decorator.FirstCourseCondition;
+import vn.iotstar.decorator.FixedAmountDiscount;
+import vn.iotstar.decorator.IDiscount;
+import vn.iotstar.decorator.LoyalCustomerCondition;
+import vn.iotstar.decorator.MinOrder5Condition;
+import vn.iotstar.decorator.NewUserCondition;
+import vn.iotstar.decorator.PercentageDiscount;
+import vn.iotstar.decorator.WeekendOnlyCondition;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.Discount;
 import vn.iotstar.entity.Notification;
@@ -105,7 +114,8 @@ public class CouponController extends HttpServlet {
 		    String endTime = req.getParameter("endTime");
 		    String codeAmount = req.getParameter("codeAmount");
 		    String[] appliedCourseIds = req.getParameterValues("appliedCourses");
-
+		    String[] conditions = req.getParameterValues("conditions");
+		    
 		    Discount discount = new Discount();
 		    discount.setDisCode(disCode);
 		    discount.setDecreasedFee(decreasedFee);
@@ -113,7 +123,7 @@ public class CouponController extends HttpServlet {
 		    discount.setStartTime(startTime);
 		    discount.setEndTime(endTime);
 		    discount.setCodeAmount(codeAmount);
-
+		    
 		    Set<Course> appliedCourses = new HashSet<>();
 		    if (appliedCourseIds != null) {
 		        for (String courseId : appliedCourseIds) {
@@ -124,11 +134,55 @@ public class CouponController extends HttpServlet {
 		        }
 		    }
 		    discount.setAppliedCourses(appliedCourses);
+		    
+		    // Tạo loại giảm giá cơ bản
+	        if ("PERCENTAGE".equals(type)) {
+	            IDiscount percentageDiscount = new PercentageDiscount(discount);
+	            for (String cond : conditions) {
+	                switch (cond.trim()) {
+	                    case "NEW_USER":
+	                    	percentageDiscount = new NewUserCondition(percentageDiscount);
+	                        break;
+	                    case "LOYAL_CUSTOMER":
+	                    	percentageDiscount = new LoyalCustomerCondition(percentageDiscount);
+	                        break;
+	                    case "MIN_ORDER_5":
+	                    	percentageDiscount = new MinOrder5Condition(percentageDiscount);
+	                        break;
+	                    case "FIRST_COURSE":
+	                    	percentageDiscount = new FirstCourseCondition(percentageDiscount);
+	                        break;
+	                }
+	            }
+	            discount.setDecreasedFee(percentageDiscount.getDiscountValue());
+	            System.out.println ("Kết quả cuối cùng: " + percentageDiscount.getDiscountValue());
 
-		    if (discountService.insert(discount)) {
-		    	System.out.println("Thêm thành công");
-		    	resp.sendRedirect(req.getContextPath() + "/teacher/coupon");
-		    }
+	        } else {
+	        	IDiscount fixedAmountDiscount = new FixedAmountDiscount(discount);
+	            for (String cond : conditions) {
+	                switch (cond.trim()) {
+	                    case "NEW_USER":
+	                    	fixedAmountDiscount = new NewUserCondition(fixedAmountDiscount);
+	                        break;
+	                    case "LOYAL_CUSTOMER":
+	                    	fixedAmountDiscount = new LoyalCustomerCondition(fixedAmountDiscount);
+	                        break;
+	                    case "MIN_ORDER_5":
+	                    	fixedAmountDiscount = new MinOrder5Condition(fixedAmountDiscount);
+	                        break;
+	                    case "FIRST_COURSE":
+	                    	fixedAmountDiscount = new FirstCourseCondition(fixedAmountDiscount);
+	                        break;
+	                }
+	            }
+	            discount.setDecreasedFee(fixedAmountDiscount.getDiscountValue());
+	            System.out.println ("Kết quả cuối cùng1: " + fixedAmountDiscount.getDiscountValue());
+	        }
+			
+			 if (discountService.insert(discount)) {
+				 	System.out.println("Thêm thành công"); 
+				 	resp.sendRedirect(req.getContextPath()+ "/teacher/coupon"); 
+			}
 		}
 		if (url.contains("/teacher/editCoupon")) 
 		{
@@ -143,6 +197,7 @@ public class CouponController extends HttpServlet {
 	        String endTime = req.getParameter("endTime");
 	        String codeAmount = req.getParameter("codeAmount");
 	        String[] appliedCourseIds = req.getParameterValues("appliedCourses");
+	        String[] conditions = req.getParameterValues("conditions");
 
 	        Discount discount = discountService.findById(discountId);
 
@@ -166,7 +221,50 @@ public class CouponController extends HttpServlet {
 	        }
 	        discount.getAppliedCourses().clear();
 	        discount.getAppliedCourses().addAll(appliedCourses);
+	        
+	     // Tạo loại giảm giá cơ bản
+	        if ("PERCENTAGE".equals(type)) {
+	            IDiscount percentageDiscount = new PercentageDiscount(discount);
+	            for (String cond : conditions) {
+	                switch (cond.trim()) {
+	                    case "NEW_USER":
+	                    	percentageDiscount = new NewUserCondition(percentageDiscount);
+	                        break;
+	                    case "LOYAL_CUSTOMER":
+	                    	percentageDiscount = new LoyalCustomerCondition(percentageDiscount);
+	                        break;
+	                    case "MIN_ORDER_5":
+	                    	percentageDiscount = new MinOrder5Condition(percentageDiscount);
+	                        break;
+	                    case "FIRST_COURSE":
+	                    	percentageDiscount = new FirstCourseCondition(percentageDiscount);
+	                        break;
+	                }
+	            }
+	            discount.setDecreasedFee(percentageDiscount.getDiscountValue());
+	            System.out.println ("Kết quả cuối cùng: " + percentageDiscount.getDiscountValue());
 
+	        } else {
+	        	IDiscount fixedAmountDiscount = new FixedAmountDiscount(discount);
+	            for (String cond : conditions) {
+	                switch (cond.trim()) {
+	                    case "NEW_USER":
+	                    	fixedAmountDiscount = new NewUserCondition(fixedAmountDiscount);
+	                        break;
+	                    case "LOYAL_CUSTOMER":
+	                    	fixedAmountDiscount = new LoyalCustomerCondition(fixedAmountDiscount);
+	                        break;
+	                    case "MIN_ORDER_5":
+	                    	fixedAmountDiscount = new MinOrder5Condition(fixedAmountDiscount);
+	                        break;
+	                    case "FIRST_COURSE":
+	                    	fixedAmountDiscount = new FirstCourseCondition(fixedAmountDiscount);
+	                        break;
+	                }
+	            }
+	            discount.setDecreasedFee(fixedAmountDiscount.getDiscountValue());
+	            System.out.println ("Kết quả cuối cùng1: " + fixedAmountDiscount.getDiscountValue());
+	        }
 	        if (discountService.update(discount)) {
 	        	resp.sendRedirect(req.getContextPath() + "/teacher/coupon");
 	        }

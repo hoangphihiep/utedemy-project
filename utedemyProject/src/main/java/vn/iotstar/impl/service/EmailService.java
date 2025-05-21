@@ -11,6 +11,7 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import vn.iotstar.utils.EmailUtil;
 
 
 
@@ -63,12 +64,32 @@ public class EmailService {
             // Gửi email
             Transport.send(message);
             
-            // Trả về true nếu gửi email thành công
             return true;
         } catch (MessagingException e) {
             e.printStackTrace();
             // Trả về false nếu có lỗi xảy ra
             return false;
         }
+    }
+    
+    public boolean sendNewCourseNotification(String email, String message) {    	
+    	try {
+    		Session session = EmailUtil.createMailSession();
+
+    		Message msg = new MimeMessage(session);
+    		msg.setFrom(new InternetAddress(EmailUtil.SENDER_EMAIL));
+    		msg.addRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+    		msg.setSubject("Thông báo khóa học mới");
+            msg.setContent(message, "text/html; charset=utf-8"); // ✅ Gửi HTML đúng cách
+
+    		// send email
+    		Transport.send(msg);
+
+    		System.out.println("Send notification about new course successfully !");
+    		return true;
+    	}catch(MessagingException ex) {
+    		System.out.println("Error" + ex.getMessage());
+    		return false;
+    	}
     }
 }

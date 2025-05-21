@@ -78,8 +78,23 @@ public class OrderController extends HttpServlet {
 
 				       Discount discount = item.getDiscount();
 				       if (discount != null) {
+				    	   int decreased = 0;
+				            try {
+				                // Cách 1: Sử dụng regex để trích xuất số
+				                String regex = "\\d+";
+				                java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex);
+				                java.util.regex.Matcher matcher = pattern.matcher(discount.getDecreasedFee());
+				                
+				                if (matcher.find()) {
+				                    String numberStr = matcher.group();
+				                    decreased =  Integer.parseInt(numberStr);
+				                }
+				                
+				            } catch (Exception e) {
+				                e.printStackTrace();
+				            }
 				           String type = discount.getType();
-				           double decreasedFee = Double.parseDouble(discount.getDecreasedFee());
+				           double decreasedFee = decreased;
 
 				           if ("PERCENTAGE".equalsIgnoreCase(type)) {
 				               discountAmount = coursePrice * (decreasedFee / 100);
@@ -266,11 +281,14 @@ public class OrderController extends HttpServlet {
         session.setAttribute("finishedFees", finishedFees);
         session.setAttribute("totalAmountStr", totalAmountStr);
         
-        float totalAmount = Float.parseFloat(totalAmountStr);
+        float totalAmount1 = Float.parseFloat(totalAmountStr);
         
         //mình phải xử lí paypal ở đây, truyền total amount, sau khi hoàn tất thì mới chạy code ở dước
-         String approveLink = PayPalService.createPayment(convertVNDToUSD(totalAmount), "USD", "http://localhost:8082/utedemyProject/user/orderpaypal/success",
+         String approveLink = PayPalService.createPayment(convertVNDToUSD(totalAmount1), "USD", "http://localhost:8082/utedemyProject/user/orderpaypal/success",
 	            "http://localhost:8082/utedemyProject/user/orderpaypal/cancel");
+         System.out.print ("Tông tiền: " + totalAmount1);
+         System.out.println ("Link paypal: " + PayPalService.createPayment(convertVNDToUSD(totalAmount1), "USD", "http://localhost:8082/utedemyProject/user/orderpaypal/success",
+ 	            "http://localhost:8082/utedemyProject/user/orderpaypal/cancel"));
          if (approveLink != null) {
  	        resp.sendRedirect(approveLink);
  	        return;

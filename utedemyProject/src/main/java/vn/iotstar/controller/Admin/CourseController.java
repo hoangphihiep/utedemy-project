@@ -10,13 +10,19 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import vn.iotstar.observer_pattern.EmailNotifier;
+import vn.iotstar.observer_pattern.NewCourseNotificationManager;
+import vn.iotstar.observer_pattern.PushSystemNotifier;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.Notification;
+import vn.iotstar.entity.Teacher;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.impl.service.NotificationService;
+import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.INotificationService;
+import vn.iotstar.state.CourseContext;
 
 @WebServlet(urlPatterns = {"/admin/courseManagement","/admin/cancelCourse","/admin/restoreCourse","/admin/reviewCourse"})
 public class CourseController extends HttpServlet {
@@ -24,7 +30,8 @@ public class CourseController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ICourseService courseService = new CourseService();
 	INotificationService notificationService = new NotificationService();
-
+	UserService userService = new UserService();
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI();
@@ -47,7 +54,10 @@ public class CourseController extends HttpServlet {
 			if (idCourseStr != null) {
 				int idCourse = Integer.parseInt(idCourseStr);
 				Course course = courseService.findByIdCourse(idCourse);
-				course.setStatus(0);
+				CourseContext context = new CourseContext(course);
+				context.cancel(course);
+				
+				//course.setStatus(0);
 				if (content != null) {
 					Notification notification = new Notification();
 					notification.setSender(user);
@@ -70,14 +80,15 @@ public class CourseController extends HttpServlet {
 			if (idCourseStr != null) {
 				int idCourse = Integer.parseInt(idCourseStr);
 				Course course = courseService.findByIdCourse(idCourse); 
-				if (course.getStatus() == 0) {
-					course.setStatus(1);
-					boolean check = courseService.updateCourse(course);
-					if (check) {
-						System.out.println("Đã mở khóa khóa học");
-						resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
-					}
+				CourseContext context = new CourseContext(course);
+				context.restore(course); // Sử dụng state pattern
+				boolean check = courseService.updateCourse(course);
+				if (check) {
+					System.out.println("Đã mở khóa khóa học");
+					
+					resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
 				}
+
 			}
 		}
 		else if (url.contains("/admin/reviewCourse")) {
@@ -86,13 +97,26 @@ public class CourseController extends HttpServlet {
 			if (idCourseStr != null) {
 				int idCourse = Integer.parseInt(idCourseStr);
 				Course course = courseService.findByIdCourse(idCourse); 
-				if (course.getStatus() == 2) {
-					course.setStatus(1);
-					boolean check = courseService.updateCourse(course);
-					if (check) {
-						System.out.println("Đã duyệt");
-						resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
+				CourseContext context = new CourseContext(course);
+				context.review(course); // Sử dụng state pattern
+				boolean check = courseService.updateCourse(course);
+				if (check) {
+					System.out.println("Đã duyệt");
+					// we send created course notification right here
+					Teacher teacher = (Teacher) userService.findById(course.getTeacher().getId());
+					List<User> purchasedCourseUsers = courseService.getPurchasedCourseUsers(teacher.getId());
+
+					NewCourseNotificationManager notificationManager = new NewCourseNotificationManager();
+					notificationManager.addObserver(new EmailNotifier());
+					notificationManager.addObserver(new PushSystemNotifier());
+					// add others observer if need
+
+					for (User follower : purchasedCourseUsers) {
+						System.out.println("Test follower data: " + follower.getFullname());
+
+						notificationManager.notifyAllObservers(follower, course);
 					}
+					resp.sendRedirect(req.getContextPath() + "/admin/courseManagement");
 				}
 			}
 		}

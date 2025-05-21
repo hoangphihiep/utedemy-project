@@ -1,6 +1,7 @@
 package vn.iotstar.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.servlet.ServletException;
@@ -10,8 +11,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.iotstar.entity.User;
+import vn.iotstar.impl.service.NotificationService;
 import vn.iotstar.impl.service.UserService;
+import vn.iotstar.service.INotificationService;
 import vn.iotstar.service.IUserService;
 import vn.iotstar.utils.RoleUtil;
 import vn.iotstar.entity.*;
@@ -22,7 +24,8 @@ import vn.iotstar.entity.*;
 public class WaitingController extends HttpServlet {
 	
 	IUserService user_service = new UserService();
-
+	public INotificationService notificationService = new NotificationService();
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
@@ -56,6 +59,14 @@ public class WaitingController extends HttpServlet {
 				return;
 			} else if (roleId == RoleUtil.USER) {
 				System.out.println("session User là user");
+				List<Notification> notifications = notificationService.findByIdUser(u.getId());
+				System.out.println ("id user: " + u.getId());
+				for (Notification no : notifications) {
+					System.out.println ("Thong bao: " + no.getContent());
+				}
+				int soLuongThongBao = notifications.size();
+				session.setAttribute("unreadCount", soLuongThongBao);
+				session.setAttribute("notifications", notifications);
 				resp.sendRedirect(req.getContextPath() + "/user/homepage");
 				return;
 			} else {
@@ -91,7 +102,8 @@ public class WaitingController extends HttpServlet {
 						resp.sendRedirect(req.getContextPath() + "/views/hiep.jsp");
 						return;
 					} else if (roleId == RoleUtil.USER) {
-						System.out.println("session User là user");
+						System.out.println("session User là user1");
+						
 						resp.sendRedirect(req.getContextPath() + "/views/user/homepage.jsp");
 						return;
 					} else {

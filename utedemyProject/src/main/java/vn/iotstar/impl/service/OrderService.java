@@ -49,5 +49,21 @@ public class OrderService implements IOrderService {
     {
     	return orderDao.getAllOrderItems();
     }
+	@Override
+	public boolean checkOrder(int idUser, int idTeacher) {
+		return orderDao.checkOrder(idUser, idTeacher);
+	}
+	@Override
+	public boolean isLoyalCustomer(int idUser, int idTeacher) {
+		return orderDao.isLoyalCustomer(idUser, idTeacher);
+	}
+	@Override
+	public boolean isHighValueCustomer(int idUser, int idTeacher) {
+		return orderDao.isHighValueCustomer(idUser, idTeacher);
+	}
+	@Override
+	public boolean isFirstCourse(int idCourse) {
+		return orderDao.isFirstCourse(idCourse);
+	}
 
 }

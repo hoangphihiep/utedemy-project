@@ -148,5 +148,6 @@ public interface ICourseService {
 
 	public CourseType getCourseTypeById(int id);
 
+	public List<User> getPurchasedCourseUsers(int teacherId);
 }
 

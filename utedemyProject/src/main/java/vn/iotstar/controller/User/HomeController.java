@@ -8,13 +8,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import vn.iotstar.entity.Notification;
+import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.CourseService;
+import vn.iotstar.impl.service.NotificationService;
 import vn.iotstar.service.ICourseService;
+import vn.iotstar.service.INotificationService;
 
 @WebServlet(urlPatterns = {"/user/homepage"})
 public class HomeController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	
 	private ICourseService courseService = new CourseService();
 	 
 	@Override
@@ -23,6 +29,10 @@ public class HomeController extends HttpServlet {
 	    req.setCharacterEncoding("UTF-8");
 	    resp.setCharacterEncoding("UTF-8");
 	    
+	    HttpSession session = req.getSession();
+	    
+	    
+		
 	    List<Object[]> bestSellerCourses = courseService.getBestSellingCourses(5);
 	    System.out.println("Best Seller Courses: " + bestSellerCourses); // In dữ liệu
 	    for (Object[] course : bestSellerCourses) {

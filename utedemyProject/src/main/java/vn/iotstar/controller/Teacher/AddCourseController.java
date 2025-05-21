@@ -1,4 +1,4 @@
-package vn.iotstar.controller.Teacher;
+	package vn.iotstar.controller.Teacher;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import vn.iotstar.observer_pattern.EmailNotifier;
+import vn.iotstar.observer_pattern.NewCourseNotificationManager;
 import vn.iotstar.entity.Answer;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.CourseDetail;
@@ -36,6 +38,7 @@ import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.state.CourseContext;
 import vn.iotstar.utils.Constant;
 
 @MultipartConfig(
@@ -94,7 +97,9 @@ public class AddCourseController extends HttpServlet{
 			if (idCourseStr != null) {
 				int idCourse = Integer.parseInt(idCourseStr);
 				Course course = courseService.findByIdCourse(idCourse); 
-				course.setStatus(2);
+				//course.setStatus(2);
+				CourseContext context = new CourseContext(course);
+				context.review(course);
 				boolean check = courseService.updateCourse(course);
 				if (check) {
 					resp.sendRedirect(req.getContextPath() + "/teacher/course");
@@ -124,14 +129,22 @@ public class AddCourseController extends HttpServlet{
 			}
 			CourseType courseType = courseService.findByIDCourseType(courseTypeIdInt);
 			
-			Course course = new Course();
-			course.setCourseName(courseName);
-			course.setCourseType(courseType);
-			course.setStatus(3);
-			
 			User user = (User) session.getAttribute("account");
 			Teacher teacher = (Teacher) userService.findById(user.getId());
-			course.setTeacher(teacher);
+			//course.setTeacher(teacher);
+			
+			System.out.println ("Có vào thay đổi này");
+			Course course = new Course.Builder()
+					.courseName(courseName)
+					.courseType(courseType)
+					.status(3)
+					.teacher(teacher)
+					.build();
+//			course.setCourseName(courseName);
+//			course.setCourseType(courseType);
+//			course.setStatus(3);
+			
+			
 			boolean check = courseService.saveCoure(course);
 
 			
