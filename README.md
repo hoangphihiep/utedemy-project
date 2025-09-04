@@ -21,6 +21,27 @@ Kết quả tạo token
 <img width="1919" height="982" alt="image" src="https://github.com/user-attachments/assets/379b794b-2710-48c8-a3f7-25cb49aeeafb" />
 
 
+chọn nhánh master
+<img width="1919" height="1141" alt="image" src="https://github.com/user-attachments/assets/305971da-ae93-4df2-9b13-2861e6bc6533" />
+chọn next
+<img width="1919" height="1139" alt="image" src="https://github.com/user-attachments/assets/335112bd-aed7-47bf-a2f8-ded432d45ee9" />
+chọn next
+<img width="1919" height="1139" alt="image" src="https://github.com/user-attachments/assets/fb0e4d12-00b8-44ce-aa11-636de7d1e9af" />
+Finish
+<img width="1919" height="1140" alt="image" src="https://github.com/user-attachments/assets/69db14da-eeb8-4520-8497-b1ac6cf07015" />
+vào file pom.xml chỉnh jdk phù hợp với máy.
+<img width="1919" height="1139" alt="image" src="https://github.com/user-attachments/assets/9f472df8-f31e-4657-981f-34d1ad177d5c" />
+
+vào persistence.xml chỉnh thông tin mysql
+tạo database coursedb
+chỉnh user,password phù hợp với thiết lập mysql
+<img width="1919" height="1140" alt="image" src="https://github.com/user-attachments/assets/021e9d6b-a00c-4d47-b8d4-5eaa43e2393a" />
+chạy file test để tạo bảng trong database
+<img width="1919" height="1140" alt="image" src="https://github.com/user-attachments/assets/bb8f2e89-7c95-4fa0-820b-e5c4ef27bad5" />
+
+
+
+
 
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/b451962a-0c3b-46de-a95c-1ed6bbca0f42" />'
 
