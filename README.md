@@ -8,6 +8,8 @@ Bước 2: Chọn Git/Project from git
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/cb99d814-3306-43b3-a2f8-a9fdd331de88" />
 chọn clone URI
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/1333df2e-00e3-4857-bb32-86ea82bbc0f5" />
+dán link git project vào
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/eda0c08d-f7e3-47f6-a444-a88bb1ac0020" />
 
 
 
