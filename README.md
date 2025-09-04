@@ -41,7 +41,7 @@ Chạy file Test trong project để Hibernate/JPA tự động tạo bảng tro
 
 7. Chạy project
 Sau khi cấu hình thành công, chạy project.
-Kết quả sẽ hiển thị như hình sau:kết quả sau khi chạy project
+Kết quả sẽ hiển thị như hình:
 <img width="1919" height="1085" alt="image" src="https://github.com/user-attachments/assets/e986e6b4-806f-4c67-a90b-6241a3b91ad6" />
 
 
