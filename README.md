@@ -11,6 +11,14 @@ chọn clone URI
 dán link git project vào
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/eda0c08d-f7e3-47f6-a444-a88bb1ac0020" />
 
+tạo token git: Developer Settings
+<img width="1919" height="872" alt="image" src="https://github.com/user-attachments/assets/32ed2af8-bf46-4b2d-a828-58b2aac33af9" />
+New personal access token (classic)
+<img width="1919" height="995" alt="image" src="https://github.com/user-attachments/assets/81d62c64-9823-4b45-9bf9-60f0a5ff1f04" />
+chọn tất cả quyền -> generate token
+<img width="1919" height="993" alt="image" src="https://github.com/user-attachments/assets/4f3478a3-266d-4d4a-8af0-839974acc45b" />
+Kết quả tạo token
+<img width="1919" height="982" alt="image" src="https://github.com/user-attachments/assets/379b794b-2710-48c8-a3f7-25cb49aeeafb" />
 
 
 
