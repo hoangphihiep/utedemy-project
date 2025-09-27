@@ -1,7 +1,5 @@
 package vn.iotstar.decorator;
 
-
-
 public class NewUserCondition extends DiscountDecorator {
     
 	public NewUserCondition(IDiscount discount) {
@@ -12,6 +10,4 @@ public class NewUserCondition extends DiscountDecorator {
 	public String getDiscountValue() {
 		return super.getDiscountValue() + ",NEW_USER";
 	}
-    
-    
 }

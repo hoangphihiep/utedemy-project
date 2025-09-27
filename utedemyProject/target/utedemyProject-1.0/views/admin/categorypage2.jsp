@@ -149,7 +149,7 @@ table th, table td {
 
         <!-- Styled button to add course -->
         <form action="${pageContext.request.contextPath}/admin/add2" method="get">
-            <button type="submit" style="display: block; width: 200px; margin: 20px auto; padding: 12px 20px; text-align: center; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease;">Thêm khóa học</button>
+            <button type="submit" style="display: block; width: 200px; margin: 20px auto; padding: 12px 20px; text-align: center; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease;">Thêm danh mục</button>
         </form>
     </div>
 </body>

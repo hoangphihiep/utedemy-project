@@ -62,8 +62,6 @@ public class verifyOTPController extends HttpServlet{
 			
 			String email = req.getParameter("email");
 			
-			
-			
 			System.out.println ("Người dùng nhập: " + otpCode);
 	        System.out.println ("gmail của người dùng: " + email);
 	        

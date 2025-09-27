@@ -44,15 +44,11 @@ public class ForgotPasswordController extends HttpServlet{
             session.setAttribute("attempts", 0);
             session.setAttribute("last_send_time", System.currentTimeMillis());
             
-            // Thiết lập thời gian hết hạn session (ví dụ: 5 phút)
-            session.setMaxInactiveInterval(900);
             
         	if (emailService.sendOtp(email, otpCode)) {
-        		System.out.println("tài khoản có tồn tại, gửi mã thành công");
+        		req.setAttribute("email", email);
+            	req.getRequestDispatcher("/views/user/verifyOTP.jsp").forward(req, resp);
         	}
-        	 
-        	req.setAttribute("email", email);
-        	req.getRequestDispatcher("/views/user/verifyOTP.jsp").forward(req, resp);
         } else {
         	req.setAttribute("error", "Email không tồn tại trong hệ thống.");
         	req.getRequestDispatcher("/views/user/forgotPassword.jsp").forward(req, resp);

@@ -110,7 +110,6 @@ vn\iotstar\entity\User.class
 vn\iotstar\controller\User\CartController.class
 vn\iotstar\dao\ICourseDao.class
 vn\iotstar\decorator\NewUserCondition.class
-vn\iotstar\decorator\WeekendOnlyCondition.class
 vn\iotstar\controller\User\ResetPasswordController.class
 vn\iotstar\entity\Section.class
 vn\iotstar\entity\Course.class

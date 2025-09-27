@@ -20,7 +20,6 @@ import vn.iotstar.decorator.LoyalCustomerCondition;
 import vn.iotstar.decorator.MinOrder5Condition;
 import vn.iotstar.decorator.NewUserCondition;
 import vn.iotstar.decorator.PercentageDiscount;
-import vn.iotstar.decorator.WeekendOnlyCondition;
 import vn.iotstar.entity.Course;
 import vn.iotstar.entity.Discount;
 import vn.iotstar.entity.Notification;
@@ -135,7 +134,6 @@ public class CouponController extends HttpServlet {
 		    }
 		    discount.setAppliedCourses(appliedCourses);
 		    
-		    // Tạo loại giảm giá cơ bản
 	        if ("PERCENTAGE".equals(type)) {
 	            IDiscount percentageDiscount = new PercentageDiscount(discount);
 	            for (String cond : conditions) {
@@ -209,7 +207,6 @@ public class CouponController extends HttpServlet {
 	        discount.setEndTime(endTime);
 	        discount.setCodeAmount(codeAmount);
 
-	        // Cập nhật mối quan hệ với khóa học
 	        Set<Course> appliedCourses = new HashSet<>();
 	        if (appliedCourseIds != null) {
 	            for (String courseId : appliedCourseIds) {
@@ -222,7 +219,6 @@ public class CouponController extends HttpServlet {
 	        discount.getAppliedCourses().clear();
 	        discount.getAppliedCourses().addAll(appliedCourses);
 	        
-	     // Tạo loại giảm giá cơ bản
 	        if ("PERCENTAGE".equals(type)) {
 	            IDiscount percentageDiscount = new PercentageDiscount(discount);
 	            for (String cond : conditions) {

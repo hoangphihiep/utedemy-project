@@ -131,18 +131,13 @@ public class AddCourseController extends HttpServlet{
 			
 			User user = (User) session.getAttribute("account");
 			Teacher teacher = (Teacher) userService.findById(user.getId());
-			//course.setTeacher(teacher);
 			
-			System.out.println ("Có vào thay đổi này");
 			Course course = new Course.Builder()
 					.courseName(courseName)
 					.courseType(courseType)
 					.status(3)
 					.teacher(teacher)
 					.build();
-//			course.setCourseName(courseName);
-//			course.setCourseType(courseType);
-//			course.setStatus(3);
 			
 			
 			boolean check = courseService.saveCoure(course);

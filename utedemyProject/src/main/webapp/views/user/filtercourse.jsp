@@ -31,18 +31,14 @@
 					<!-- 					<button class="sort-btn">
 						<span>Sắp xếp theo</span> <span>Học nhiều nhất</span> <span>▼</span>
 					</button> -->
-					<select class="sort-dropdown" name="sort" id="sort-select">
-						<form action="${pageContext.request.contextPath}/user/search"
-							method="post">
-							<select name="sortBy">
-								<option value="highest-rated">Đánh giá cao nhất</option>
-								<option value="most-popular">Học nhiều nhất</option>
-								<!-- Thêm các tùy chọn khác -->
-							</select>
-							<button type="submit">Lọc</button>
-						</form>
-
-					</select>
+					<form action="${pageContext.request.contextPath}/user/search" method="post">
+					  <select class="sort-dropdown" name="sortBy" id="sort-select">
+					    <option value="highest-rated">Đánh giá cao nhất</option>
+					    <option value="most-popular">Học nhiều nhất</option>
+					    <!-- Thêm các tùy chọn khác -->
+					  </select>
+					  <button type="submit">Lọc</button>
+					</form>
 				</div>
 			</div>
 		</div>

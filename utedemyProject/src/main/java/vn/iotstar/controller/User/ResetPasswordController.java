@@ -33,7 +33,8 @@ public class ResetPasswordController extends HttpServlet {
 		
 		boolean isSuccess = userService.updatePassword(email, encryptedPassword);
 		if (isSuccess) {
-			resp.sendRedirect(req.getContextPath() + "/home?showLoginModal=true");
+			System.out.println ("Co vao day");
+			resp.sendRedirect(req.getContextPath() + "/user/homepage");
 		} else {
 			System.out.println ("Không cập nhật được");
 		}
