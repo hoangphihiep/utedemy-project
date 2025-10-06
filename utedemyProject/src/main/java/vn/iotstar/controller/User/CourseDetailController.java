@@ -12,6 +12,7 @@ import vn.iotstar.impl.service.FavoriteCourseService;
 import vn.iotstar.impl.service.OrderService;
 import vn.iotstar.service.IFavoriteCourseService;
 import vn.iotstar.service.IOrderService;
+import vn.iotstar.utils.CSRFUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class CourseDetailController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        
+        // Generate CSRF token cho form
+        String csrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", csrfToken);
 
         // Lấy courseId từ tham số yêu cầu
         String courseIdStr = req.getParameter("courseId");
@@ -203,8 +208,6 @@ public class CourseDetailController extends HttpServlet {
                 } else {
                     req.setAttribute("orderStatus", "PROCESSING");
                 }
-            } else {
-                setDefaultCourseAttributes(req);
             }
         } else {
             setDefaultCourseAttributes(req);

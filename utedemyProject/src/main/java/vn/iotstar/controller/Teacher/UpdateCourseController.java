@@ -119,12 +119,15 @@ public class UpdateCourseController extends HttpServlet{
 		}
 		else if (url.contains("/teacher/editBasicInformation")) 
 		{
+			Course course = null;
 			String idCourseStr = req.getParameter("id");
-			int idCourse = Integer.parseInt(idCourseStr);
-			Course course = courseService.findByIdCourse(idCourse);
-			session.setAttribute("courseSession1", course);
-			//Course course = (Course)session.getAttribute("courseSession");
-			System.out.println ("Ten khoa học: " + course.getCourseName());
+			if (idCourseStr != null && !idCourseStr.isEmpty()) {
+			    int courseId = Integer.parseInt(idCourseStr);
+			    course = courseService.findByIdCourse(courseId);
+				session.setAttribute("courseSession1", course);
+			} else {
+				course = (Course)session.getAttribute("courseSession1");
+			}
 			CourseType courseType = courseService.findByIDCourseType(course.getCourseType().getId());
 			List<CourseType> listCourseType = courseService.listCourseType();
 			req.setAttribute("listCourseType", listCourseType);

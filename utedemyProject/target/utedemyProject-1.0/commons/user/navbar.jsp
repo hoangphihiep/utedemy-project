@@ -11,7 +11,7 @@
 </ul>
 </nav>
 
-<script>
+<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
 // Đợi trang tải xong
 document.addEventListener('DOMContentLoaded', function() {
   // Lấy đường dẫn hiện tại

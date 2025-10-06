@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <body>
-<script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 	<div class="content-box">
 		<div class="content-header">Thông tin cơ bản</div>
 		<div class="content-body">
@@ -96,7 +96,7 @@
 		</div>
 		
 	</div>
-	<script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
     CKEDITOR.replace('courseIntroduction');
     
 // Function to preview images

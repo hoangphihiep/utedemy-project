@@ -11,16 +11,27 @@
         <span class="unica-logo">unica</span>
     </a>
 		</div>
-		<form action="${pageContext.request.contextPath}/user/search"
-			method="post">
-			<div class="search-box-inner">
-				<input type="text" name="keyword"
-					placeholder="Tìm khóa học, giảng viên">
-				<button class="search-btn">
-					<i class="fas fa-search"></i>
-				</button>
-			</div>
-		</form>
+		<form action="${pageContext.request.contextPath}/user/search" 
+              method="post" 
+              id="headerSearchForm"
+              onsubmit="return validateSearchForm()">
+            
+            <!-- CSRF Token -->
+            <input type="hidden" name="csrfToken" value="${csrfToken}" />
+            
+            <div class="search-box-inner">
+                <input type="text" 
+                       name="keyword" 
+                       id="searchKeyword"
+                       placeholder="Tìm khóa học, giảng viên"
+                       maxlength="200"
+                       autocomplete="off"
+                       value="<c:out value='${param.keyword}' />">
+                <button class="search-btn" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
 		<c:if test="${not empty sessionScope.account}">
 			<!-- User is logged in - show cart, favorites and avatar with dropdown -->
 			<div>
@@ -31,7 +42,7 @@
 						<a href="#" onclick="toggleDropdown(event)" class="nav-link"
 							style="color: white; margin: 0 10px; text-decoration: none; padding: 8px; border-radius: 4px; position: relative;">
 							
-							<img src="/do_An/Content/Images/notification.png"
+							<img src="/utedemyProject/Content/Images/notification.png"
 							
 							alt="Notification" valign="middle" width="20" height="20" /> <span
 							class="notification-count"
@@ -112,4 +123,4 @@
 	</div>
 
 </header>
-<script src="/utedemyProject/views/Script/header.js"></script>
+<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="/utedemyProject/views/Script/header.js"></script>

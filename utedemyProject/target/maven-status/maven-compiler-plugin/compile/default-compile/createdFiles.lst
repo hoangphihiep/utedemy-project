@@ -9,13 +9,13 @@ vn\iotstar\controller\PayPalCallbackController.class
 vn\iotstar\service\IFavoriteCourseService.class
 vn\iotstar\entity\Role.class
 vn\iotstar\impl\dao\ReviewDao.class
-vn\iotstar\controller\TestServlet.class
 vn\iotstar\service\IRoleService.class
 vn\iotstar\controller\Teacher\CouponController.class
 vn\iotstar\entity\Quiz.class
 vn\iotstar\controller\User\OrderController.class
 vn\iotstar\service\INotificationService.class
 vn\iotstar\impl\service\RoleService.class
+vn\iotstar\utils\CSRFUtil.class
 vn\iotstar\service\ICourseDetailService.class
 vn\iotstar\dao\ICourseDetailDAO.class
 vn\iotstar\controller\Admin\UpdateCategoryController.class
@@ -28,6 +28,7 @@ vn\iotstar\impl\service\NotificationService.class
 vn\iotstar\controller\User\ViewTeacherProfileController.class
 vn\iotstar\entity\Notification.class
 vn\iotstar\service\IDiscountService.class
+vn\iotstar\controller\SameSiteCookieFilter$1.class
 vn\iotstar\controller\WaitingController.class
 vn\iotstar\dao\INotificationDao.class
 vn\iotstar\impl\dao\NotificationDao.class
@@ -48,8 +49,10 @@ vn\iotstar\controller\User\DiscountController.class
 vn\iotstar\impl\dao\RoleDao.class
 vn\iotstar\impl\dao\UserDao.class
 vn\iotstar\controller\Admin\AccountController.class
+vn\iotstar\controller\SameSiteCookieFilter.class
 vn\iotstar\controller\Admin\CategoryController.class
 vn\iotstar\controller\FilterController.class
+vn\iotstar\filter\CSRFFilter.class
 vn\iotstar\impl\service\DiscountService.class
 vn\iotstar\controller\Teacher\HomeController.class
 vn\iotstar\entity\Discount.class
@@ -59,6 +62,7 @@ vn\iotstar\controller\User\verifyOTPController.class
 vn\iotstar\dao\IDiscountDao.class
 vn\iotstar\configs\JPAConfig.class
 vn\iotstar\controller\User\LogoutController.class
+vn\iotstar\filter\CSRFFilter$SecurityHeadersResponseWrapper.class
 vn\iotstar\entity\OrderItem.class
 vn\iotstar\controller\User\CourseDetailController.class
 vn\iotstar\entity\Voucher.class
@@ -82,6 +86,7 @@ vn\iotstar\entity\CourseType.class
 vn\iotstar\impl\dao\OrderDao.class
 vn\iotstar\dao\IOrderDao.class
 vn\iotstar\controller\Admin\CourseController.class
+vn\iotstar\controller\SearchController$ValidationResult.class
 vn\iotstar\impl\service\CourseDetailService.class
 vn\iotstar\entity\Orders.class
 vn\iotstar\impl\service\EmailService$1.class

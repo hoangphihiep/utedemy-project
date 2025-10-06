@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <div >
-            <script>link_active = 3;</script>
+            <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">link_active = 3;</script>
  			
             <div >
                 

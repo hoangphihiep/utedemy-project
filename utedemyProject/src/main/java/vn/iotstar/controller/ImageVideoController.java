@@ -21,7 +21,7 @@ public class ImageVideoController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String fileName = req.getParameter("fname");
-
+		System.out.println ("Có vào đây123456789");
 		if (fileName != null && !fileName.isEmpty()) {
 			File file = new File(Constant.DIR + "/" + fileName);
 	        if (file.exists()) {

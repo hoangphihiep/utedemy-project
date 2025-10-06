@@ -58,6 +58,19 @@
                 </c:forEach>
             </div>
         </div>
+        
+        <!-- Điều kiện sử dụng mã giảm giá -->
+		<div style="margin-bottom: 15px;">
+		    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Điều kiện sử dụng:</label>
+		    <div>
+		        <input type="checkbox" id="newUser" name="conditions" value="NEW_USER">
+		        <label for="newUser">Chỉ áp dụng cho người dùng mới</label>
+		    </div>
+		    <div>
+		        <input type="checkbox" id="loyalCustomer" name="conditions" value="LOYAL_CUSTOMER">
+		        <label for="loyalCustomer">Chỉ áp dụng cho khách hàng thân thiết</label>
+		    </div>
+		</div>
 
         <!-- Nút gửi -->
         <div style="text-align: center; margin-top: 20px;">

@@ -24,6 +24,7 @@
         <% } %>
         
         <form action="${pageContext.request.contextPath}/user/forgotPassword" method="POST" id="forgotPasswordForm">
+            <input type="hidden" name="csrfToken" value="${csrfToken}" />
             <div class="label">EMAIL</div>
             <input type="text" class="input-field" name="email" id="email" placeholder="Email" required>
             <div id="emailError" class="error-message"></div>
@@ -37,7 +38,7 @@
         </div>
     </div>
     
-    <script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         // Hàm kiểm tra email hợp lệ
         function isValidEmail(email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

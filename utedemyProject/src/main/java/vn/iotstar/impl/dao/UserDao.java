@@ -52,6 +52,9 @@ public class UserDao implements IUserDao {
 	        e.printStackTrace();
 	        return false;
 	    }
+		finally {
+	        enma.close();
+	    }
 	}
 	@Override
 	public boolean checkExistPhoneNumber(String phonenumber) {

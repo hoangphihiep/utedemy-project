@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
+    <style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         /* Thêm style cho nút bị vô hiệu hóa */
         .save-btn:disabled {
             opacity: 0.6;
@@ -22,6 +22,7 @@
 		</form>
 
         <form action="${pageContext.request.contextPath}/user/registerTeacher" method="POST" style="display:inline;" enctype="multipart/form-data">
+        <input type="hidden" name="csrfToken" value="${csrfToken}" />
         <!-- Thêm phần mô tả về giảng viên -->
         <div class="form-group description-section" style="margin-top: 20px;">
 		    <div class="form-control description-control">

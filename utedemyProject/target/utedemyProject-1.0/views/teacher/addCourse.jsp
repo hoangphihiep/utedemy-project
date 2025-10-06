@@ -33,7 +33,7 @@
 	    </form>
 	</div>
 	
-	<script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
 	    // Character count functionality
 	    const courseNameInput = document.querySelector('input[name="courseName"]');
 	    const charCount = document.querySelector('.char-count');

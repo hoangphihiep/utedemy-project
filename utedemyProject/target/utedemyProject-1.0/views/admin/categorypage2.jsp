@@ -8,7 +8,7 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
 	rel="stylesheet">
-<style>
+<style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
 body {
 	font-family: Arial, sans-serif;
 	background-color: #f0f2f5;

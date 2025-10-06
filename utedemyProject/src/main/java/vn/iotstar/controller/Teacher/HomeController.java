@@ -20,6 +20,7 @@ import vn.iotstar.impl.service.NotificationService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IDiscountService;
 import vn.iotstar.service.INotificationService;
+import vn.iotstar.utils.CSRFUtil;
 
 @MultipartConfig(
 	    fileSizeThreshold = 1024 * 1024, // 1 MB
@@ -40,7 +41,10 @@ public class HomeController extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
-
+		
+		String csrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", csrfToken);
+        
 		if (url.contains("/teacher/course")) 
 		{
 			int activeCoursesCount = 0;

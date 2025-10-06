@@ -1,18 +1,14 @@
 package vn.iotstar.controller;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.Gson;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import vn.iotstar.entity.Course;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.impl.service.CourseService;
-import java.io.PrintWriter;
 
 @WebServlet("/views/user/homepage")
 public class CourseController extends HttpServlet {

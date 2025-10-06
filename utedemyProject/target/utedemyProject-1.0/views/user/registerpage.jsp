@@ -42,6 +42,7 @@
             </c:if>
          
             <form id="registrationForm" action="/utedemyProject/user/register" method="post">
+            	<input type="hidden" name="csrfToken" value="${csrfToken}" />
                 <div class="form-group">
                     <label for="fullname">HỌ TÊN</label>
                     <input type="text" id="fullname" name="fullname" placeholder="Họ tên" required>
@@ -87,8 +88,5 @@
         </div>
     </div>
 
-    <script>
-
-    </script>
 </body>
 </html>

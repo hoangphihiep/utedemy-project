@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <title>Bảng điều khiển khóa học trực tuyến</title>
-    <style>
+    <style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         * {
             margin: 0;
             padding: 0;
@@ -850,10 +850,10 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-	<script src="/do_An/Content/js/sweetalert2.min.js"></script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="/utedemyProject/Content/js/sweetalert2.min.js"></script>
 </head>
 <body>
 	<%@ include file="/commons/teacher/header.jsp"%>
@@ -874,7 +874,7 @@
 			<sitemesh:write property="body" />
 		</div>
 	</div>
-	<script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         $(document).ready(function() {
             $('#reservationTable').DataTable({
                 "paging": true,        // Bật phân trang
@@ -899,8 +899,8 @@
             });
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-	<script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
 	    function toggleDropdown(event) {
 	        event.preventDefault();
 	        const dropdown = document.getElementById('notificationDropdown');
@@ -920,7 +920,7 @@
 	        }
 	    });
 	</script>
-	<script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         // JavaScript functionality can be added here
         document.addEventListener('DOMContentLoaded', function() {
             // Menu item activation

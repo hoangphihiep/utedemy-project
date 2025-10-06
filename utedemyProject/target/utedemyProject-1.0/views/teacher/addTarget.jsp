@@ -59,7 +59,7 @@
 		
 		</div>
 	</div>
-	<script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         // Lấy phần tử container và nút thêm mới
         const container = document.getElementById('objectiveItemsContainer');
         const addButton = document.getElementById('addButton');

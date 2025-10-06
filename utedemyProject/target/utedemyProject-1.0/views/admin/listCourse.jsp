@@ -109,7 +109,7 @@
 		</div>
 	</div>
 
-	<script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
 		// Lấy phần tử modal
 		const modal = document.getElementById('thongbao');
 		

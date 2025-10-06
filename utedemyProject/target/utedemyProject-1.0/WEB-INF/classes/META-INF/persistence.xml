@@ -14,9 +14,39 @@
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="Tuonglua8*8"/>
             
-            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+             <!-- Hibernate Properties -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+            
+            <!-- ===== CONNECTION POOL CONFIGURATION ===== -->
+            <!-- Giới hạn số connection pool của Hibernate -->
+            <property name="hibernate.connection.pool_size" value="10"/>
+            
+            <!-- Timeout settings -->
+            <property name="hibernate.connection.timeout" value="5000"/> <!-- 5 seconds -->
+            <property name="hibernate.connection.autocommit" value="false"/>
+            
+            <!-- C3P0 Connection Pool (Better than Hibernate's default) -->
+            <property name="hibernate.c3p0.min_size" value="3"/>
+			<property name="hibernate.c3p0.max_size" value="10"/>
+			<property name="hibernate.c3p0.timeout" value="1800"/>
+			<property name="hibernate.c3p0.max_statements" value="50"/>
+			<property name="hibernate.c3p0.idle_test_period" value="3000"/>
+            
+            <!-- Connection validation -->
+            <property name="hibernate.c3p0.testConnectionOnCheckout" value="true"/>
+            <property name="hibernate.c3p0.preferredTestQuery" value="SELECT 1"/>
+            
+            <!-- Leak detection -->
+            <property name="hibernate.c3p0.unreturnedConnectionTimeout" value="60"/>
+            <property name="hibernate.c3p0.debugUnreturnedConnectionStackTraces" value="true"/>
+            
+            <!-- Query timeout -->
+            <property name="jakarta.persistence.query.timeout" value="5000"/>
+            
+            <!-- Schema management -->
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
         </properties>
     </persistence-unit>
 </persistence>

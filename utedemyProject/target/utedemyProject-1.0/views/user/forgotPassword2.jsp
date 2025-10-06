@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt lại mật khẩu</title>
     <link rel="stylesheet" href="/utedemyProject/views/Css/forgotPassword.css">
-    <style>
+    <style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         .password-container {
             position: relative;
         }
@@ -56,6 +56,7 @@
         <% } %>
         
         <form action="${pageContext.request.contextPath}/user/resetPassword" method="post" id="resetPasswordForm">
+
             <input type="hidden" name="email" value="${email}">
             
             <div class="label">MẬT KHẨU MỚI</div>
@@ -88,7 +89,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
             if (input.type === "password") {

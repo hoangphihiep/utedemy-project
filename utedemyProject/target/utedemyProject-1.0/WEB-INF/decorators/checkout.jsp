@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unica - Thanh Toán</title>
     <link rel="stylesheet" href="/utedemyProject/views/Css/checkout.css">
-    <style>
+    <style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         /* Thêm CSS cho hiển thị loại giảm giá */
         .discount-type {
             font-size: 0.9em;

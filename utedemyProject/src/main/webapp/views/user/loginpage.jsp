@@ -39,6 +39,7 @@
             </c:if>
 
             <form id="loginForm" action="/utedemyProject/login" method="post">
+            	<input type="hidden" name="csrfToken" value="${csrfToken}" />
                 <div class="form-group">
                     <label for="email">EMAIL / SỐ ĐIỆN THOẠI</label>
                     <input type="text" id="email" name="email" placeholder="Email / Số điện thoại" required>
@@ -74,7 +75,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         // Toggle password visibility
         function togglePassword() {
             const passwordField = document.getElementById('password');

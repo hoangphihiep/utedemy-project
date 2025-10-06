@@ -7,7 +7,7 @@
 
 <!-- Di chuyển CSS và script vào decorator hoặc để lại nếu cần -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/views/Css/viewCourseDetails.css">
-<script src="${pageContext.request.contextPath}/views/Script/viewCourseDetails.js"></script>
+<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="${pageContext.request.contextPath}/views/Script/viewCourseDetails.js"></script>
 
 <c:if test="${not empty error}">
     <div class="error-message" style="color: red; text-align: center; margin: 10px 0;">
@@ -376,7 +376,7 @@
     
     
 </div>
-<script type="text/javascript">
+<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" type="text/javascript">
 
 //hàm mua ngay
 function buyNow(courseId) {

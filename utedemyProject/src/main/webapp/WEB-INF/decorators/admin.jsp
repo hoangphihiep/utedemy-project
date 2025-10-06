@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
+    <style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         * {
             margin: 0;
             padding: 0;
@@ -300,10 +300,10 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-	<script src="/do_An/Content/js/sweetalert2.min.js"></script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="/do_An/Content/js/sweetalert2.min.js"></script>
 </head>
 <body>
     <%@ include file="/commons/admin/navbar.jsp"%>
@@ -314,7 +314,7 @@
 	         
         </div>
 
-	<script>
+	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
         $(document).ready(function() {
             $('#reservationTable').DataTable({
                 "paging": true,        // Bật phân trang
@@ -339,8 +339,8 @@
             });
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-    <script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" >
         function toggleDropdown(event) {
             event.preventDefault();
             const dropdown = document.getElementById('notificationDropdown');

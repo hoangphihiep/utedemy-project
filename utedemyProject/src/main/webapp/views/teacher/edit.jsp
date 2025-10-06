@@ -177,6 +177,6 @@
       </div>
     </div>
 
-    <script src="/utedemyProject/views/Script/editCourse.js"></script>
+    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="/utedemyProject/views/Script/editCourse.js"></script>
 </body>
 </html>
