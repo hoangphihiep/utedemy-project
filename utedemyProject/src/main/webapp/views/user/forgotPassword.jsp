@@ -38,7 +38,7 @@
         </div>
     </div>
     
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <script nonce="${requestScope.nonce}">
         // Hàm kiểm tra email hợp lệ
         function isValidEmail(email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -90,7 +90,7 @@
         </section>
     </main>
 
-  <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+  <script nonce="${requestScope.nonce}">
   
 //Hàm điều hướng đến trang chi tiết khóa học
   function redirectToCourseDetail(courseId) {

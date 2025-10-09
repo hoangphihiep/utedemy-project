@@ -61,8 +61,8 @@
 			<sitemesh:write property="body" />
 		</div>
 	</div>
-	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" type="text/javascript">
+	<script nonce="${requestScope.nonce}"  src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script nonce="${requestScope.nonce}"  type="text/javascript">
 		// Thêm event listener cho nút lưu
 		document.querySelector('.save-button').addEventListener('click', function() {
 		    saveTargetData();

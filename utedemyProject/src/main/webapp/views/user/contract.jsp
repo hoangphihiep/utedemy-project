@@ -282,7 +282,7 @@
 
         <button class="submit-btn">Lưu</button>
     </div>
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <script nonce="${requestScope.nonce}">
         // Simulating the checkbox and save button functionality
         document.addEventListener('DOMContentLoaded', function() {
             const agreeCheckbox = document.getElementById('agree');

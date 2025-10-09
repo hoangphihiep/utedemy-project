@@ -10,7 +10,7 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="/utedemyProject/views/Script/searchcourse.js"></script>
+<script nonce="${requestScope.nonce}" src="/utedemyProject/views/Script/searchcourse.js"></script>
 
 
 <title>Unica - Kết quả tìm kiếm</title>

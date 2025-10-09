@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <script nonce="${requestScope.nonce}">
         // Toggle password visibility
         function togglePassword() {
             const passwordField = document.getElementById('password');

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt lại mật khẩu</title>
     <link rel="stylesheet" href="/utedemyProject/views/Css/forgotPassword.css">
-    <style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <style nonce="${requestScope.nonce}">
         .password-container {
             position: relative;
         }
@@ -89,7 +89,7 @@
         </div>
     </div>
 
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <script nonce="${requestScope.nonce}">
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
             if (input.type === "password") {

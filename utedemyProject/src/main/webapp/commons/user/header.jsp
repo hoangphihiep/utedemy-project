@@ -91,4 +91,4 @@
 	</div>
 
 </header>
-<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="/utedemyProject/views/Script/header.js"></script>
+<script nonce="${requestScope.nonce}" src="/utedemyProject/views/Script/header.js"></script>

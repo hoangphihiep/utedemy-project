@@ -2,10 +2,13 @@ package vn.iotstar.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletResponseWrapper;
 import vn.iotstar.utils.CSRFUtil;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,6 +17,8 @@ import java.io.PrintWriter;
 public class CSRFFilter implements Filter {
     
     private static final boolean ALLOW_SECURITY_SCANNERS = true;
+    private static final SecureRandom secureRandom = new SecureRandom(); // tạo 1 đối tượng random tái sử dụng
+    private static final Base64.Encoder base64Encoder = Base64.getEncoder();
     
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -35,22 +40,29 @@ public class CSRFFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
         String userAgent = httpRequest.getHeader("User-Agent");
         
-        String nonce = "2TAWjZIgxy7UGObaOZ4UyQ==";
+        String nonce;
+        byte[] randomBytes = new byte[16];
+        secureRandom.nextBytes(randomBytes);
+        nonce = base64Encoder.encodeToString(randomBytes);
 
         String csp = "default-src 'self'; " +
-            "script-src 'self' 'nonce-" + nonce + "' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "style-src 'self' 'nonce-" + nonce + "' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://cdn.datatables.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "img-src 'self' data: https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "font-src 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "connect-src 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "frame-src https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "frame-ancestors 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "form-action 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
-            "object-src 'none'; " +
-            "base-uri 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net;";
-
-        // ✅ LUÔN wrap response để set security headers cho MỌI request
-        HttpServletResponse wrappedResponse = new SecurityHeadersResponseWrapper(httpResponse, csp);
+	            "script-src 'self' 'nonce-" + nonce + "' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "style-src 'self' 'nonce-" + nonce + "' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://cdn.datatables.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "img-src 'self' data: https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "font-src 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "connect-src 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "frame-src https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "frame-ancestors 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "form-action 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net; " +
+	            "base-uri 'self' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.datatables.net https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.youtube.com https://via.placeholder.com https://photo.salekit.com https://unica.vn https://static.unica.vn https://upload.wikimedia.org https://static.wikia.nocookie.net;";
+        
+        httpRequest.setAttribute("nonce", nonce);
+        
+        //Khang
+       
+        //Hiep
+        // LUÔN wrap response để set security headers cho MỌI request
+        HttpServletResponse wrappedResponse = new SecureResponseWrapper(httpResponse, csp);
 
         // 1. Allow GET and HEAD requests without CSRF check
         if ("GET".equalsIgnoreCase(method) || "HEAD".equalsIgnoreCase(method)) {
@@ -165,58 +177,4 @@ public class CSRFFilter implements Filter {
     /**
      * Response wrapper để đảm bảo security headers được set cho mọi response
      */
-    private static class SecurityHeadersResponseWrapper extends HttpServletResponseWrapper {
-        private final String csp;
-        private boolean headersSet = false;
-        
-        public SecurityHeadersResponseWrapper(HttpServletResponse response, String csp) {
-            super(response);
-            this.csp = csp;
-        }
-        
-        private void setSecurityHeaders() {
-            if (!headersSet) {
-                HttpServletResponse response = (HttpServletResponse) getResponse();
-                response.setHeader("Content-Security-Policy", csp);
-                response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-                headersSet = true;
-            }
-        }
-        
-        @Override
-        public void sendError(int sc) throws IOException {
-            setSecurityHeaders();
-            super.sendError(sc);
-        }
-        
-        @Override
-        public void sendError(int sc, String msg) throws IOException {
-            setSecurityHeaders();
-            super.sendError(sc, msg);
-        }
-        
-        @Override
-        public void sendRedirect(String location) throws IOException {
-            setSecurityHeaders();
-            super.sendRedirect(location);
-        }
-        
-        @Override
-        public void setStatus(int sc) {
-            setSecurityHeaders();
-            super.setStatus(sc);
-        }
-        
-        @Override
-        public ServletOutputStream getOutputStream() throws IOException {
-            setSecurityHeaders();
-            return super.getOutputStream();
-        }
-        
-        @Override
-        public PrintWriter getWriter() throws IOException {
-            setSecurityHeaders();
-            return super.getWriter();
-        }
-    }
 }
