@@ -20,16 +20,4 @@
 	<session-config>
 		<tracking-mode>COOKIE</tracking-mode>
 	</session-config>
-
-	<filter>
-		<filter-name>sameSiteCookieFilter</filter-name>
-		<filter-class>vn.iotstar.controller.SameSiteCookieFilter</filter-class>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>sameSiteCookieFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	
-
 </web-app>

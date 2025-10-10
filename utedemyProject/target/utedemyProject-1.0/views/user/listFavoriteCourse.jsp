@@ -105,11 +105,11 @@
         
     </div>    
     <!-- Bootstrap JS -->
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script nonce="${requestScope.nonce}" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script nonce="${requestScope.nonce}" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <script nonce="${requestScope.nonce}">
         $(document).ready(function() {
             // Remove course from favorites
             $('.remove-favorite').click(function() {

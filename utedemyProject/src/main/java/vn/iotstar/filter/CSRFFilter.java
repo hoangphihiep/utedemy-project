@@ -13,7 +13,7 @@ import java.util.Base64;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebFilter("/*")
+//@WebFilter("/*")
 public class CSRFFilter implements Filter {
     
     private static final boolean ALLOW_SECURITY_SCANNERS = true;

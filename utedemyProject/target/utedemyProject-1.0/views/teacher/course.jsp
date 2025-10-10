@@ -220,7 +220,7 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-        <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+        <script nonce="${requestScope.nonce}">
 	     
 		     // Preview hình ảnh khi upload
 		        function previewFile(courseId) {

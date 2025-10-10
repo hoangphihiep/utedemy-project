@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <style nonce="${requestScope.nonce}">
         /* Thêm style cho nút bị vô hiệu hóa */
         .save-btn:disabled {
             opacity: 0.6;

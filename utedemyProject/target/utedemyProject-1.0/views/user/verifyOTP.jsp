@@ -43,8 +43,8 @@
         </div>
     </div>
 
-	<script nonce="2TAWjZIgxy7UGObaOZ4UyQ==" src="/utedemyProject/views/Script/verifyOTP.js"></script>
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+	<script nonce="${requestScope.nonce}" src="/utedemyProject/views/Script/verifyOTP.js"></script>
+    <script nonce="${requestScope.nonce}">
     	document.addEventListener('DOMContentLoaded', function() {
     	  const email = "${email}";
     	  startCountdown(email);

@@ -183,7 +183,7 @@
         </div>
     </div>
 
-    <script nonce="2TAWjZIgxy7UGObaOZ4UyQ==">
+    <script nonce="${requestScope.nonce}">
     // Client-side validation để ngăn chặn buffer overflow
     function validateForm() {
         // Validate CSRF Token length
