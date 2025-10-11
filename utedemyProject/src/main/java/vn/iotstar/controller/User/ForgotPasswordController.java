@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import vn.iotstar.impl.service.EmailService;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.utils.CSRFUtil;
 
 @WebServlet(urlPatterns = {"/user/forgotPassword"})
 public class ForgotPasswordController extends HttpServlet{
@@ -20,6 +21,9 @@ public class ForgotPasswordController extends HttpServlet{
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String csrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", csrfToken);
+        
 		req.getRequestDispatcher("/views/user/forgotPassword2.jsp").forward(req, resp);
 	}
 	
@@ -30,6 +34,11 @@ public class ForgotPasswordController extends HttpServlet{
         
         HttpSession session = req.getSession();
         
+        if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+        
         IUserService userService = new UserService();
         String email = req.getParameter("email");
         
@@ -38,6 +47,8 @@ public class ForgotPasswordController extends HttpServlet{
         if (userExists) {
         	String otpCode = emailService.generateOTP();
         	
+        	String newCsrfToken = CSRFUtil.generateToken(req);
+	        req.setAttribute("csrfToken", newCsrfToken);
         	session.setAttribute("otp_code", otpCode);
             session.setAttribute("email", email);  // Lưu email vào session
             session.setAttribute("send", 1);
@@ -54,6 +65,8 @@ public class ForgotPasswordController extends HttpServlet{
         	req.setAttribute("email", email);
         	req.getRequestDispatcher("/views/user/verifyOTP.jsp").forward(req, resp);
         } else {
+        	String newCsrfToken = CSRFUtil.generateToken(req);
+            req.setAttribute("csrfToken", newCsrfToken);
         	req.setAttribute("error", "Email không tồn tại trong hệ thống.");
         	req.getRequestDispatcher("/views/user/forgotPassword.jsp").forward(req, resp);
         }

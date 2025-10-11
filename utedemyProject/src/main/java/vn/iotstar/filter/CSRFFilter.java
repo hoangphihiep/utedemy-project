@@ -13,7 +13,7 @@ import java.util.Base64;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-//@WebFilter("/*")
+@WebFilter("/*")
 public class CSRFFilter implements Filter {
     
     private static final boolean ALLOW_SECURITY_SCANNERS = true;
@@ -58,9 +58,6 @@ public class CSRFFilter implements Filter {
         
         httpRequest.setAttribute("nonce", nonce);
         
-        //Khang
-       
-        //Hiep
         // LUÔN wrap response để set security headers cho MỌI request
         HttpServletResponse wrappedResponse = new SecureResponseWrapper(httpResponse, csp);
 
@@ -177,4 +174,5 @@ public class CSRFFilter implements Filter {
     /**
      * Response wrapper để đảm bảo security headers được set cho mọi response
      */
+    
 }

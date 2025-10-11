@@ -56,7 +56,7 @@
         <% } %>
         
         <form action="${pageContext.request.contextPath}/user/resetPassword" method="post" id="resetPasswordForm">
-
+			<input type="hidden" name="csrfToken" value="${csrfToken}" />
             <input type="hidden" name="email" value="${email}">
             
             <div class="label">MẬT KHẨU MỚI</div>

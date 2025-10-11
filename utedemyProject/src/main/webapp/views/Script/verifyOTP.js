@@ -106,7 +106,8 @@
 		      'Content-Type': 'application/x-www-form-urlencoded',
 		      'X-Requested-With': 'XMLHttpRequest'
 		    },
-		    body: 'email=' + encodeURIComponent(email)
+			body: 'email=' + encodeURIComponent(email) + 
+			          '&csrfToken=' + encodeURIComponent(csrfToken)
 		  })
 		  .then(response => response.json())
 		  .then(data => {
@@ -269,6 +270,7 @@
 		    const otp5 = formData.get('otp5');
 		    const otp6 = formData.get('otp6');
 		    const email = formData.get('email');
+			const csrfToken = formData.get('csrfToken');
 		    
 		    // Gửi request bằng fetch API
 		    fetch('/utedemyProject/user/verifyOTP', {
@@ -277,8 +279,9 @@
 		        'Content-Type': 'application/x-www-form-urlencoded',
 		        'X-Requested-With': 'XMLHttpRequest' // Để server biết đây là request AJAX
 		      },
-		      body: 'otp1=' + otp1 + '&otp2=' + otp2 + '&otp3=' + otp3 + '&otp4=' + otp4 + 
-		            '&otp5=' + otp5 + '&otp6=' + otp6 + '&email=' + encodeURIComponent(email)
+			  body: 'otp1=' + otp1 + '&otp2=' + otp2 + '&otp3=' + otp3 + '&otp4=' + otp4 + 
+			              '&otp5=' + otp5 + '&otp6=' + otp6 + '&email=' + encodeURIComponent(email) +
+			              '&csrfToken=' + encodeURIComponent(csrfToken) // THÊM CSRF TOKEN VÀO BODY
 		    })
 		    .then(response => response.json())
 		    .then(data => {

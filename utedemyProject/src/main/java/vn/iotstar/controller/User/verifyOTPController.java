@@ -23,6 +23,7 @@ import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IRoleService;
 import vn.iotstar.service.IUserService;
 import vn.iotstar.utils.AESUtil;
+import vn.iotstar.utils.CSRFUtil;
 import vn.iotstar.utils.RoleUtil;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.entity.*;
@@ -46,11 +47,29 @@ public class verifyOTPController extends HttpServlet{
 		resp.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
 		
-		System.out.println ("Có vào đây");
+		System.out.println("URL: " + url);
+	    System.out.println("CSRF Token from request: " + req.getParameter("csrfToken"));
+	    System.out.println("CSRF Token from session: " + session.getAttribute("CSRF_TOKEN"));
+	    
 		if (url.contains("/user/verifyOTP")) 
 		{
 			// Kiểm tra xem có phải là request AJAX không
 		    boolean isAjaxRequest = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
+		    
+		    // VALIDATE CSRF TOKEN
+		    if (!CSRFUtil.validateToken(req)) {
+		        System.out.println("CSRF validation failed!");
+		        if (isAjaxRequest) {
+		            resp.setContentType("application/json");
+		            resp.setCharacterEncoding("UTF-8");
+		            PrintWriter out = resp.getWriter();
+		            out.print("{\"success\": false, \"message\": \"CSRF Token không hợp lệ hoặc bị thiếu\"}");
+		            out.flush();
+		        } else {
+		            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF Token không hợp lệ hoặc bị thiếu");
+		        }
+		        return;
+		    }
 		    
 			String otpCode1 = req.getParameter("otp1");
 			String otpCode2 = req.getParameter("otp2");
@@ -61,8 +80,6 @@ public class verifyOTPController extends HttpServlet{
 			String otpCode = otpCode1 + otpCode2 + otpCode3 + otpCode4 + otpCode5 + otpCode6;
 			
 			String email = req.getParameter("email");
-			
-			
 			
 			System.out.println ("Người dùng nhập: " + otpCode);
 	        System.out.println ("gmail của người dùng: " + email);
@@ -94,7 +111,6 @@ public class verifyOTPController extends HttpServlet{
 	                		try {
 	                			encryptedPassword = AESUtil.encrypt(password_register);
 	                		} catch (Exception e) {
-	                			// TODO Auto-generated catch block
 	                			e.printStackTrace();
 	                		}
 								
@@ -140,6 +156,7 @@ public class verifyOTPController extends HttpServlet{
 	            out.flush();
 	        }
 		}
+		
 		if (url.contains("/user/deleteOTP")) {
 			try {
 	            // Đọc JSON từ request body
@@ -174,16 +191,26 @@ public class verifyOTPController extends HttpServlet{
 	            resp.getWriter().write(errorJson.toString());
 	        }
 		}
+		
 		if (url.contains("/user/resendOTP")) {
 		    boolean isAjaxRequest = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
-		    String email = req.getParameter("email");
 		    
 		    if (isAjaxRequest) {
 		        resp.setContentType("application/json");
 		        resp.setCharacterEncoding("UTF-8");
 		        PrintWriter out = resp.getWriter();
 		        
+		        // VALIDATE CSRF TOKEN
+		        if (!CSRFUtil.validateToken(req)) {
+		            System.out.println("CSRF validation failed in resendOTP!");
+		            out.print("{\"success\": false, \"message\": \"CSRF Token không hợp lệ hoặc bị thiếu\"}");
+		            out.flush();
+		            return;
+		        }
+		        
+		        String email = req.getParameter("email");
 		        String otpCode = emailService.generateOTP();
+		        
 		        // Lấy thông tin từ session
 		        Integer sendCount = (Integer) session.getAttribute("send");
 		        Long lastSendTime = (Long) session.getAttribute("last_send_time");
@@ -194,12 +221,10 @@ public class verifyOTPController extends HttpServlet{
 		        
 				// Kiểm tra số lần gửi OTP
 		        if (sendCount >= 3) {
-		        	
 		        	// Kiểm tra xem đã qua thời gian hạn chế 1 giờ chưa
 		            long now = System.currentTimeMillis();
 		            
 		            if (lastSendTime != null) {
-		            	
 		            	long diffInMillis = now - lastSendTime;
 		                long oneHourInMillis = 60 * 60 * 1000; // 1 giờ
 		                
@@ -221,26 +246,31 @@ public class verifyOTPController extends HttpServlet{
 		                sendCount = 0;
 		            }
 		        }
+		        
+		        // TẠO CSRF TOKEN MỚI
+		        String newCsrfToken = CSRFUtil.generateToken(req);
+	            
 		        // Cập nhật thông tin vào session
 		        session.setAttribute("otp_code", otpCode);
 		        session.setAttribute("send", sendCount + 1);
 		        session.setAttribute("attempts", 0);
 		        session.setAttribute("last_send_time", System.currentTimeMillis());
 		        session.setAttribute("user_email", email);
-		        
 		        // Thiết lập thời gian tồn tại của session (ví dụ: 15 phút)
 		        session.setMaxInactiveInterval(15 * 60);
 		        
 		        // Gửi OTP qua email
 		        boolean sendResult = emailService.sendOtp(email, otpCode);
 		        if (sendResult) {
-		            out.print("{\"success\": true}");
+		            // TRẢ VỀ CSRF TOKEN MỚI TRONG JSON RESPONSE
+		            out.print("{\"success\": true, \"newCsrfToken\": \"" + newCsrfToken + "\"}");
 		        } else {
 		            out.print("{\"success\": false, \"message\": \"Không thể gửi mã OTP. Vui lòng thử lại sau.\"}");
 		        }
 		        out.flush();
 		    } else {
 		        // Xử lý request thông thường (nếu cần)
+		        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Request không hợp lệ");
 		    }
 		}
 	}
@@ -297,5 +327,4 @@ public class verifyOTPController extends HttpServlet{
 	    }
 	    session.setAttribute("attempts", attempts + 1);
 	}
-
 }
