@@ -207,7 +207,7 @@
         </section>  
     </main>
 
-    <script>
+    <script nonce="${requestScope.nonce}">
     function redirectToCourseDetail(courseId) {
         const contextPath = "<c:out value='${contextPath}'/>";
         // Đảm bảo courseId là số hoặc chuỗi hợp lệ

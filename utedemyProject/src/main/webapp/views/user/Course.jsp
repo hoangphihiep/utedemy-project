@@ -6,7 +6,7 @@
     <title>Unica - Học online mọi kỹ nằng từ chuyện gia hàng đầu</title>
     <link rel="stylesheet" href="/utedemyProject/views/Css/Course.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="/utedemyProject/views/Script/Course.js"></script>
+    <script nonce="${requestScope.nonce}" src="/utedemyProject/views/Script/Course.js"></script>
 <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
 </head>
 
@@ -193,7 +193,7 @@
 
 </html>
 
-<script>
+<script nonce="${requestScope.nonce}">
     let lessonData = JSON.parse('<%= request.getAttribute("lessonJson").toString().replace("'", "\\'") %>');
     let courseDescription = JSON.parse('<%= request.getAttribute("overviewJson").toString().replace("'", "\\'") %>');
     let instructorData = JSON.parse('<%= request.getAttribute("teacherJson").toString().replace("'", "\\'") %>');

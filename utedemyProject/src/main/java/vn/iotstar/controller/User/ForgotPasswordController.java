@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import vn.iotstar.impl.service.EmailService;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.utils.CSRFUtil;
 
 @WebServlet(urlPatterns = {"/user/forgotPassword"})
 public class ForgotPasswordController extends HttpServlet{
@@ -20,6 +21,8 @@ public class ForgotPasswordController extends HttpServlet{
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String csrfToken = CSRFUtil.generateToken(req);
+		req.setAttribute("csrfToken", csrfToken);
 		req.getRequestDispatcher("/views/user/forgotPassword2.jsp").forward(req, resp);
 	}
 	
@@ -29,6 +32,14 @@ public class ForgotPasswordController extends HttpServlet{
         resp.setCharacterEncoding("UTF-8");
         
         HttpSession session = req.getSession();
+        
+        if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
         
         IUserService userService = new UserService();
         String email = req.getParameter("email");

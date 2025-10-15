@@ -177,6 +177,6 @@
       </div>
     </div>
 
-    <script src="/utedemyProject/views/Script/editCourse.js"></script>
+    <script nonce="${requestScope.nonce}" src="/utedemyProject/views/Script/editCourse.js"></script>
 </body>
 </html>

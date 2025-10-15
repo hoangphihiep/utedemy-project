@@ -203,7 +203,7 @@
     </div>
 </div>
 
-    <script>
+    <script nonce="${requestScope.nonce}">
  // Áp dụng mã giảm giá thông qua AJAX
     function applyDiscount(productId, orderId) {
         const discountInput = document.querySelector('.discount-code[data-product-id="' + productId + '"]');

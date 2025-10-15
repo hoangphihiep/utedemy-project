@@ -2,21 +2,43 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-             
+
     <persistence-unit name="jpa-hibernate-mysql" transaction-type="RESOURCE_LOCAL">
         <class>vn.iotstar.entity.Role</class>
         <class>vn.iotstar.entity.User</class>
 
         <properties>
+            <!-- JDBC -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" 
+            <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:mysql://localhost:3306/coursedb?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="Tuonglua8*8"/>
-            
+
+            <!-- Hibernate -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.show_sql" value="true"/>
+
+            <!-- Use HikariCP (recommended) -->
+            <!-- maxPoolSize must be chosen relative to MySQL max_connections -->
+            <property name="hibernate.connection.provider_class" value="com.zaxxer.hikari.hibernate.HikariConnectionProvider"/>
+
+            <!-- Hikari settings -->
+            <property name="hibernate.hikari.minimumIdle" value="5"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="25"/>
+            <property name="hibernate.hikari.idleTimeout" value="600000"/>        <!-- 10 min -->
+            <property name="hibernate.hikari.maxLifetime" value="1800000"/>       <!-- 30 min -->
+            <property name="hibernate.hikari.connectionTimeout" value="30000"/>  <!-- 30 s -->
+            <property name="hibernate.hikari.leakDetectionThreshold" value="20000"/> <!-- 20 s -->
+            <property name="hibernate.hikari.connectionTestQuery" value="SELECT 1"/>
+
+            <!-- Optional: validation timeout for queries -->
+            <property name="jakarta.persistence.query.timeout" value="5000"/>
         </properties>
     </persistence-unit>
 </persistence>
+
+
+

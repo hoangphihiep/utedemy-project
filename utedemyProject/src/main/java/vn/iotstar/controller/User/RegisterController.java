@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.iotstar.impl.service.*;
 import vn.iotstar.service.*;
+import vn.iotstar.utils.CSRFUtil;
 
 
 @WebServlet(urlPatterns = {"/user/register"})
@@ -38,6 +39,14 @@ public class RegisterController extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 		req.setCharacterEncoding("UTF-8");
 		
+		if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
+        
 		IUserService service = new UserService();
 		HttpSession session = req.getSession();
 		String path = req.getServletPath();

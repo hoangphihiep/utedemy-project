@@ -56,7 +56,15 @@ public class LoginController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         
         HttpSession session = req.getSession(true);
-
+        
+        if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
+        
         String input = req.getParameter("email");
         String password_notEncrypt = req.getParameter("password");
         String password = "";

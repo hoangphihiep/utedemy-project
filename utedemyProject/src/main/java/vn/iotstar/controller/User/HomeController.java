@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.service.ICourseService;
+import vn.iotstar.utils.CSRFUtil;
 
 @WebServlet(urlPatterns = {"/user/homepage"})
 public class HomeController extends HttpServlet {
@@ -22,6 +23,9 @@ public class HomeController extends HttpServlet {
 	    String url = req.getRequestURI();
 	    req.setCharacterEncoding("UTF-8");
 	    resp.setCharacterEncoding("UTF-8");
+	    
+	    String csrfToken = CSRFUtil.generateToken(req);
+		req.setAttribute("csrfToken", csrfToken);
 	    
 	    List<Object[]> bestSellerCourses = courseService.getBestSellingCourses(5);
 	    System.out.println("Best Seller Courses: " + bestSellerCourses); // In dữ liệu

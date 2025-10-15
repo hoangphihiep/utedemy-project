@@ -12,6 +12,7 @@ import vn.iotstar.impl.service.FavoriteCourseService;
 import vn.iotstar.impl.service.OrderService;
 import vn.iotstar.service.IFavoriteCourseService;
 import vn.iotstar.service.IOrderService;
+import vn.iotstar.utils.CSRFUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +51,9 @@ public class CourseDetailController extends HttpServlet {
                 req.setAttribute("warning", "ID khóa học không hợp lệ, sử dụng ID mặc định: 1.");
             }
         }
+        
+        String csrfToken = CSRFUtil.generateToken(req);
+		req.setAttribute("csrfToken", csrfToken);
 
         // Lấy thông tin chi tiết khóa học từ Service
         CourseDetail courseDetail = courseDetailService.getCourseDetailById(courseId);

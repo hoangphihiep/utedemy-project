@@ -20,6 +20,7 @@ import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IReviewService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.utils.CSRFUtil;
 import vn.iotstar.entity.*;
 
 @WebServlet(urlPatterns = { "/user/filter" })
@@ -31,6 +32,8 @@ public class FilterController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String csrfToken = CSRFUtil.generateToken(req);
+		req.setAttribute("csrfToken", csrfToken);
 		req.getRequestDispatcher("/views/user/searchcourse.jsp").forward(req, resp);
 	}
 
@@ -38,7 +41,15 @@ public class FilterController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-
+		
+		if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
+        
 		HttpSession session = req.getSession();
 		String keyWord = (String) session.getAttribute("keyWord");
 		String ratingParam = req.getParameter("rating");

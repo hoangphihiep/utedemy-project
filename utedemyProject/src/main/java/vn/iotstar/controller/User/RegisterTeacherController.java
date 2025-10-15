@@ -17,6 +17,7 @@ import vn.iotstar.entity.Teacher;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.utils.CSRFUtil;
 import vn.iotstar.utils.Constant;
 
 @MultipartConfig(
@@ -35,6 +36,8 @@ public class RegisterTeacherController extends HttpServlet{
 		String url = req.getRequestURI();
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
+		String csrfToken = CSRFUtil.generateToken(req);
+		req.setAttribute("csrfToken", csrfToken);
 		if (url.contains("/user/registerTeacher")) 
 		{
 			req.getRequestDispatcher("/views/user/teacherRegister1.jsp").forward(req, resp);
@@ -56,6 +59,22 @@ public class RegisterTeacherController extends HttpServlet{
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
+		
+		if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
+        
+        if (session == null || session.getAttribute("account") == null) {
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, 
+                "Bạn cần đăng nhập để thực hiện chức năng này");
+            return;
+        }
+
+        
 		if (url.contains("/user/registerTeacher")) 
 		{
 			User user = (User)session.getAttribute("account");

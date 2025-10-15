@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IUserService;
 import vn.iotstar.utils.AESUtil;
+import vn.iotstar.utils.CSRFUtil;
 
 @WebServlet(urlPatterns = {"/user/resetPassword"})
 public class ResetPasswordController extends HttpServlet {
@@ -23,6 +24,14 @@ public class ResetPasswordController extends HttpServlet {
 		String password = req.getParameter("newPassword");
 		String email = (String) req.getSession().getAttribute("email");
 		
+		if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
+        
 		String encryptedPassword = null;
 		try {
 			encryptedPassword = AESUtil.encrypt(password);

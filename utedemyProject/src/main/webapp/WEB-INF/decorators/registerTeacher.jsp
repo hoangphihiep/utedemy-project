@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <title>Bảng điều khiển khóa học trực tuyến</title>
-    <style>
+    <style nonce="${requestScope.nonce}">
         * {
             margin: 0;
             padding: 0;

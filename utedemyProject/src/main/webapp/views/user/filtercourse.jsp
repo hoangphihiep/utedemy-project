@@ -10,7 +10,7 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<script src="/utedemyProject/views/Script/searchcourse.js"></script>
+<script nonce="${requestScope.nonce}" src="/utedemyProject/views/Script/searchcourse.js"></script>
 
 
 <title>Unica - Kết quả tìm kiếm</title>
@@ -27,6 +27,7 @@
 
 		<form action="${pageContext.request.contextPath}/user/filter"
 			method="post">
+			<input type="hidden" name="csrfToken" value="${csrfToken}" />
 			<div class="search-box">
 				<input type="text" name="keyword" placeholder="Search..."
 					value="${keyWord}">
@@ -62,6 +63,7 @@
 					<select class="sort-dropdown" name="sort" id="sort-select">
 						<form action="${pageContext.request.contextPath}/user/search"
 							method="post">
+							<input type="hidden" name="csrfToken" value="${csrfToken}" />
 							<select name="sortBy">
 								<option value="highest-rated">Đánh giá cao nhất</option>
 								<option value="most-popular">Học nhiều nhất</option>
@@ -139,6 +141,7 @@
  --%>
 		<form action="${pageContext.request.contextPath}/user/search"
 			method="post">
+			<input type="hidden" name="csrfToken" value="${csrfToken}" />
 			<input type="hidden" name="keyword" value="${sessionScope.keyWord}" />
 			<button type="submit"
 				style="padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; border: none; border-radius: 15px; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">

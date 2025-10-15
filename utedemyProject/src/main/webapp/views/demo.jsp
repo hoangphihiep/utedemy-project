@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<style>
+<style nonce="${requestScope.nonce}">
 body {
 	font-family: Arial, sans-serif;
 	background: #f5f5f5;

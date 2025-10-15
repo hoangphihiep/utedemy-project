@@ -13,6 +13,7 @@
 		</div>
 		<form action="${pageContext.request.contextPath}/user/search"
 			method="post">
+			<input type="hidden" name="csrfToken" value="${csrfToken}" />
 			<div class="search-box-inner">
 				<input type="text" name="keyword"
 					placeholder="Tìm khóa học, giảng viên">

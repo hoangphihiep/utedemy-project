@@ -3,6 +3,7 @@ package vn.iotstar.controller.User;
 import vn.iotstar.entity.User;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.utils.CSRFUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,7 +27,10 @@ public class ViewTeacherProfileController extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("doGet method called. Request URL: " + request.getRequestURL());
         System.out.println("All request parameters: " + request.getParameterMap());
-
+        
+        String csrfToken = CSRFUtil.generateToken(request);
+        request.setAttribute("csrfToken", csrfToken);
+		
         // Kiểm tra tham số "id" trong request
         String userIdStr = request.getParameter("id");
         System.out.println("userIdStr from request: " + userIdStr);

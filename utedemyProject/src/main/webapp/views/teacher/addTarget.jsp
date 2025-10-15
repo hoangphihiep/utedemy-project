@@ -59,7 +59,7 @@
 		
 		</div>
 	</div>
-	<script>
+	<script nonce="${requestScope.nonce}">
         // Lấy phần tử container và nút thêm mới
         const container = document.getElementById('objectiveItemsContainer');
         const addButton = document.getElementById('addButton');

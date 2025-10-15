@@ -59,7 +59,7 @@
 
 		</div>
 	</div>
-	<script>
+	<script nonce="${requestScope.nonce}">
 	// Hàm để khởi tạo các objective-item từ một chuỗi được phân tách bằng dấu phẩy
 	function initializeObjectivesFromString() {
 	    // Lấy chuỗi mục tiêu từ input field ẩn

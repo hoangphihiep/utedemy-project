@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="${requestScope.nonce}">
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Page loaded successfully');
             const followButton = document.querySelector('button:nth-child(1)');

@@ -23,6 +23,7 @@ import vn.iotstar.impl.service.UserService;
 import vn.iotstar.service.IRoleService;
 import vn.iotstar.service.IUserService;
 import vn.iotstar.utils.AESUtil;
+import vn.iotstar.utils.CSRFUtil;
 import vn.iotstar.utils.RoleUtil;
 import vn.iotstar.configs.JPAConfig;
 import vn.iotstar.entity.*;
@@ -45,6 +46,14 @@ public class verifyOTPController extends HttpServlet{
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
+		
+		if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
 		
 		System.out.println ("Có vào đây");
 		if (url.contains("/user/verifyOTP")) 

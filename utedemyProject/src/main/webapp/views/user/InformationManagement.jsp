@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration Form</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/views/Css/InformationManagement.css">
-    <script src="${pageContext.request.contextPath}/views/Script/InformationManagement.js"></script>
-    <style>
+    <script nonce="${requestScope.nonce}"  src="${pageContext.request.contextPath}/views/Script/InformationManagement.js"></script>
+    <style nonce="${requestScope.nonce}">
         .error-message {
             color: red;
             font-size: 0.9em;
@@ -161,7 +161,7 @@
         
     </div>
     
-    <script>
+    <script nonce="${requestScope.nonce}">
     document.addEventListener('DOMContentLoaded', function() {
         // Lấy nút TRUY CẬP
         const accessBtn = document.querySelector('.btn.btn-primary:last-child');

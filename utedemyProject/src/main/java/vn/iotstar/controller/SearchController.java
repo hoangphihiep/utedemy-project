@@ -13,6 +13,7 @@ import vn.iotstar.impl.service.CourseService;
 import vn.iotstar.impl.service.ReviewService;
 import vn.iotstar.service.ICourseService;
 import vn.iotstar.service.IUserService;
+import vn.iotstar.utils.CSRFUtil;
 import vn.iotstar.service.IReviewService;
 import vn.iotstar.impl.service.UserService;
 import vn.iotstar.entity.*;
@@ -26,6 +27,8 @@ public class SearchController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String csrfToken = CSRFUtil.generateToken(req);
+		req.setAttribute("csrfToken", csrfToken);
 		req.getRequestDispatcher("/views/user/homepage.jsp").forward(req, resp);
 	}
 
@@ -33,6 +36,14 @@ public class SearchController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
+		
+		if (!CSRFUtil.validateToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
+                "CSRF Token không hợp lệ hoặc bị thiếu");
+            return;
+        }
+		String newCsrfToken = CSRFUtil.generateToken(req);
+        req.setAttribute("csrfToken", newCsrfToken);
 
 		String keyWord = req.getParameter("keyword");
 		HttpSession session = req.getSession();
