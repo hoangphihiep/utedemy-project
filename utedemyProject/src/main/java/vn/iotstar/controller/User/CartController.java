@@ -35,6 +35,12 @@ public class CartController extends HttpServlet{
 		resp.setCharacterEncoding("UTF-8");
 		
 		HttpSession session = req.getSession();
+		
+		if (session == null || session.getAttribute("account") == null) {
+		    resp.sendRedirect(req.getContextPath() + "/user/homepage");
+		    return;
+		}
+		
 		User u = (User) session.getAttribute("account");
 		int userId = u.getId();
 		
@@ -86,6 +92,12 @@ public class CartController extends HttpServlet{
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
+		
+		if (session == null || session.getAttribute("account") == null) {
+		    resp.sendRedirect(req.getContextPath() + "/user/homepage");
+		    return;
+		}
+		
 		User u = (User) session.getAttribute("account");
 		
 		if (url.contains("deletecart"))
