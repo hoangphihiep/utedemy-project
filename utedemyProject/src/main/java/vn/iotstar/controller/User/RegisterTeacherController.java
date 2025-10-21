@@ -69,8 +69,7 @@ public class RegisterTeacherController extends HttpServlet{
         req.setAttribute("csrfToken", newCsrfToken);
         
         if (session == null || session.getAttribute("account") == null) {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, 
-                "Bạn cần đăng nhập để thực hiện chức năng này");
+            resp.sendRedirect(req.getContextPath() + "/user/homepage");
             return;
         }
 
